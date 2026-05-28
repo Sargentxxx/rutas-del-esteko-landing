@@ -234,7 +234,7 @@ a {
 
 .logo-container {
     background-color: #000000; /* Pure black to blend seamlessly with the logo image */
-    padding: 2px 14px 2px 2px; /* Balanced minimal padding to fit the horizontal split logo */
+    padding: 6px 20px; /* Balanced premium padding for the new landscape logo */
     border-radius: 40px;
     display: flex;
     align-items: center;
