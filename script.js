@@ -1,14 +1,35 @@
 /**
- * Rutas del Esteko - Landing Page Interactive Operations (SPA Version)
+ * Rutas del Esteko - Landing Page Interactive Operations (Dynamic SPA Version)
  * Author: Antigravity Regiment (Agent 00 - General Commander)
  * Powered by: DeepSeek Strategy Design
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+// ==========================================================================
+// 1. CONFIGURACIÓN Y CLIENTE DE SUPABASE (PÚBLICO)
+// ==========================================================================
+const SUPABASE_URL = "https://wzclhwfdvdrrcfzmmxit.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6Y2xod2ZkdmRycmNmem1teGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwODYwODUsImV4cCI6MjA5MDY2MjA4NX0.N5g-kwoU44_49RU6yaQkch-klk191yhKTzr0ABo02Hk";
+
+let supabasePublic = null;
+let isDbOnlinePublic = false;
+
+try {
+    if (typeof supabase !== 'undefined') {
+        supabasePublic = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+} catch (e) {
+    console.warn("Librería de Supabase no disponible. Operando en modo Local Fallback.");
+}
+
+// ==========================================================================
+// 2. INICIO Y CARGA DINÁMICA DE CONTENIDO
+// ==========================================================================
+document.addEventListener('DOMContentLoaded', async () => {
     
-    // ==========================================================================
+    // Probar conexión e inicializar datos dinámicos
+    await testConnectionAndLoadContent();
+
     // 1. MOBILE MENU TOGGLE DRAWER
-    // ==========================================================================
     const mobileToggle = document.getElementById('mobile-toggle');
     const navMenu = document.getElementById('nav-menu');
     const menuIcon = mobileToggle.querySelector('i');
@@ -17,11 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         navMenu.classList.toggle('open');
         const isOpen = navMenu.classList.contains('open');
         
-        // Dynamic icon rotation
         if (isOpen) {
             menuIcon.classList.remove('fa-bars');
             menuIcon.classList.add('fa-xmark');
-            document.body.style.overflow = 'hidden'; // Prevents body scrolling when menu is open
+            document.body.style.overflow = 'hidden';
         } else {
             menuIcon.classList.remove('fa-xmark');
             menuIcon.classList.add('fa-bars');
@@ -29,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Close menu function
     function closeMobileMenu() {
         navMenu.classList.remove('open');
         menuIcon.classList.remove('fa-xmark');
@@ -37,27 +56,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
-    // ==========================================================================
     // 2. SPA ROUTER & VIEW SWITCHER (Tabs Navigation)
-    // ==========================================================================
     const spaViews = document.querySelectorAll('.spa-view');
-    const navLinks = document.querySelectorAll('.nav-menu a, .footer-links a');
 
     function switchView(hash) {
-        // Default to 'inicio' if no hash or empty hash
         const viewId = hash.replace('#', '') || 'inicio';
         const targetViewElement = document.getElementById('view-' + viewId);
 
         if (targetViewElement) {
-            // Hide all views
             spaViews.forEach(view => {
                 view.classList.remove('active-view');
             });
 
-            // Show active view
             targetViewElement.classList.add('active-view');
 
-            // Update active state in nav menu
             document.querySelectorAll('.nav-menu a').forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === '#' + viewId) {
@@ -65,15 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Scroll window to top smoothly/instantly
             window.scrollTo({ top: 0, behavior: 'instant' });
-
-            // Close mobile navigation drawer
             closeMobileMenu();
         }
     }
 
-    // Intercept clicks on all hash links (e.g. #inicio, #nosotros)
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (link) {
@@ -81,31 +89,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (href && href.startsWith('#')) {
                 e.preventDefault();
                 const hash = href;
-                
-                // Update URL hash
                 history.pushState(null, null, hash);
-                
-                // Switch SPA View
                 switchView(hash);
             }
         }
     });
 
-    // Support back/forward button navigation & page load hashes
     window.addEventListener('popstate', () => {
         switchView(window.location.hash);
     });
 
-    // Initial load view selection
     switchView(window.location.hash);
 
-    // ==========================================================================
     // 3. STICKY HEADER SCROLL EFFECT
-    // ==========================================================================
     const mainHeader = document.getElementById('main-header');
     
     window.addEventListener('scroll', () => {
-        // Sticky Header Shrinking on Scroll
         if (window.scrollY > 50) {
             mainHeader.classList.add('scrolled');
         } else {
@@ -113,24 +112,339 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ==========================================================================
-    // 4. DYNAMIC TRIP FILTERING (Tab Navigation in Destinos)
-    // ==========================================================================
+    // 4. MARQUEE EFFECT BUFFER
+    const marqueeText = document.querySelector('.marquee-text');
+    if (marqueeText) {
+        const doubleContent = marqueeText.innerHTML + " &nbsp;•&nbsp; " + marqueeText.innerHTML;
+        marqueeText.innerHTML = doubleContent;
+    }
+});
+
+// ==========================================================================
+// 3. RECUPERACIÓN DE DATOS (NUBE O CACHÉ DE EMERGENCIA)
+// ==========================================================================
+async function testConnectionAndLoadContent() {
+    if (supabasePublic) {
+        try {
+            const { data, error } = await supabasePublic
+                .from('landing_sections')
+                .select('id')
+                .limit(1);
+
+            if (!error) {
+                isDbOnlinePublic = true;
+            }
+        } catch (e) {
+            isDbOnlinePublic = false;
+        }
+    }
+
+    // 1. Cargar y aplicar textos de secciones
+    await loadAndApplySections();
+
+    // 2. Cargar y renderizar catálogo de viajes y configuraciones
+    await loadAndApplyDestinationsAndConfig();
+
+    // 3. Cargar y renderizar galerías de fotos escolares/fiestas
+    await loadAndApplyGalleries();
+
+    // 4. Inicializar los Leads Forms
+    initLeadFormSubmission();
+}
+
+// Aplicar textos dinámicos
+async function loadAndApplySections() {
+    let sections = null;
+
+    if (isDbOnlinePublic && supabasePublic) {
+        try {
+            const { data, error } = await supabasePublic
+                .from('landing_sections')
+                .select('*');
+
+            if (!error && data && data.length > 0) {
+                sections = {};
+                data.forEach(item => {
+                    sections[item.id] = {
+                        title: item.title,
+                        subtitle: item.subtitle,
+                        content: item.content,
+                        image_url: item.image_url
+                    };
+                });
+                localStorage.setItem('esteko_landing_sections', JSON.stringify(sections));
+            }
+        } catch (e) {
+            console.warn("Fallo cargando secciones de la nube, usando caché.");
+        }
+    }
+
+    if (!sections) {
+        sections = JSON.parse(localStorage.getItem('esteko_landing_sections'));
+    }
+
+    if (!sections) return; // No hay datos aún
+
+    // Aplicar textos en el HTML
+    // Hero
+    if (sections.hero) {
+        const hTitle = document.querySelector('.hero-title');
+        const hSub = document.querySelector('.hero-subtitle');
+        const hText = document.querySelector('.hero-text');
+
+        if (hTitle && sections.hero.title) hTitle.textContent = sections.hero.title;
+        if (hSub && sections.hero.subtitle) hSub.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${sections.hero.subtitle}`;
+        if (hText && sections.hero.content) hText.textContent = sections.hero.content;
+    }
+
+    // Nosotros
+    if (sections.nosotros) {
+        const nTitle = document.querySelector('.nosotros h2');
+        const nContentWrapper = document.querySelector('.nosotros-content');
+        const nImage = document.querySelector('.main-photo img');
+
+        if (nTitle && sections.nosotros.title) nTitle.textContent = sections.nosotros.title;
+        
+        // Re-escribir párrafos
+        if (nContentWrapper && sections.nosotros.content) {
+            const paras = sections.nosotros.content.split('\n\n');
+            let parasHtml = `<h3>Agencia de Viajes y Turismo</h3>`;
+            paras.forEach(p => {
+                if (p.trim()) parasHtml += `<p>${p.trim()}</p>`;
+            });
+            
+            // Re-inyectar la tarjeta legal y las viñetas que estaban abajo
+            const minturCard = document.querySelector('.mintur-safety-card');
+            const featuresList = document.querySelector('.features-list');
+            
+            nContentWrapper.innerHTML = parasHtml;
+            if (minturCard) nContentWrapper.appendChild(minturCard);
+            if (featuresList) nContentWrapper.appendChild(featuresList);
+        }
+
+        if (nImage && sections.nosotros.image_url) nImage.src = sections.nosotros.image_url;
+    }
+
+    // La Fiesta
+    if (sections.fiesta) {
+        const fTitle = document.querySelector('.fiesta h2');
+        const fImage = document.querySelector('.fiesta-visual img');
+        const fContentWrapper = document.querySelector('.fiesta-content');
+
+        if (fTitle && sections.fiesta.title) fTitle.textContent = sections.fiesta.title;
+        if (fImage && sections.fiesta.image_url) fImage.src = sections.fiesta.image_url;
+        
+        if (fContentWrapper && sections.fiesta.content) {
+            const paras = sections.fiesta.content.split('\n\n');
+            let parasHtml = `<h3>Tradición, Música y Experiencias Inolvidables</h3>`;
+            paras.forEach(p => {
+                if (p.trim()) parasHtml += `<p>${p.trim()}</p>`;
+            });
+            
+            const quote = document.querySelector('.fiesta-quote');
+            const perks = document.querySelector('.fiesta-perks');
+            
+            fContentWrapper.innerHTML = parasHtml;
+            if (quote) fContentWrapper.appendChild(quote);
+            if (perks) fContentWrapper.appendChild(perks);
+        }
+    }
+
+    // Educativo
+    if (sections.educativo) {
+        const eTitle = document.querySelector('.educativo-text h2');
+        const eImage = document.querySelector('.edu-img');
+        const eContentWrapper = document.querySelector('.educativo-text');
+
+        if (eTitle && sections.educativo.title) eTitle.textContent = sections.educativo.title;
+        if (eImage && sections.educativo.image_url) eImage.src = sections.educativo.image_url;
+        
+        if (eContentWrapper && sections.educativo.content) {
+            const paras = sections.educativo.content.split('\n\n');
+            let parasHtml = `<span class="badge-edu"><i class="fa-solid fa-graduation-cap"></i> División Educativa</span>
+                             <h2>${sections.educativo.title || 'Paseos con Escuelas y Colegios'}</h2>`;
+            paras.forEach(p => {
+                if (p.trim()) parasHtml += `<p class="edu-intro">${p.trim()}</p>`;
+            });
+
+            const features = document.querySelector('.edu-features');
+            const btn = document.querySelector('.btn-edu');
+
+            eContentWrapper.innerHTML = parasHtml;
+            if (features) eContentWrapper.appendChild(features);
+            if (btn) eContentWrapper.appendChild(btn);
+        }
+    }
+}
+
+// Aplicar catálogo y simulador
+async function loadAndApplyDestinationsAndConfig() {
+    let destinations = null;
+    let config = null;
+
+    // 1. Cargar Configuración General
+    if (isDbOnlinePublic && supabasePublic) {
+        try {
+            const { data, error } = await supabasePublic
+                .from('landing_config')
+                .select('*');
+
+            if (!error && data && data.length > 0) {
+                config = {};
+                data.forEach(item => {
+                    config[item.key] = item.value;
+                });
+                localStorage.setItem('esteko_landing_config', JSON.stringify(config));
+            }
+        } catch (e) {
+            console.warn("Fallo de red al leer configuraciones.");
+        }
+    }
+
+    if (!config) {
+        config = JSON.parse(localStorage.getItem('esteko_landing_config'));
+    }
+
+    // Aplicar config de legajos, email, whatsapp y redes
+    if (config) {
+        applyGlobalConfigVars(config);
+    }
+
+    // 2. Cargar catálogo de destinos
+    if (isDbOnlinePublic && supabasePublic) {
+        try {
+            const { data, error } = await supabasePublic
+                .from('landing_destinations')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            if (!error && data && data.length > 0) {
+                destinations = data;
+                localStorage.setItem('esteko_landing_destinations', JSON.stringify(destinations));
+            }
+        } catch (e) {
+            console.warn("Fallo leyendo destinos, usando local.");
+        }
+    }
+
+    if (!destinations) {
+        destinations = JSON.parse(localStorage.getItem('esteko_landing_destinations'));
+    }
+
+    if (!destinations) return; // Nada que renderizar
+
+    // Renderizar catálogo en el frontend público
+    renderPublicCatalogGrid(destinations, config);
+
+    // Inicializar filtros del catálogo
+    initTripFilters();
+
+    // Inicializar el Simulador de Ahorro
+    initSavingsSimulator(destinations, config);
+}
+
+function applyGlobalConfigVars(config) {
+    // Correo
+    const emailEls = document.querySelectorAll('.footer-about p, .top-bar-content span'); // O reemplazar selectores específicos
+    // Legajo badge
+    const badgeEl = document.querySelector('.registration-badge');
+    if (badgeEl && config.legajo) {
+        badgeEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Legajo Oficial N° ${config.legajo} - 
+                            <a href="${config.legajo_url || 'https://www.agenciasdeviajes.ar/#buscador'}" target="_blank" class="top-bar-link">Buscador Nacional de Agencias</a>`;
+    }
+
+    // WhatsApp enlaces dinámicos
+    if (config.whatsapp) {
+        const waLinks = document.querySelectorAll('a[href^="https://wa.me/"]');
+        waLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href) {
+                const currentText = href.split('?text=')[1] || '';
+                link.setAttribute('href', `https://wa.me/54${config.whatsapp}${currentText ? '?text=' + currentText : ''}`);
+            }
+        });
+    }
+
+    // Redes Sociales enlaces
+    const fbLinks = document.querySelectorAll('a[aria-label="Facebook"], .footer-copyright a[href*="facebook"]');
+    const igLinks = document.querySelectorAll('a[aria-label="Instagram"], .footer-copyright a[href*="instagram"], .sorteos-banner a[href*="instagram"]');
+    const tkLinks = document.querySelectorAll('a[aria-label="TikTok"], .footer-copyright a[href*="tiktok"]');
+
+    if (config.facebook) fbLinks.forEach(link => link.setAttribute('href', config.facebook));
+    if (config.instagram) igLinks.forEach(link => {
+        link.setAttribute('href', config.instagram);
+        // Si tiene el texto descriptivo del link
+        if (link.textContent.includes('@')) {
+            const handle = config.instagram.split('instagram.com/')[1]?.replace('/', '') || 'rutasdelesteko.sde';
+            link.innerHTML = `<i class="fa-brands fa-instagram"></i> Ir a Instagram @${handle}`;
+        }
+    });
+    if (config.tiktok) tkLinks.forEach(link => link.setAttribute('href', config.tiktok));
+}
+
+function renderPublicCatalogGrid(destinations, config) {
+    const grid = document.getElementById('destinations-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    
+    destinations.forEach(dest => {
+        const card = document.createElement('div');
+        card.className = 'destination-card';
+        card.setAttribute('data-category', dest.category);
+        card.id = `card-dynamic-${dest.id}`;
+
+        // Generar viñetas de servicios
+        let servicesHtml = '';
+        if (dest.services) {
+            dest.services.forEach(serv => {
+                servicesHtml += `<li><i class="fa-solid fa-check" style="color:var(--primary); margin-right:8px;"></i> ${serv}</li>`;
+            });
+        }
+
+        const waText = encodeURIComponent(dest.whatsapp_text || `Hola! Me interesa el viaje a ${dest.name}`);
+        const phone = config?.whatsapp || '3855962089';
+
+        card.innerHTML = `
+            <div class="card-image">
+                <img src="${dest.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=500&q=80'}" alt="${dest.name}">
+                <span class="card-badge badge-${dest.category === 'verano' ? 'summer' : dest.category === 'invierno' ? 'winter' : 'escape'}">${dest.category}</span>
+            </div>
+            <div class="card-body">
+                <span class="card-duration"><i class="fa-solid fa-clock"></i> ${dest.duration}</span>
+                <h3>${dest.name}</h3>
+                <p class="card-desc">${dest.description}</p>
+                <ul class="card-services" style="list-style:none;">
+                    ${servicesHtml}
+                </ul>
+                <div class="card-footer">
+                    <span class="price-info">${dest.price_info}</span>
+                    <a href="https://wa.me/54${phone}?text=${waText}" target="_blank" class="btn-card">Consultar <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function initTripFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const destinationCards = document.querySelectorAll('.destination-card');
 
     filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active status from other buttons
-            filterButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // Clonar para remover listeners anteriores si existieran
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
 
-            const filterValue = btn.getAttribute('data-filter');
+        newBtn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            newBtn.classList.add('active');
 
-            destinationCards.forEach(card => {
+            const filterValue = newBtn.getAttribute('data-filter');
+
+            document.querySelectorAll('.destination-card').forEach(card => {
                 const category = card.getAttribute('data-category');
                 
-                // Beautiful micro-animation transition for filtered cards
                 if (filterValue === 'all' || category === filterValue) {
                     card.style.display = 'flex';
                     setTimeout(() => {
@@ -142,101 +456,225 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         card.style.display = 'none';
-                    }, 300); // Waits for transition out to finish
+                    }, 300);
                 }
             });
         });
     });
+}
 
-    // ==========================================================================
-    // 5. INTERACTIVE PAYMENT INSTALMENTS CALCULATOR
-    // ==========================================================================
-    const simDestiny = document.getElementById('sim-destiny');
-    const simInstallments = document.getElementById('sim-installments');
-    const simTotalVal = document.getElementById('sim-total-val');
-    const simSeñaVal = document.getElementById('sim-seña-val');
-    const simInstallVal = document.getElementById('sim-install-val');
+function initSavingsSimulator(destinations, config) {
+    const selectDestiny = document.getElementById('sim-destiny');
+    const selectInstallments = document.getElementById('sim-installments');
+    const totalVal = document.getElementById('sim-total-val');
+    const señaVal = document.getElementById('sim-seña-val');
+    const installVal = document.getElementById('sim-install-val');
 
-    function calculateSim() {
-        const total = parseInt(simDestiny.value, 10);
-        const installments = parseInt(simInstallments.value, 10);
-        
-        // Recommended sign-in / seña (approx 20% rounded to thousands)
-        const señaValRaw = total * 0.20;
-        const seña = Math.ceil(señaValRaw / 1000) * 1000;
-        
-        // Quota is the remainder divided by the amount of months
-        const remainder = total - seña;
-        const installmentQuote = Math.round(remainder / installments);
+    if (!selectDestiny || !selectInstallments) return;
 
-        // Render beautifully with Argentine Peso formatting
-        simTotalVal.textContent = `$${total.toLocaleString('es-AR')} ARS`;
-        simSeñaVal.textContent = `$${seña.toLocaleString('es-AR')} ARS`;
-        simInstallVal.textContent = `$${installmentQuote.toLocaleString('es-AR')} ARS`;
+    // Poblar destinos dinámicamente
+    selectDestiny.innerHTML = '';
+    destinations.forEach(dest => {
+        const opt = document.createElement('option');
+        opt.value = dest.cost;
+        opt.textContent = `${dest.name} ($${parseInt(dest.cost, 10).toLocaleString('es-AR')})`;
+        selectDestiny.appendChild(opt);
+    });
+
+    // Poblar cuotas si la config las tiene
+    if (config?.quotas && config.quotas.length > 0) {
+        selectInstallments.innerHTML = '';
+        config.quotas.forEach(q => {
+            const opt = document.createElement('option');
+            opt.value = q;
+            opt.textContent = `${q} Cuotas Mensuales`;
+            if (q === 6) opt.selected = true; // 6 por defecto
+            selectInstallments.appendChild(opt);
+        });
     }
 
-    // Trigger calculation when selectors change
-    if (simDestiny && simInstallments) {
-        simDestiny.addEventListener('change', calculateSim);
-        simInstallments.addEventListener('change', calculateSim);
-        // Initial run
-        calculateSim();
+    // Función de cálculo
+    function calculate() {
+        const total = parseInt(selectDestiny.value, 10) || 0;
+        const installments = parseInt(selectInstallments.value, 10) || 6;
+        const señaPercent = config?.seña_percent || 20;
+
+        // Seña redondeada a miles
+        const rawSeña = total * (señaPercent / 100);
+        const seña = Math.ceil(rawSeña / 1000) * 1000;
+        const remaining = total - seña;
+        const monthlyQuote = Math.round(remaining / installments);
+
+        totalVal.textContent = `$${total.toLocaleString('es-AR')} ARS`;
+        señaVal.textContent = `$${seña.toLocaleString('es-AR')} ARS`;
+        installVal.textContent = `$${monthlyQuote.toLocaleString('es-AR')} ARS`;
     }
 
-    // ==========================================================================
-    // 6. LEAD CAPTURE FORM / NEWSLETTER & LOCALSTORAGE PERSISTENCE
-    // ==========================================================================
+    selectDestiny.addEventListener('change', calculate);
+    selectInstallments.addEventListener('change', calculate);
+    calculate();
+}
+
+// ==========================================================================
+// 4. CARGAR GALERIAS DE FOTOS COMPLEMENTARIAS
+// ==========================================================================
+async function loadAndApplyGalleries() {
+    let gallery = null;
+
+    if (isDbOnlinePublic && supabasePublic) {
+        try {
+            const { data, error } = await supabasePublic
+                .from('landing_gallery')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (!error && data) {
+                gallery = data;
+                localStorage.setItem('esteko_landing_gallery', JSON.stringify(gallery));
+            }
+        } catch (e) {
+            console.warn("Fallo de red al leer galerías escolares.");
+        }
+    }
+
+    if (!gallery) {
+        gallery = JSON.parse(localStorage.getItem('esteko_landing_gallery')) || [];
+    }
+
+    // Inyectar en La Fiesta
+    const fiestaFiltered = gallery.filter(item => item.section === 'fiesta');
+    renderSingleGallerySection(fiestaFiltered, '#view-fiesta .container', 'fiesta-gallery-grid');
+
+    // Inyectar en Educativo
+    const eduFiltered = gallery.filter(item => item.section === 'educativo');
+    renderSingleGallerySection(eduFiltered, '#view-educativo .container', 'educativo-gallery-grid');
+}
+
+function renderSingleGallerySection(images, containerSelector, uniqueId) {
+    const parentContainer = document.querySelector(containerSelector);
+    if (!parentContainer) return;
+
+    // Eliminar grid dinámica anterior si ya existiera
+    const oldGrid = document.getElementById(uniqueId);
+    if (oldGrid) oldGrid.remove();
+
+    if (images.length === 0) return;
+
+    // Crear la nueva grilla
+    const grid = document.createElement('div');
+    grid.className = 'gallery-grid-dynamic';
+    grid.id = uniqueId;
+
+    images.forEach(img => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item-dynamic';
+        item.innerHTML = `<img src="${img.image_url}" alt="Rutas del Esteko Experiencias" loading="lazy">`;
+        grid.appendChild(item);
+    });
+
+    // Inyectar al final del contenedor padre
+    parentContainer.appendChild(grid);
+}
+
+// ==========================================================================
+// 5. REGISTRO Y ENVÍO DE LEADS A LA NUBE
+// ==========================================================================
+function initLeadFormSubmission() {
     const leadForm = document.getElementById('lead-form');
     const leadSuccessMsg = document.getElementById('lead-success-msg');
     const successUserName = document.getElementById('success-user-name');
     const btnResetForm = document.getElementById('btn-reset-form');
 
-    if (leadForm) {
-        leadForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Stop page reload
+    if (!leadForm) return;
 
-            const name = document.getElementById('lead-name').value.trim();
-            const phone = document.getElementById('lead-phone').value.trim();
-            const email = document.getElementById('lead-email').value.trim();
-            const destiny = document.getElementById('lead-destiny-select').value;
-
-            // Structured Lead object
-            const leadData = {
-                name,
-                phone,
-                email,
-                destiny,
-                registeredAt: new Date().toISOString()
-            };
-
-            // Save locally to simulate client data registry
-            let leads = JSON.parse(localStorage.getItem('esteko_leads') || '[]');
-            leads.push(leadData);
-            localStorage.setItem('esteko_leads', JSON.stringify(leads));
-
-            // Display personalized visually striking success confirmation card
-            if (successUserName) successUserName.textContent = name;
-            leadForm.style.display = 'none';
-            if (leadSuccessMsg) leadSuccessMsg.style.display = 'block';
+    // Cargar selector de destinos dinámico en el formulario de registro
+    const leadDestSelect = document.getElementById('lead-destiny-select');
+    const localDests = JSON.parse(localStorage.getItem('esteko_landing_destinations')) || DEFAULT_DESTINATIONS;
+    
+    if (leadDestSelect && localDests.length > 0) {
+        leadDestSelect.innerHTML = '';
+        localDests.forEach(dest => {
+            const opt = document.createElement('option');
+            opt.value = dest.name;
+            opt.textContent = dest.name;
+            leadDestSelect.appendChild(opt);
         });
+        
+        // Agregar opciones por defecto escolares
+        const optEdu = document.createElement('option');
+        optEdu.value = "Viaje Educativo (Colegio)";
+        optEdu.textContent = "Viaje Educativo (Colegio)";
+        leadDestSelect.appendChild(optEdu);
+
+        const optOtro = document.createElement('option');
+        optOtro.value = "Otro Destino";
+        optOtro.textContent = "Otro Destino / Escapada";
+        leadDestSelect.appendChild(optOtro);
     }
+
+    // Reemplazar listener anterior
+    const newForm = leadForm.cloneNode(true);
+    leadForm.parentNode.replaceChild(newForm, leadForm);
+
+    newForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('btn-submit-lead');
+        const submitText = document.getElementById('btn-submit-text');
+
+        submitBtn.disabled = true;
+        submitText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';
+
+        const name = document.getElementById('lead-name').value.trim();
+        const phone = document.getElementById('lead-phone').value.trim();
+        const email = document.getElementById('lead-email').value.trim();
+        const destiny = document.getElementById('lead-destiny-select').value;
+
+        const leadData = {
+            name,
+            phone,
+            email,
+            destiny,
+            created_at: new Date().toISOString()
+        };
+
+        // 1. Guardar localmente
+        let leads = JSON.parse(localStorage.getItem('esteko_leads') || '[]');
+        leads.push(leadData);
+        localStorage.setItem('esteko_leads', JSON.stringify(leads));
+
+        // 2. Guardar en Supabase (si está online)
+        let dbSaved = true;
+        if (isDbOnlinePublic && supabasePublic) {
+            try {
+                const { error } = await supabasePublic
+                    .from('landing_leads')
+                    .insert(leadData);
+
+                if (error) {
+                    console.error("Error al registrar lead en Supabase:", error);
+                    dbSaved = false;
+                }
+            } catch (err) {
+                console.error("Fallo de red enviando lead:", err);
+                dbSaved = false;
+            }
+        }
+
+        // Mostrar confirmación
+        if (successUserName) successUserName.textContent = name;
+        newForm.style.display = 'none';
+        if (leadSuccessMsg) leadSuccessMsg.style.display = 'block';
+
+        submitBtn.disabled = false;
+        submitText.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Registrarme y Participar';
+    });
 
     if (btnResetForm) {
         btnResetForm.addEventListener('click', () => {
-            // Reset and show form back
-            leadForm.reset();
+            newForm.reset();
             if (leadSuccessMsg) leadSuccessMsg.style.display = 'none';
-            leadForm.style.display = 'block';
+            newForm.style.display = 'block';
         });
     }
-
-    // ==========================================================================
-    // 7. MARQUEE EFFECT BUFFER
-    // ==========================================================================
-    // Marquee effect double buffer to avoid empty white space gaps in scrolling strip
-    const marqueeText = document.querySelector('.marquee-text');
-    if (marqueeText) {
-        const doubleContent = marqueeText.innerHTML + " &nbsp;•&nbsp; " + marqueeText.innerHTML;
-        marqueeText.innerHTML = doubleContent;
-    }
-});
+}

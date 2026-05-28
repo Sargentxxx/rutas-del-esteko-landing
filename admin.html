@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Rutas del Esteko</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+    <!-- LOGIN CONTAINER -->
+    <div id="login-container" class="login-wrapper">
+        <div class="login-glass-card">
+            <div class="login-header">
+                <div class="login-badge-logo">
+                    <img src="img/logo.png" alt="Rutas del Esteko Logo">
+                </div>
+                <h2>Control de Mando</h2>
+                <p>Acceso restringido para el Regimiento Rutas del Esteko</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group-admin">
+                    <label for="admin-email"><i class="fa-solid fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="admin-email" placeholder="ejemplo@rutasdelesteko.com.ar" required autocomplete="username">
+                </div>
+                
+                <div class="form-group-admin">
+                    <label for="admin-password"><i class="fa-solid fa-lock"></i> Contraseña de Acceso</label>
+                    <div class="pass-input-wrapper">
+                        <input type="password" id="admin-password" placeholder="••••••••••••" required autocomplete="current-password">
+                        <button type="button" id="toggle-password" aria-label="Mostrar Contraseña"><i class="fa-solid fa-eye"></i></button>
+                    </div>
+                </div>
+                
+                <div id="login-error" class="login-error-alert" style="display: none;">
+                    <i class="fa-solid fa-circle-exclamation"></i> <span id="error-message">Credenciales Incorrectas</span>
+                </div>
+                
+                <button type="submit" class="btn-admin btn-admin-primary btn-admin-block" id="btn-login-submit">
+                    <span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión Militar</span>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <span>Rutas del Esteko ERP &copy; 2026</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN ADMIN DASHBOARD (Hidden initially) -->
+    <div id="dashboard-container" class="dashboard-wrapper" style="display: none;">
+        
+        <!-- SIDEBAR -->
+        <aside class="db-sidebar">
+            <div class="sidebar-brand">
+                <img src="img/logo.png" alt="Rutas del Esteko" class="sidebar-logo">
+                <div class="brand-text">
+                    <span class="main-title">Rutas del Esteko</span>
+                    <span class="sub-title">Panel de Control</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="sidebar-link active" data-tab="secciones"><i class="fa-solid fa-file-signature"></i> Editar Secciones</a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="destinos"><i class="fa-solid fa-compass"></i> Destinos (CRUD)</a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="galeria"><i class="fa-solid fa-images"></i> Galerías Escolares/Fiestas</a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="configuracion"><i class="fa-solid fa-sliders"></i> Simulador y Datos</a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="leads"><i class="fa-solid fa-users-viewfinder"></i> Leads Capturados <span class="badge-leads-count" id="nav-leads-badge">0</span></a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <div class="user-avatar"><i class="fa-solid fa-user-shield"></i></div>
+                    <div class="user-meta">
+                        <span class="user-name" id="logged-user-email">admin@esteko.com</span>
+                        <span class="user-role"><i class="fa-solid fa-shield-halved"></i> Administrador</span>
+                    </div>
+                </div>
+                <button id="btn-logout" class="btn-sidebar-logout" title="Cerrar Sesión"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</button>
+            </div>
+        </aside>
+        
+        <!-- CONTENT WORKSPACE -->
+        <main class="db-content">
+            
+            <!-- TOP STATS / CONNECTION STATUS BAR -->
+            <header class="content-header">
+                <div class="header-welcome">
+                    <h1>Módulo de Control Dinámico</h1>
+                    <p id="system-date">Cargando fecha militar...</p>
+                </div>
+                
+                <div class="system-status-indicator">
+                    <!-- DB Status Shield -->
+                    <div class="status-shield database-offline" id="db-status-badge">
+                        <i class="fa-solid fa-cloud-bolt status-icon"></i>
+                        <span class="status-text" id="db-status-text">Buscando Base de Datos...</span>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content-body">
+                
+                <!-- FALLBACK DATABASE NOTICE BANNER -->
+                <div class="db-fallback-banner" id="fallback-banner" style="display: none;">
+                    <div class="banner-icon"><i class="fa-solid fa-triangle-exclamation animate-pulse"></i></div>
+                    <div class="banner-body">
+                        <h4>¡Operando en Base de Datos Local de Emergencia!</h4>
+                        <p>No se pudo establecer conexión directa con Supabase o la estructura de tablas no existe. Los cambios se guardarán localmente (LocalStorage) y se aplicarán al instante para visualización en esta máquina. Para sincronizar la nube con todo tu equipo, ejecuta el script en el editor de Supabase.</p>
+                        <button class="btn-admin-secondary btn-admin-xs" onclick="document.getElementById('sql-migrator-modal').style.display='flex'"><i class="fa-solid fa-code"></i> Ver Código SQL para Supabase</button>
+                    </div>
+                </div>
+
+                <!-- 1. TAB: SECCIONES -->
+                <section class="tab-pane active-pane" id="tab-secciones">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-file-signature text-primary"></i> Edición de Secciones Principales</h2>
+                        <p>Modificá los textos y las imágenes de portada de cada sección de la landing page pública.</p>
+                    </div>
+                    
+                    <form id="form-edit-sections">
+                        <!-- Hero Section Edit -->
+                        <div class="admin-card">
+                            <div class="card-title-bar">
+                                <h3><i class="fa-solid fa-house-chimney"></i> Portada Principal (Hero)</h3>
+                            </div>
+                            <div class="card-body-admin">
+                                <div class="grid-2-col">
+                                    <div class="form-group-admin">
+                                        <label for="hero-title">Título Principal (H1)</label>
+                                        <input type="text" id="hero-title" class="form-control-admin" placeholder="Ej. Tu viaje soñado, con la confianza de siempre.">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="hero-subtitle">Subtítulo Flotante</label>
+                                        <input type="text" id="hero-subtitle" class="form-control-admin" placeholder="Ej. Desde Santiago del Estero al País">
+                                    </div>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="hero-text">Texto Descriptivo Principal</label>
+                                    <textarea id="hero-text" class="form-control-admin" rows="3" placeholder="Descripción resumida debajo del título..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nosotros Section Edit -->
+                        <div class="admin-card">
+                            <div class="card-title-bar">
+                                <h3><i class="fa-solid fa-users-gear"></i> Sección Nosotros</h3>
+                            </div>
+                            <div class="card-body-admin">
+                                <div class="grid-2-col">
+                                    <div class="form-group-admin">
+                                        <label for="nosotros-title">Título de la Sección</label>
+                                        <input type="text" id="nosotros-title" class="form-control-admin" placeholder="Ej. ¡Bienvenidos a Rutas del Esteko!">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="nosotros-image">Imagen de Portada (Subir archivo o pegar URL)</label>
+                                        <div class="file-uploader-wrapper">
+                                            <input type="text" id="nosotros-image" class="form-control-admin url-input-fallback" placeholder="Pegar URL de imagen o subir ->">
+                                            <input type="file" id="nosotros-file" class="file-input-hidden" accept="image/*">
+                                            <label for="nosotros-file" class="btn-file-trigger"><i class="fa-solid fa-upload"></i> Subir</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="nosotros-content">Contenido / Quiénes Somos (Párrafos, puedes separar con saltos de línea)</label>
+                                    <textarea id="nosotros-content" class="form-control-admin" rows="6" placeholder="Detalle completo de la historia y habilitación de la agencia..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- La Fiesta Section Edit -->
+                        <div class="admin-card">
+                            <div class="card-title-bar">
+                                <h3><i class="fa-solid fa-guitar"></i> Sección La Fiesta de Rutas</h3>
+                            </div>
+                            <div class="card-body-admin">
+                                <div class="grid-2-col">
+                                    <div class="form-group-admin">
+                                        <label for="fiesta-title">Título de la Sección</label>
+                                        <input type="text" id="fiesta-title" class="form-control-admin" placeholder="Ej. La Fiesta de Rutas del Esteko">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="fiesta-image">Imagen Portada de la Fiesta</label>
+                                        <div class="file-uploader-wrapper">
+                                            <input type="text" id="fiesta-image" class="form-control-admin url-input-fallback" placeholder="Pegar URL o subir archivo ->">
+                                            <input type="file" id="fiesta-file" class="file-input-hidden" accept="image/*">
+                                            <label for="fiesta-file" class="btn-file-trigger"><i class="fa-solid fa-upload"></i> Subir</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="fiesta-content">Contenido Histórico de la Fiesta (Párrafos)</label>
+                                    <textarea id="fiesta-content" class="form-control-admin" rows="5" placeholder="Detalle de las ediciones, artistas invitados y sorteos de la fiesta..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Educativos Section Edit -->
+                        <div class="admin-card">
+                            <div class="card-title-bar">
+                                <h3><i class="fa-solid fa-graduation-cap"></i> Sección Viajes Educativos</h3>
+                            </div>
+                            <div class="card-body-admin">
+                                <div class="grid-2-col">
+                                    <div class="form-group-admin">
+                                        <label for="educativo-title">Título de la Sección</label>
+                                        <input type="text" id="educativo-title" class="form-control-admin" placeholder="Ej. Paseos con Escuelas y Colegios">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="educativo-image">Imagen de Portada Educativos</label>
+                                        <div class="file-uploader-wrapper">
+                                            <input type="text" id="educativo-image" class="form-control-admin url-input-fallback" placeholder="Pegar URL o subir archivo ->">
+                                            <input type="file" id="educativo-file" class="file-input-hidden" accept="image/*">
+                                            <label for="educativo-file" class="btn-file-trigger"><i class="fa-solid fa-upload"></i> Subir</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="educativo-content">Descripción del Enfoque Pedagógico / Escolar</label>
+                                    <textarea id="educativo-content" class="form-control-admin" rows="4" placeholder="Redacción sobre la seguridad, seguros de viaje y coordinadores especializados para escuelas..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="submit-bar">
+                            <button type="submit" class="btn-admin btn-admin-primary" id="btn-save-sections"><i class="fa-solid fa-floppy-disk"></i> Guardar Todos los Cambios de Texto</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- 2. TAB: DESTINOS (CRUD) -->
+                <section class="tab-pane" id="tab-destinos">
+                    <div class="pane-header header-flex">
+                        <div>
+                            <h2><i class="fa-solid fa-compass text-primary"></i> Catálogo de Destinos Turísticos</h2>
+                            <p>Agregá, editá y eliminá los destinos que se muestran en el catálogo y simulador de la landing.</p>
+                        </div>
+                        <button class="btn-admin btn-admin-primary" id="btn-open-create-destination-modal"><i class="fa-solid fa-circle-plus"></i> Nuevo Destino</button>
+                    </div>
+
+                    <!-- Catalogo Grid Admin -->
+                    <div class="destinations-admin-list" id="destinations-admin-container">
+                        <!-- Cards injected by JS -->
+                        <div class="loading-placeholder-spinner">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Cargando destinos...
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. TAB: GALERIAS -->
+                <section class="tab-pane" id="tab-galeria">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-images text-primary"></i> Galerías Fotográficas del Esteko</h2>
+                        <p>Cargá múltiples imágenes para alimentar las secciones de "La Fiesta de Rutas" y los "Viajes Educativos".</p>
+                    </div>
+
+                    <div class="grid-2-col">
+                        
+                        <!-- Uploader Box -->
+                        <div class="admin-card">
+                            <div class="card-title-bar">
+                                <h3><i class="fa-solid fa-cloud-arrow-up"></i> Cargar Nuevas Fotos a Galería</h3>
+                            </div>
+                            <div class="card-body-admin">
+                                <form id="form-upload-gallery">
+                                    <div class="form-group-admin">
+                                        <label for="gallery-upload-section">Seleccionar Destino / Sección:</label>
+                                        <select id="gallery-upload-section" class="form-control-admin" required>
+                                            <option value="fiesta">La Fiesta de Rutas del Esteko</option>
+                                            <option value="educativo">Viajes Educativos Escolares</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group-admin">
+                                        <label>Cargar Imagen de la Galería:</label>
+                                        <div class="gallery-uploader-dropzone" id="gallery-dropzone">
+                                            <i class="fa-solid fa-images dropzone-icon"></i>
+                                            <span class="dropzone-text">Arrastrá una imagen o hacé clic aquí</span>
+                                            <input type="file" id="gallery-file-input" accept="image/*" style="display: none;">
+                                            <span class="file-selected-name" id="selected-file-label" style="display:none;"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group-admin">
+                                        <label for="gallery-url-input">O ingresar URL de Imagen Directa (Contingencia):</label>
+                                        <input type="text" id="gallery-url-input" class="form-control-admin" placeholder="Ej. https://images.unsplash.com/photo-...">
+                                    </div>
+                                    
+                                    <button type="submit" class="btn-admin btn-admin-primary btn-admin-block" id="btn-submit-gallery-img">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Agregar Imagen a la Galería
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Visual Library Manager -->
+                        <div class="admin-card">
+                            <div class="card-title-bar card-flex-header">
+                                <h3><i class="fa-solid fa-photo-film"></i> Biblioteca de Imágenes de Galería</h3>
+                                <div class="tab-filters-xs">
+                                    <button class="btn-xs-tab active" id="btn-gallery-filter-fiesta" onclick="filterAdminGallery('fiesta')">Fiestas</button>
+                                    <button class="btn-xs-tab" id="btn-gallery-filter-educativo" onclick="filterAdminGallery('educativo')">Educativos</button>
+                                </div>
+                            </div>
+                            <div class="card-body-admin gallery-admin-preview-grid" id="admin-gallery-display">
+                                <!-- Photo thumbnails with delete icons -->
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 4. TAB: CONFIGURACION -->
+                <section class="tab-pane" id="tab-configuracion">
+                    <div class="pane-header">
+                        <h2><i class="fa-solid fa-sliders text-primary"></i> Configuraciones de Simulador y Datos Oficiales</h2>
+                        <p>Configurá el simulador de ahorro, datos legales, de contacto, de redes sociales y legajos de la agencia.</p>
+                    </div>
+
+                    <form id="form-system-config">
+                        <div class="grid-2-col">
+                            
+                            <!-- Financial & Simulator Setup -->
+                            <div class="admin-card">
+                                <div class="card-title-bar">
+                                    <h3><i class="fa-solid fa-calculator"></i> Parámetros de Financiamiento</h3>
+                                </div>
+                                <div class="card-body-admin">
+                                    <p class="section-notice-info">Ajustá la configuración general del **Simulador de Ahorro**. Los valores específicos por viaje se configuran en la pestaña de Destinos.</p>
+                                    
+                                    <div class="form-group-admin">
+                                        <label for="config-seña-percent">Porcentaje de Seña Recomendado (%)</label>
+                                        <input type="number" id="config-seña-percent" class="form-control-admin" min="5" max="90" value="20">
+                                    </div>
+                                    
+                                    <div class="form-group-admin">
+                                        <label>Planes de Cuotas Disponibles por Defecto:</label>
+                                        <div class="checkbox-group-admin">
+                                            <label class="checkbox-lbl-admin"><input type="checkbox" id="quota-3" checked> 3 Cuotas Mensuales</label>
+                                            <label class="checkbox-lbl-admin"><input type="checkbox" id="quota-6" checked> 6 Cuotas Mensuales</label>
+                                            <label class="checkbox-lbl-admin"><input type="checkbox" id="quota-9" checked> 9 Cuotas Mensuales</label>
+                                            <label class="checkbox-lbl-admin"><input type="checkbox" id="quota-12" checked> 12 Cuotas Mensuales</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Legal & Contact Info -->
+                            <div class="admin-card">
+                                <div class="card-title-bar">
+                                    <h3><i class="fa-solid fa-building-circle-check"></i> Datos Legales y de Agencia</h3>
+                                </div>
+                                <div class="card-body-admin">
+                                    <div class="grid-2-col">
+                                        <div class="form-group-admin">
+                                            <label for="config-legajo">Número de Legajo Oficial</label>
+                                            <input type="text" id="config-legajo" class="form-control-admin" placeholder="Ej. 19.515">
+                                        </div>
+                                        <div class="form-group-admin">
+                                            <label for="config-legajo-url">Buscador Oficial MINTUR Link</label>
+                                            <input type="text" id="config-legajo-url" class="form-control-admin" placeholder="https://www.agenciasdeviajes.ar/#buscador">
+                                        </div>
+                                    </div>
+                                    <div class="grid-2-col">
+                                        <div class="form-group-admin">
+                                            <label for="config-email">Correo Electrónico Oficial</label>
+                                            <input type="email" id="config-email" class="form-control-admin" placeholder="rutasdelesteko@gmail.com">
+                                        </div>
+                                        <div class="form-group-admin">
+                                            <label for="config-whatsapp">WhatsApp Oficial (Solo Números, ej. 3855962089)</label>
+                                            <input type="text" id="config-whatsapp" class="form-control-admin" placeholder="3855962089">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Social Media Settings -->
+                        <div class="admin-card">
+                            <div class="card-title-bar">
+                                <h3><i class="fa-solid fa-share-nodes"></i> Enlaces a Redes Sociales</h3>
+                            </div>
+                            <div class="card-body-admin">
+                                <div class="grid-3-col">
+                                    <div class="form-group-admin">
+                                        <label for="config-facebook"><i class="fa-brands fa-facebook text-primary"></i> Facebook URL</label>
+                                        <input type="text" id="config-facebook" class="form-control-admin" placeholder="https://www.facebook.com/...">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="config-instagram"><i class="fa-brands fa-instagram text-primary"></i> Instagram URL</label>
+                                        <input type="text" id="config-instagram" class="form-control-admin" placeholder="https://www.instagram.com/...">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="config-tiktok"><i class="fa-brands fa-tiktok text-primary"></i> TikTok URL</label>
+                                        <input type="text" id="config-tiktok" class="form-control-admin" placeholder="https://www.tiktok.com/@...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="submit-bar">
+                            <button type="submit" class="btn-admin btn-admin-primary" id="btn-save-config"><i class="fa-solid fa-floppy-disk"></i> Guardar Parámetros de Configuración</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- 5. TAB: LEADS -->
+                <section class="tab-pane" id="tab-leads">
+                    <div class="pane-header header-flex">
+                        <div>
+                            <h2><i class="fa-solid fa-users-viewfinder text-primary"></i> Leads Capturados (Formularios de Contacto)</h2>
+                            <p>Consultá el listado de personas registradas interesadas en viajar y participantes de sorteos.</p>
+                        </div>
+                        <button class="btn-admin btn-admin-secondary" id="btn-clear-leads"><i class="fa-solid fa-trash-can"></i> Vaciar Leads</button>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="card-body-admin table-responsive-admin">
+                            <table class="leads-table-admin">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Registro</th>
+                                        <th>Nombre y Apellido</th>
+                                        <th>WhatsApp / Teléfono</th>
+                                        <th>Correo Electrónico</th>
+                                        <th>Destino Solicitado</th>
+                                        <th>Acción de Contacto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leads-table-body">
+                                    <!-- Injected by JS -->
+                                    <tr>
+                                        <td colspan="6" class="table-empty-placeholder">No hay leads capturados todavía.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: DESTINATION FORM (CREATE / EDIT) -->
+    <div id="destination-modal" class="modal-overlay-admin" style="display: none;">
+        <div class="modal-admin-card">
+            <div class="modal-admin-header">
+                <h3 id="dest-modal-title"><i class="fa-solid fa-circle-plus"></i> Registrar Nuevo Destino</h3>
+                <button class="modal-close-trigger" id="btn-close-dest-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="form-destination-crud">
+                <input type="hidden" id="dest-id">
+                
+                <div class="modal-admin-body">
+                    <div class="grid-2-col">
+                        <div class="form-group-admin">
+                            <label for="dest-name">Nombre del Viaje / Destino</label>
+                            <input type="text" id="dest-name" class="form-control-admin" placeholder="Ej. Mar del Plata Mágica" required>
+                        </div>
+                        <div class="form-group-admin">
+                            <label for="dest-category">Temporada / Categoría</label>
+                            <select id="dest-category" class="form-control-admin" required>
+                                <option value="verano">Verano</option>
+                                <option value="invierno">Invierno</option>
+                                <option value="mas">Más Escapadas</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2-col">
+                        <div class="form-group-admin">
+                            <label for="dest-duration">Duración del Viaje</label>
+                            <input type="text" id="dest-duration" class="form-control-admin" placeholder="Ej. 7 Noches / 10 Días" required>
+                        </div>
+                        <div class="form-group-admin">
+                            <label for="dest-price-info">Info de Salidas / Temporada</label>
+                            <input type="text" id="dest-price-info" class="form-control-admin" placeholder="Ej. Salidas Enero y Febrero" required>
+                        </div>
+                    </div>
+
+                    <div class="grid-2-col">
+                        <div class="form-group-admin">
+                            <label for="dest-cost">Costo del Viaje (Para el Simulador - Solo Números)</label>
+                            <input type="number" id="dest-cost" class="form-control-admin" min="0" placeholder="Ej. 90000" required>
+                        </div>
+                        <div class="form-group-admin">
+                            <label for="dest-image">Imagen de Portada (URL o subir archivo)</label>
+                            <div class="file-uploader-wrapper">
+                                <input type="text" id="dest-image" class="form-control-admin url-input-fallback" placeholder="Pegar URL o subir archivo ->">
+                                <input type="file" id="dest-file" class="file-input-hidden" accept="image/*">
+                                <label for="dest-file" class="btn-file-trigger"><i class="fa-solid fa-upload"></i> Subir</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group-admin">
+                        <label for="dest-whatsapp-text">Texto de Mensaje para WhatsApp Directo</label>
+                        <input type="text" id="dest-whatsapp-text" class="form-control-admin" placeholder="Ej. Hola! Me interesa el viaje a Mar del Plata" required>
+                    </div>
+
+                    <div class="form-group-admin">
+                        <label for="dest-description">Descripción General del Viaje</label>
+                        <textarea id="dest-description" class="form-control-admin" rows="3" placeholder="Resumen atractivo sobre el micro, los coordinadores y la estadía en departamentos/cabañas..." required></textarea>
+                    </div>
+
+                    <div class="form-group-admin">
+                        <label for="dest-services">Servicios Incluidos (Escribe uno por línea, ej. - Micros de San Felipe con CNRT)</label>
+                        <textarea id="dest-services" class="form-control-admin" rows="4" placeholder="- Unidad de larga distancia de San Felipe&#10;- Departamentos equipados a metros del mar&#10;- Coordinación permanente y asistencia médica" required></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-admin-footer">
+                    <button type="button" class="btn-admin btn-admin-secondary" id="btn-cancel-dest-modal">Cancelar</button>
+                    <button type="submit" class="btn-admin btn-admin-primary" id="btn-save-dest-submit"><i class="fa-solid fa-circle-check"></i> Guardar Destino</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SQL MIGRATOR MODAL PANEL -->
+    <div id="sql-migrator-modal" class="modal-overlay-admin" style="display: none;">
+        <div class="modal-admin-card sql-modal-width">
+            <div class="modal-admin-header">
+                <h3><i class="fa-solid fa-database"></i> Script de Base de Datos para Supabase</h3>
+                <button class="modal-close-trigger" onclick="document.getElementById('sql-migrator-modal').style.display='none'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-admin-body">
+                <p>Copia el siguiente script SQL y ejecútalo en la pestaña **SQL Editor** en tu consola de Supabase para crear las tablas necesarias y configurar las políticas de Row Level Security (RLS) seguras automáticamente.</p>
+                <div class="code-container-admin">
+                    <textarea class="code-block-admin" id="sql-code-text" readonly>
+-- 1. Tabla para Textos de Secciones
+CREATE TABLE IF NOT EXISTS public.landing_sections (
+    id text PRIMARY KEY,
+    title text NOT NULL,
+    subtitle text,
+    content text,
+    image_url text,
+    extra_data jsonb DEFAULT '{}'::jsonb,
+    updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE public.landing_sections ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read sections" ON public.landing_sections;
+CREATE POLICY "Allow public read sections" ON public.landing_sections FOR SELECT TO public USING (true);
+
+DROP POLICY IF EXISTS "Allow auth write sections" ON public.landing_sections;
+CREATE POLICY "Allow auth write sections" ON public.landing_sections FOR ALL TO authenticated USING (true);
+
+
+-- 2. Tabla para Destinos
+CREATE TABLE IF NOT EXISTS public.landing_destinations (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL,
+    category text NOT NULL,
+    duration text NOT NULL,
+    description text NOT NULL,
+    image_url text NOT NULL,
+    price_info text NOT NULL,
+    whatsapp_text text NOT NULL,
+    services text[] NOT NULL,
+    cost numeric NOT NULL DEFAULT 0,
+    created_at timestamptz DEFAULT now(),
+    updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE public.landing_destinations ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read destinations" ON public.landing_destinations;
+CREATE POLICY "Allow public read destinations" ON public.landing_destinations FOR SELECT TO public USING (true);
+
+DROP POLICY IF EXISTS "Allow auth write destinations" ON public.landing_destinations;
+CREATE POLICY "Allow auth write destinations" ON public.landing_destinations FOR ALL TO authenticated USING (true);
+
+
+-- 3. Tabla para Galerías de Fotos
+CREATE TABLE IF NOT EXISTS public.landing_gallery (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    section text NOT NULL,
+    image_url text NOT NULL,
+    created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE public.landing_gallery ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read gallery" ON public.landing_gallery;
+CREATE POLICY "Allow public read gallery" ON public.landing_gallery FOR SELECT TO public USING (true);
+
+DROP POLICY IF EXISTS "Allow auth write gallery" ON public.landing_gallery;
+CREATE POLICY "Allow auth write gallery" ON public.landing_gallery FOR ALL TO authenticated USING (true);
+
+
+-- 4. Tabla para Formulario de Leads
+CREATE TABLE IF NOT EXISTS public.landing_leads (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL,
+    phone text NOT NULL,
+    email text NOT NULL,
+    destiny text NOT NULL,
+    created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE public.landing_leads ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public insert leads" ON public.landing_leads;
+CREATE POLICY "Allow public insert leads" ON public.landing_leads FOR INSERT TO public WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow auth read/write leads" ON public.landing_leads;
+CREATE POLICY "Allow auth read/write leads" ON public.landing_leads FOR ALL TO authenticated USING (true);
+                    </textarea>
+                </div>
+            </div>
+            
+            <div class="modal-admin-footer">
+                <button class="btn-admin btn-admin-secondary" onclick="document.getElementById('sql-migrator-modal').style.display='none'">Cerrar</button>
+                <button class="btn-admin btn-admin-primary" id="btn-copy-sql-code"><i class="fa-solid fa-copy"></i> Copiar Código SQL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Injected by JS -->
+    <div id="admin-toast-notification" class="admin-toast" style="display: none;">
+        <i class="fa-solid fa-circle-check status-toast-icon"></i> <span id="toast-message">Datos guardados</span>
+    </div>
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Admin JS Lógica -->
+    <script src="admin.js"></script>
+</body>
+</html>
