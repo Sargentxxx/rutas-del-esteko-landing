@@ -222,12 +222,31 @@ async function testDatabaseConnection() {
 function checkActiveSession() {
     const sessionToken = localStorage.getItem('esteko_admin_session');
     
-    if (sessionToken) {
-        showDashboardView(sessionToken);
+    if (supabaseClient) {
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                const email = session.user.email;
+                localStorage.setItem('esteko_admin_session', email);
+                showDashboardView(email);
+            } else {
+                // Si no hay sesión local de contingencia
+                const currentSession = localStorage.getItem('esteko_admin_session');
+                if (currentSession && currentSession.includes("Local Admin")) {
+                    showDashboardView(currentSession);
+                } else {
+                    localStorage.removeItem('esteko_admin_session');
+                    document.getElementById('login-container').style.display = 'flex';
+                    document.getElementById('dashboard-container').style.display = 'none';
+                }
+            }
+        });
     } else {
-        // Mostrar Login
-        document.getElementById('login-container').style.display = 'flex';
-        document.getElementById('dashboard-container').style.display = 'none';
+        if (sessionToken) {
+            showDashboardView(sessionToken);
+        } else {
+            document.getElementById('login-container').style.display = 'flex';
+            document.getElementById('dashboard-container').style.display = 'none';
+        }
     }
 }
 
@@ -293,6 +312,38 @@ function initLoginListeners() {
         });
     }
 
+    // Listener para inicio de sesión con Google
+    const googleLoginBtn = document.getElementById('btn-google-login');
+    if (googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', async () => {
+            if (isDatabaseOnline && supabaseClient) {
+                try {
+                    googleLoginBtn.disabled = true;
+                    googleLoginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Conectando...';
+                    const { error } = await supabaseClient.auth.signInWithOAuth({
+                        provider: 'google',
+                        options: {
+                            redirectTo: window.location.origin + window.location.pathname
+                        }
+                    });
+                    if (error) {
+                        console.error("Error al iniciar sesión con Google:", error);
+                        alert("Error al conectar con Google: " + error.message);
+                        googleLoginBtn.disabled = false;
+                        googleLoginBtn.innerHTML = '<i class="fa-brands fa-google" style="color: #ea4335;"></i> Continuar con Google';
+                    }
+                } catch (err) {
+                    console.error("Fallo de red en Google Auth:", err);
+                    alert("Error de red al intentar conectar con Google.");
+                    googleLoginBtn.disabled = false;
+                    googleLoginBtn.innerHTML = '<i class="fa-brands fa-google" style="color: #ea4335;"></i> Continuar con Google';
+                }
+            } else {
+                alert("La base de datos en la nube está desconectada. No se puede iniciar sesión con Google en este momento.");
+            }
+        });
+    }
+
     const logoutBtn = document.getElementById('btn-logout');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
@@ -311,9 +362,18 @@ function initLoginListeners() {
 }
 
 function showDashboardView(userEmail) {
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('dashboard-container').style.display = 'flex';
-    document.getElementById('logged-user-email').textContent = userEmail;
+    const loginContainer = document.getElementById('login-container');
+    const dashboardContainer = document.getElementById('dashboard-container');
+    const userEmailEl = document.getElementById('logged-user-email');
+
+    // Evitar recargas duplicadas de pestañas si el panel ya está visible para el mismo usuario
+    if (dashboardContainer.style.display === 'flex' && userEmailEl.textContent === userEmail) {
+        return;
+    }
+
+    loginContainer.style.display = 'none';
+    dashboardContainer.style.display = 'flex';
+    userEmailEl.textContent = userEmail;
 
     // Cargar los datos de la pestaña activa inicial
     loadTabContent('secciones');
