@@ -229,32 +229,55 @@ a {
     display: flex;
     align-items: center;
     transition: var(--transition-smooth);
+    text-decoration: none;
 }
 
 .logo-container {
     background-color: var(--dark-charcoal);
-    padding: 8px 18px;
+    padding: 6px 18px 6px 12px; /* Balanced padding: left side has slightly less padding to balance circular logo */
     border-radius: 40px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 10px;
     box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     transition: var(--transition-smooth);
 }
 
 .logo-container:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
     background-color: #000;
     border-color: var(--primary);
 }
 
+.logo-container:hover .logo-text {
+    background: linear-gradient(135deg, #ffffff 10%, var(--secondary) 90%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .navbar-logo-img {
-    height: 38px;
+    height: 42px;
     width: auto;
     object-fit: contain;
     display: block;
+}
+
+.logo-text {
+    font-family: 'Playball', 'Dancing Script', cursive;
+    font-size: 1.6rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, #ffffff 40%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 1.1;
+    padding-bottom: 2px; /* Prevent script letter clipping */
+    transition: var(--transition-smooth);
 }
 
 /* Navigation */
@@ -2061,5 +2084,19 @@ a {
 
 .gallery-item-dynamic:hover img {
     transform: scale(1.05);
+}
+
+/* Mobile responsive styles for premium logo container */
+@media (max-width: 480px) {
+    .logo-container {
+        padding: 5px 12px 5px 8px;
+        gap: 8px;
+    }
+    .navbar-logo-img {
+        height: 34px;
+    }
+    .logo-text {
+        font-size: 1.25rem;
+    }
 }
 
