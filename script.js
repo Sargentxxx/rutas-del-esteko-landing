@@ -87,6 +87,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (link) {
             const href = link.getAttribute('href');
             if (href && href.startsWith('#')) {
+                // Permitir enlaces a nuevas pestañas
+                if (link.getAttribute('target') === '_blank') {
+                    return;
+                }
                 e.preventDefault();
                 const hash = href;
                 history.pushState(null, null, hash);
