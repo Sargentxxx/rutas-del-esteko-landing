@@ -1173,3 +1173,44 @@
 .animate-pulse {
     animation: pulse 2s infinite;
 }
+
+/* ==========================================================================
+   GOOGLE LOGIN & SEPARATOR
+   ========================================================================== */
+.login-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 18px 0;
+    color: var(--admin-text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.login-separator::before,
+.login-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.login-separator:not(:empty)::before {
+    margin-right: .8em;
+}
+
+.login-separator:not(:empty)::after {
+    margin-left: .8em;
+}
+
+#btn-google-login {
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--admin-border);
+    color: var(--admin-text-main);
+    margin-top: 5px;
+}
+
+#btn-google-login:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+}
