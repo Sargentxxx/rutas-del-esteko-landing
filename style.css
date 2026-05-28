@@ -233,13 +233,12 @@ a {
 }
 
 .logo-container {
-    background-color: var(--dark-charcoal);
-    padding: 6px 18px 6px 12px; /* Balanced padding: left side has slightly less padding to balance circular logo */
+    background-color: #000000; /* Pure black to blend seamlessly with the logo image */
+    padding: 2px 14px 2px 2px; /* Balanced minimal padding to fit the horizontal split logo */
     border-radius: 40px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
+    justify-content: center;
     box-shadow: var(--shadow-sm);
     border: 1px solid rgba(255, 255, 255, 0.12);
     transition: var(--transition-smooth);
@@ -247,37 +246,15 @@ a {
 
 .logo-container:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
-    background-color: #000;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
     border-color: var(--primary);
 }
 
-.logo-container:hover .logo-text {
-    background: linear-gradient(135deg, #ffffff 10%, var(--secondary) 90%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
 .navbar-logo-img {
-    height: 42px;
+    height: 52px; /* Increased by 20%+ for maximum legibility */
     width: auto;
     object-fit: contain;
     display: block;
-}
-
-.logo-text {
-    font-family: 'Playball', 'Dancing Script', cursive;
-    font-size: 1.6rem;
-    font-weight: 500;
-    background: linear-gradient(135deg, #ffffff 40%, var(--secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    display: inline-block;
-    line-height: 1.1;
-    padding-bottom: 2px; /* Prevent script letter clipping */
-    transition: var(--transition-smooth);
 }
 
 /* Navigation */
@@ -2089,14 +2066,10 @@ a {
 /* Mobile responsive styles for premium logo container */
 @media (max-width: 480px) {
     .logo-container {
-        padding: 5px 12px 5px 8px;
-        gap: 8px;
+        padding: 2px 10px 2px 2px;
     }
     .navbar-logo-img {
-        height: 34px;
-    }
-    .logo-text {
-        font-size: 1.25rem;
+        height: 38px; /* Perfectly scaled and readable on smaller viewports */
     }
 }
 
