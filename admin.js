@@ -375,8 +375,44 @@ function showDashboardView(userEmail) {
     dashboardContainer.style.display = 'flex';
     userEmailEl.textContent = userEmail;
 
+    // Configurar menú de usuarios si corresponde
+    checkAdminRoleAndConfigureMenu();
+
     // Cargar los datos de la pestaña activa inicial
     loadTabContent('secciones');
+}
+
+async function checkAdminRoleAndConfigureMenu() {
+    const navUsuariosTab = document.getElementById('nav-usuarios-tab');
+    if (!navUsuariosTab) return;
+
+    if (supabaseClient) {
+        try {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                const { data: profile, error } = await supabaseClient
+                    .from('profiles')
+                    .select('rol')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (!error && profile && profile.rol === 'admin') {
+                    navUsuariosTab.style.display = 'block';
+                    return;
+                }
+            }
+        } catch (e) {
+            console.error("Error validando rol de admin en Supabase:", e);
+        }
+    }
+
+    // Fallback local: si el email contiene "Local Admin", "alberto" o "admin"
+    const sessionToken = localStorage.getItem('esteko_admin_session');
+    if (sessionToken && (sessionToken.includes("Local Admin") || sessionToken.includes("admin") || sessionToken.includes("alberto"))) {
+        navUsuariosTab.style.display = 'block';
+    } else {
+        navUsuariosTab.style.display = 'none';
+    }
 }
 
 // ==========================================================================
@@ -419,6 +455,8 @@ function loadTabContent(tabId) {
         loadConfigData();
     } else if (tabId === 'leads') {
         loadLeadsData();
+    } else if (tabId === 'usuarios') {
+        loadUsersData();
     }
 }
 
@@ -1397,3 +1435,338 @@ if (btnCopySql) {
         }
     });
 }
+
+// ==========================================================================
+// 11. MÓDULO DE GESTIÓN DE USUARIOS (CRUD CON RPC & RESILIENCIA OFFLINE)
+// ==========================================================================
+let allUsers = [];
+
+const SEED_PROFILES = [
+    {
+        id: "a30735f5-51a5-4ee1-9599-6656b284dee5",
+        full_name: "Alberto Garcia",
+        email: "alberto_garcia82@hotmail.com",
+        rol: "admin",
+        activo: true,
+        created_at: "2026-04-02T22:59:16.744Z"
+    },
+    {
+        id: "5fca907d-a9ae-4fa3-8751-0cb5f722d5eb",
+        full_name: "Rutas del Esteko",
+        email: "rutasdelesteko@gmail.com",
+        rol: "admin",
+        activo: true,
+        created_at: "2026-04-04T18:27:11.690Z"
+    },
+    {
+        id: "fc9acb2a-61cd-441a-983d-dd269cab5a74",
+        full_name: "Alberto Ezequiel Garcia",
+        email: "alberto.ezequiel.garcia@gmail.com",
+        rol: "vendedor",
+        activo: true,
+        created_at: "2026-05-09T22:45:49.896Z"
+    }
+];
+
+async function loadUsersData() {
+    const tableBody = document.getElementById('users-table-body');
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="table-empty-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Sincronizando regimiento de usuarios...</td></tr>';
+    }
+
+    allUsers = [];
+
+    // Initialize local cache if missing
+    if (!localStorage.getItem('esteko_landing_profiles')) {
+        localStorage.setItem('esteko_landing_profiles', JSON.stringify(SEED_PROFILES));
+    }
+
+    // 1. Cargar desde la nube (si está en línea)
+    if (isDatabaseOnline && supabaseClient) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            if (!error && data) {
+                allUsers = data;
+                localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
+            } else {
+                console.error("Error al leer perfiles de Supabase:", error);
+            }
+        } catch (e) {
+            console.warn("Fallo al leer usuarios de la nube, cargando caché local.");
+        }
+    }
+
+    // 2. Fallback offline
+    if (allUsers.length === 0) {
+        allUsers = JSON.parse(localStorage.getItem('esteko_landing_profiles')) || SEED_PROFILES;
+    }
+
+    renderUsersTable();
+    initUserModalListeners();
+}
+
+function renderUsersTable() {
+    const tableBody = document.getElementById('users-table-body');
+    if (!tableBody) return;
+
+    if (allUsers.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="table-empty-placeholder">No hay usuarios registrados.</td></tr>';
+        return;
+    }
+
+    tableBody.innerHTML = '';
+    allUsers.forEach(user => {
+        const row = document.createElement('tr');
+        
+        // Formatear fecha
+        const dateObj = new Date(user.created_at || new Date());
+        const formattedDate = dateObj.toLocaleDateString('es-AR');
+
+        // Rol badge class
+        let roleBadgeClass = 'badge-mas-admin';
+        if (user.rol === 'admin') roleBadgeClass = 'badge-verano-admin'; // Orange/Red-ish style
+        else if (user.rol === 'contador') roleBadgeClass = 'badge-invierno-admin'; // Blue style
+
+        // Estado badge
+        const statusText = user.activo ? 'Activo' : 'Suspendido';
+        const statusBadgeClass = user.activo ? 'status-shield database-online' : 'status-shield database-offline';
+
+        row.innerHTML = `
+            <td>
+                <div class="user-meta" style="padding: 0;">
+                    <strong style="color: var(--admin-text-main); font-size: 0.95rem;">${user.full_name || 'Sin Nombre'}</strong>
+                </div>
+            </td>
+            <td style="color: var(--admin-text-muted); font-family: monospace;">${user.email}</td>
+            <td><span class="dest-badge-admin ${roleBadgeClass}" style="position:static; text-transform: uppercase; font-weight: 700; font-size: 0.75rem;">${user.rol}</span></td>
+            <td>
+                <span class="${statusBadgeClass}" style="display: inline-flex; margin: 0; padding: 4px 8px; font-size: 0.75rem;">
+                    <i class="fa-solid ${user.activo ? 'fa-check' : 'fa-ban'}"></i> ${statusText}
+                </span>
+            </td>
+            <td style="color: var(--admin-text-muted); font-size: 0.85rem;">${formattedDate}</td>
+            <td>
+                <div class="dest-card-actions" style="margin-top: 0; justify-content: flex-start; gap: 8px;">
+                    <button class="btn-edit-admin btn-admin-xs" style="padding: 4px 8px; font-size: 0.8rem;" onclick="openEditUserModal('${user.id}')"><i class="fa-solid fa-user-pen"></i> Editar</button>
+                    <button class="btn-delete-admin btn-admin-xs" style="padding: 4px 8px; font-size: 0.8rem; background: rgba(220, 53, 69, 0.15); border-color: rgba(220, 53, 69, 0.3);" onclick="deleteUserTrigger('${user.id}')"><i class="fa-solid fa-user-minus"></i> Borrar</button>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Control de modales y triggers de usuarios
+let userModalsInitialized = false;
+
+function initUserModalListeners() {
+    if (userModalsInitialized) return;
+    userModalsInitialized = true;
+
+    // Crear Usuario Modal
+    const btnOpenCreate = document.getElementById('btn-open-create-user-modal');
+    const modalCreate = document.getElementById('user-create-modal');
+    const btnCloseCreate = document.getElementById('btn-close-user-modal');
+    const btnCancelCreate = document.getElementById('btn-cancel-user-modal');
+    const formCreate = document.getElementById('form-user-create');
+
+    if (btnOpenCreate && modalCreate) {
+        btnOpenCreate.onclick = () => {
+            formCreate.reset();
+            modalCreate.style.display = 'flex';
+        };
+    }
+    if (btnCloseCreate && modalCreate) btnCloseCreate.onclick = () => modalCreate.style.display = 'none';
+    if (btnCancelCreate && modalCreate) btnCancelCreate.onclick = () => modalCreate.style.display = 'none';
+
+    if (formCreate) {
+        formCreate.onsubmit = async (e) => {
+            e.preventDefault();
+            const u_full_name = document.getElementById('new-user-name').value.trim();
+            const u_email = document.getElementById('new-user-email').value.trim();
+            const u_password = document.getElementById('new-user-password').value;
+            const u_rol = document.getElementById('new-user-role').value;
+
+            const submitBtn = document.getElementById('btn-save-user-submit');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';
+
+            let saved = true;
+            let errorMsg = "";
+
+            if (isDatabaseOnline && supabaseClient) {
+                try {
+                    // Llamamos a la función RPC de base de datos segura
+                    const { data, error } = await supabaseClient.rpc('create_new_user', {
+                        u_email,
+                        u_password,
+                        u_full_name,
+                        u_rol
+                    });
+
+                    if (error) {
+                        saved = false;
+                        errorMsg = error.message;
+                    }
+                } catch (err) {
+                    saved = false;
+                    errorMsg = err.message || "Error de red al conectar con Supabase.";
+                }
+            } else {
+                // Modo offline: Simular en local cache
+                const simulatedId = 'sim-u-' + Math.random().toString(36).substr(2, 9);
+                const newUser = {
+                    id: simulatedId,
+                    full_name: u_full_name,
+                    email: u_email,
+                    rol: u_rol,
+                    activo: true,
+                    created_at: new Date().toISOString()
+                };
+                allUsers.push(newUser);
+                localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
+                showToast("Registrado en contingencia local offline");
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Crear Usuario';
+
+            if (saved) {
+                if (modalCreate) modalCreate.style.display = 'none';
+                showToast("¡Usuario creado con éxito en el sistema!");
+                loadUsersData();
+            } else {
+                alert("Error al registrar el usuario: " + errorMsg);
+            }
+        };
+    }
+
+    // Editar Usuario Modal
+    const modalEdit = document.getElementById('user-edit-modal');
+    const btnCloseEdit = document.getElementById('btn-close-edit-user-modal');
+    const btnCancelEdit = document.getElementById('btn-cancel-edit-user-modal');
+    const formEdit = document.getElementById('form-user-edit');
+
+    if (btnCloseEdit && modalEdit) btnCloseEdit.onclick = () => modalEdit.style.display = 'none';
+    if (btnCancelEdit && modalEdit) btnCancelEdit.onclick = () => modalEdit.style.display = 'none';
+
+    if (formEdit) {
+        formEdit.onsubmit = async (e) => {
+            e.preventDefault();
+            const edit_id = document.getElementById('edit-user-id').value;
+            const edit_name = document.getElementById('edit-user-name').value.trim();
+            const edit_rol = document.getElementById('edit-user-role').value;
+            const edit_activo = document.getElementById('edit-user-status').value === 'true';
+
+            const submitBtn = document.getElementById('btn-update-user-submit');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+            let saved = true;
+            let errorMsg = "";
+
+            if (isDatabaseOnline && supabaseClient) {
+                try {
+                    // Actualización directa en la tabla de perfiles usando política RLS de administrador
+                    const { error } = await supabaseClient
+                        .from('profiles')
+                        .update({
+                            full_name: edit_name,
+                            rol: edit_rol,
+                            activo: edit_activo,
+                            updated_at: new Date()
+                        })
+                        .eq('id', edit_id);
+
+                    if (error) {
+                        saved = false;
+                        errorMsg = error.message;
+                    }
+                } catch (err) {
+                    saved = false;
+                    errorMsg = err.message || "Fallo de conexión.";
+                }
+            } else {
+                // Modo offline
+                const index = allUsers.findIndex(u => u.id === edit_id);
+                if (index !== -1) {
+                    allUsers[index].full_name = edit_name;
+                    allUsers[index].rol = edit_rol;
+                    allUsers[index].activo = edit_activo;
+                    localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
+                    showToast("Actualizado en contingencia local");
+                }
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
+
+            if (saved) {
+                if (modalEdit) modalEdit.style.display = 'none';
+                showToast("¡Cambios guardados con éxito!");
+                loadUsersData();
+            } else {
+                alert("Error al actualizar perfil: " + errorMsg);
+            }
+        };
+    }
+}
+
+// Abrir modal de edición
+window.openEditUserModal = function(userId) {
+    const user = allUsers.find(u => u.id === userId);
+    if (!user) return;
+
+    document.getElementById('edit-user-id').value = user.id;
+    document.getElementById('edit-user-name').value = user.full_name || '';
+    document.getElementById('edit-user-email').value = user.email;
+    document.getElementById('edit-user-role').value = user.rol;
+    document.getElementById('edit-user-status').value = user.activo ? 'true' : 'false';
+
+    const modalEdit = document.getElementById('user-edit-modal');
+    if (modalEdit) modalEdit.style.display = 'flex';
+};
+
+// Eliminar un usuario
+window.deleteUserTrigger = async function(userId) {
+    // 1. Confirmar con doble paso
+    if (!confirm("¿Está seguro de eliminar militarmente a este usuario del sistema? Se revocará su acceso inmediato a la Landing y al ERP.")) {
+        return;
+    }
+
+    let deleted = true;
+    let errorMsg = "";
+
+    if (isDatabaseOnline && supabaseClient) {
+        try {
+            // Llamar a la función RPC segura para borrar de auth y public.profiles
+            const { error } = await supabaseClient.rpc('delete_existing_user', {
+                target_user_id: userId
+            });
+
+            if (error) {
+                deleted = false;
+                errorMsg = error.message;
+            }
+        } catch (err) {
+            deleted = false;
+            errorMsg = err.message || "Error de conexión.";
+        }
+    } else {
+        // Offline simulation
+        allUsers = allUsers.filter(u => u.id !== userId);
+        localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
+    }
+
+    if (deleted) {
+        showToast("Usuario eliminado con éxito del sistema.");
+        loadUsersData();
+    } else {
+        alert("Error al eliminar usuario: " + errorMsg);
+    }
+};
+
