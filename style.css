@@ -176,7 +176,7 @@ a {
 }
 
 .top-bar-socials a {
-    font-size: 1.15rem;
+    font-size: 1.6rem;
     display: inline-block;
     transition: var(--transition-fast);
 }
@@ -1498,13 +1498,13 @@ a {
 }
 
 .contact-social-icons a {
-    width: 44px;
-    height: 44px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     color: var(--text-light);
     box-shadow: var(--shadow-sm);
     transition: var(--transition-smooth);
@@ -1716,7 +1716,7 @@ a {
 }
 
 .copyright-social a {
-    font-size: 1.4rem;
+    font-size: 1.9rem;
     display: inline-block;
     transition: var(--transition-fast);
 }
@@ -1923,8 +1923,8 @@ a {
     position: relative;
 }
 .reviewer-avatar {
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     border: 2px solid var(--primary-light);
     object-fit: cover;
@@ -1973,7 +1973,7 @@ a {
     color: var(--text-muted);
 }
 .review-comment {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     color: var(--text-main);
     line-height: 1.6;
     font-style: italic;
