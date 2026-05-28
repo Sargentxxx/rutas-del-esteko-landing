@@ -13,6 +13,74 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 let supabasePublic = null;
 let isDbOnlinePublic = false;
 
+// Datos por defecto (Semilla inicial) por si no existe conexión a la base de datos
+const DEFAULT_DESTINATIONS = [
+    {
+        id: "default-mdp",
+        name: "Mar del Plata Mágica",
+        category: "verano",
+        duration: "7 Noches / 10 Días",
+        description: "Salidas durante la temporada de verano desde la Terminal de Ómnibus en unidades premium de la empresa San Felipe (habilitación CNRT). Estadía de 7 noches en departamentos céntricos equipados, cercanos a los principales atractivos y playas.",
+        image_url: "https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=600&q=80",
+        price_info: "Temporada de Verano",
+        whatsapp_text: "Hola! Me interesa el viaje a Mar del Plata",
+        services: [
+            "Micros de San Felipe con CNRT",
+            "Deptos. Céntricos Equipados",
+            "Coordinación Permanente y Excursiones"
+        ],
+        cost: 90000
+    },
+    {
+        id: "default-camboriu",
+        name: "Balneario Camboriú",
+        category: "verano",
+        duration: "7 Noches / 11 Días",
+        description: "Salidas en enero y febrero desde la Terminal de Ómnibus a bordo de unidades de última generación de la empresa San Felipe con habilitación CNRT internacional. Estadía de 7 noches en departamentos equipados céntricos (2 a 7 personas) a metros del mar y la peatonal.",
+        image_url: "https://images.unsplash.com/photo-1516815231560-8f41ec531527?auto=format&fit=crop&w=600&q=80",
+        price_info: "Salidas Enero y Febrero",
+        whatsapp_text: "Hola! Me interesa el viaje a Camboriu",
+        services: [
+            "Micros San Felipe CNRT Internac.",
+            "Deptos. Céntricos (2 a 7 personas)",
+            "Excursiones Opc.: Pirata, Teleférico, Bombinhas"
+        ],
+        cost: 160000
+    },
+    {
+        id: "default-sanrafael",
+        name: "San Rafael - Mendoza",
+        category: "invierno",
+        duration: "3 Noches / 5 Días",
+        description: "Salidas en vacaciones de julio desde la Terminal de Ómnibus a bordo de unidades de la empresa San Felipe con habilitación CNRT. Estadía en cabañas equipadas (2 a 6 pers.) en complejo con juegos y parque. Incluye media pensión con menús espectaculares y cenas de 3 pasos.",
+        image_url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80",
+        price_info: "Salidas en Julio (Invierno)",
+        whatsapp_text: "Hola! Me interesa el viaje a San Rafael",
+        services: [
+            "Micros San Felipe (CNRT)",
+            "Cabañas con Media Pensión Completa",
+            "Visitas: Bodegas, Chocolate, Leñas, Reyunos"
+        ],
+        cost: 98000
+    },
+    {
+        id: "default-cataratas",
+        name: "Cataratas Arg. + Brasileras",
+        category: "invierno",
+        duration: "3 Noches / 6 Días",
+        description: "Salidas en invierno a bordo de unidades premium de la empresa San Felipe (CNRT habilitación internacional). Estadía en hotel en Foz do Iguaçu, Brasil con piscina y áreas verdes. Incluye desayuno y cena buffet durante la estadía para mayor confort.",
+        image_url: "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=600&q=80",
+        price_info: "Salidas Temporada de Invierno",
+        whatsapp_text: "Hola! Me interesa el viaje a Cataratas",
+        services: [
+            "Micros San Felipe CNRT Internac.",
+            "Hotel c/ Piscina (Desayuno y Cena Buffet)",
+            "Excursiones: Compras CDE, Hito, Cataratas Arg/Bra"
+        ],
+        cost: 92000
+    }
+];
+
 try {
     if (typeof supabase !== 'undefined') {
         supabasePublic = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
