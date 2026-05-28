@@ -1,5 +1,5 @@
 /**
- * Rutas del Esteko - Landing Page Interactive Operations
+ * Rutas del Esteko - Landing Page Interactive Operations (SPA Version)
  * Author: Antigravity Regiment (Agent 00 - General Commander)
  * Powered by: DeepSeek Strategy Design
  */
@@ -29,53 +29,92 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Close menu when clicking on nav link
-    const navLinks = navMenu.querySelectorAll('a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('open');
-            menuIcon.classList.remove('fa-xmark');
-            menuIcon.classList.add('fa-bars');
-            document.body.style.overflow = '';
-        });
-    });
+    // Close menu function
+    function closeMobileMenu() {
+        navMenu.classList.remove('open');
+        menuIcon.classList.remove('fa-xmark');
+        menuIcon.classList.add('fa-bars');
+        document.body.style.overflow = '';
+    }
 
     // ==========================================================================
-    // 2. STICKY HEADER SCROLL EFFECT & AUTO-ACTIVE NAVIGATION LINKS
+    // 2. SPA ROUTER & VIEW SWITCHER (Tabs Navigation)
+    // ==========================================================================
+    const spaViews = document.querySelectorAll('.spa-view');
+    const navLinks = document.querySelectorAll('.nav-menu a, .footer-links a');
+
+    function switchView(hash) {
+        // Default to 'inicio' if no hash or empty hash
+        const viewId = hash.replace('#', '') || 'inicio';
+        const targetViewElement = document.getElementById('view-' + viewId);
+
+        if (targetViewElement) {
+            // Hide all views
+            spaViews.forEach(view => {
+                view.classList.remove('active-view');
+            });
+
+            // Show active view
+            targetViewElement.classList.add('active-view');
+
+            // Update active state in nav menu
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + viewId) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Scroll window to top smoothly/instantly
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            // Close mobile navigation drawer
+            closeMobileMenu();
+        }
+    }
+
+    // Intercept clicks on all hash links (e.g. #inicio, #nosotros)
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link) {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const hash = href;
+                
+                // Update URL hash
+                history.pushState(null, null, hash);
+                
+                // Switch SPA View
+                switchView(hash);
+            }
+        }
+    });
+
+    // Support back/forward button navigation & page load hashes
+    window.addEventListener('popstate', () => {
+        switchView(window.location.hash);
+    });
+
+    // Initial load view selection
+    switchView(window.location.hash);
+
+    // ==========================================================================
+    // 3. STICKY HEADER SCROLL EFFECT
     // ==========================================================================
     const mainHeader = document.getElementById('main-header');
-    const sections = document.querySelectorAll('section[id]');
     
     window.addEventListener('scroll', () => {
-        // Sticky Header Shrinking
+        // Sticky Header Shrinking on Scroll
         if (window.scrollY > 50) {
             mainHeader.classList.add('scrolled');
         } else {
             mainHeader.classList.remove('scrolled');
         }
-
-        // Active Section Tracker
-        let currentSectionId = '';
-        const scrollPosition = window.scrollY + 160; // Offset for header
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            if (scrollPosition >= sectionTop && scrollPosition < (sectionTop + sectionHeight)) {
-                currentSectionId = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${currentSectionId}`) {
-                link.classList.add('active');
-            }
-        });
     });
 
     // ==========================================================================
-    // 3. DYNAMIC TRIP FILTERING (Tab Navigation)
+    // 4. DYNAMIC TRIP FILTERING (Tab Navigation in Destinos)
     // ==========================================================================
     const filterButtons = document.querySelectorAll('.filter-btn');
     const destinationCards = document.querySelectorAll('.destination-card');
@@ -110,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================================================
-    // 4. INTERACTIVE PAYMENT INSTALMENTS CALCULATOR
+    // 5. INTERACTIVE PAYMENT INSTALMENTS CALCULATOR
     // ==========================================================================
     const simDestiny = document.getElementById('sim-destiny');
     const simInstallments = document.getElementById('sim-installments');
@@ -137,57 +176,62 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Trigger calculation when selectors change
-    simDestiny.addEventListener('change', calculateSim);
-    simInstallments.addEventListener('change', calculateSim);
-    
-    // Initial run
-    calculateSim();
+    if (simDestiny && simInstallments) {
+        simDestiny.addEventListener('change', calculateSim);
+        simInstallments.addEventListener('change', calculateSim);
+        // Initial run
+        calculateSim();
+    }
 
     // ==========================================================================
-    // 5. LEAD CAPTURE FORM / NEWSLETTER & LOCALSTORAGE PERSISTENCE
+    // 6. LEAD CAPTURE FORM / NEWSLETTER & LOCALSTORAGE PERSISTENCE
     // ==========================================================================
     const leadForm = document.getElementById('lead-form');
     const leadSuccessMsg = document.getElementById('lead-success-msg');
     const successUserName = document.getElementById('success-user-name');
     const btnResetForm = document.getElementById('btn-reset-form');
 
-    leadForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // Stop page reload
+    if (leadForm) {
+        leadForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Stop page reload
 
-        const name = document.getElementById('lead-name').value.trim();
-        const phone = document.getElementById('lead-phone').value.trim();
-        const email = document.getElementById('lead-email').value.trim();
-        const destiny = document.getElementById('lead-destiny-select').value;
+            const name = document.getElementById('lead-name').value.trim();
+            const phone = document.getElementById('lead-phone').value.trim();
+            const email = document.getElementById('lead-email').value.trim();
+            const destiny = document.getElementById('lead-destiny-select').value;
 
-        // Structured Lead object
-        const leadData = {
-            name,
-            phone,
-            email,
-            destiny,
-            registeredAt: new Date().toISOString()
-        };
+            // Structured Lead object
+            const leadData = {
+                name,
+                phone,
+                email,
+                destiny,
+                registeredAt: new Date().toISOString()
+            };
 
-        // Save locally to simulate client data registry
-        let leads = JSON.parse(localStorage.getItem('esteko_leads') || '[]');
-        leads.push(leadData);
-        localStorage.setItem('esteko_leads', JSON.stringify(leads));
+            // Save locally to simulate client data registry
+            let leads = JSON.parse(localStorage.getItem('esteko_leads') || '[]');
+            leads.push(leadData);
+            localStorage.setItem('esteko_leads', JSON.stringify(leads));
 
-        // Display personalized visually striking success confirmation card
-        successUserName.textContent = name;
-        leadForm.style.display = 'none';
-        leadSuccessMsg.style.display = 'block';
-    });
+            // Display personalized visually striking success confirmation card
+            if (successUserName) successUserName.textContent = name;
+            leadForm.style.display = 'none';
+            if (leadSuccessMsg) leadSuccessMsg.style.display = 'block';
+        });
+    }
 
-    btnResetForm.addEventListener('click', () => {
-        // Reset and show form back
-        leadForm.reset();
-        leadSuccessMsg.style.display = 'none';
-        leadForm.style.display = 'block';
-    });
+    if (btnResetForm) {
+        btnResetForm.addEventListener('click', () => {
+            // Reset and show form back
+            leadForm.reset();
+            if (leadSuccessMsg) leadSuccessMsg.style.display = 'none';
+            leadForm.style.display = 'block';
+        });
+    }
 
     // ==========================================================================
-    // 6. MAP INTERACTIVE PIN CLICK SIMULATION
+    // 7. MARQUEE EFFECT BUFFER
     // ==========================================================================
     // Marquee effect double buffer to avoid empty white space gaps in scrolling strip
     const marqueeText = document.querySelector('.marquee-text');
