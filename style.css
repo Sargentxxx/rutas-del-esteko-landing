@@ -165,7 +165,7 @@ a {
 }
 
 .registration-badge i {
-    color: var(--secondary);
+    color: var(--primary);
     margin-right: 6px;
 }
 
@@ -248,15 +248,17 @@ a {
 }
 
 .navbar-logo-img {
-    height: 86px; /* Tamaño destacado (aumentado 20%) */
+    height: 100px; /* Tamaño destacado (aumentado 15% adicional) */
     width: auto;
     object-fit: contain;
     display: block;
     transition: var(--transition-smooth);
+    margin: -10px 0; /* Evita que la barra de navegación se agrande */
 }
 
 .main-header.scrolled .navbar-logo-img {
-    height: 86px; /* Se mantiene igual */
+    height: 100px;
+    margin: -10px 0;
 }
 
 /* Navigation */
@@ -2061,20 +2063,20 @@ a {
     margin-top: 40px;
 }
 .btn-google-review {
-    background-color: #4285F4;
+    background-color: var(--primary);
     color: var(--text-light);
-    box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
+    box-shadow: 0 4px 15px rgba(220, 30, 30, 0.2);
 }
 .btn-google-review:hover {
-    background-color: #357ae8;
+    background-color: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(66, 133, 244, 0.35);
+    box-shadow: 0 8px 25px rgba(220, 30, 30, 0.35);
     color: var(--text-light);
 }
 .top-bar-link {
     text-decoration: underline;
     font-weight: 700;
-    color: var(--secondary);
+    color: var(--primary);
 }
 .top-bar-link:hover {
     color: var(--text-light);
