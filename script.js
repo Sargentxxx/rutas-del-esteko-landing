@@ -274,43 +274,6 @@ async function loadAndApplySections() {
         }
         initializeHeroCarousel(heroImages);
     }
-}
-
-function initializeHeroCarousel(images) {
-    const sliderContainer = document.getElementById('hero-slider');
-    if (!sliderContainer) return;
-
-    const defaultImages = [
-        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80",
-        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80",
-        "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80"
-    ];
-
-    const finalImages = (images && images.length > 0) ? images : defaultImages;
-
-    sliderContainer.innerHTML = '';
-    finalImages.forEach((imgUrl, index) => {
-        const slide = document.createElement('div');
-        slide.className = `hero-slide${index === 0 ? ' active' : ''}`;
-        slide.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('${imgUrl}')`;
-        sliderContainer.appendChild(slide);
-    });
-
-    let currentSlide = 0;
-    const slides = sliderContainer.querySelectorAll('.hero-slide');
-    
-    if (slides.length <= 1) return;
-
-    if (window.heroCarouselInterval) {
-        clearInterval(window.heroCarouselInterval);
-    }
-
-    window.heroCarouselInterval = setInterval(() => {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }, 5000);
-}
 
     // Nosotros
     if (sections.nosotros) {
@@ -390,6 +353,42 @@ function initializeHeroCarousel(images) {
             if (btn) eContentWrapper.appendChild(btn);
         }
     }
+}
+
+function initializeHeroCarousel(images) {
+    const sliderContainer = document.getElementById('hero-slider');
+    if (!sliderContainer) return;
+
+    const defaultImages = [
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80",
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80",
+        "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80"
+    ];
+
+    const finalImages = (images && images.length > 0) ? images : defaultImages;
+
+    sliderContainer.innerHTML = '';
+    finalImages.forEach((imgUrl, index) => {
+        const slide = document.createElement('div');
+        slide.className = `hero-slide${index === 0 ? ' active' : ''}`;
+        slide.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('${imgUrl}')`;
+        sliderContainer.appendChild(slide);
+    });
+
+    let currentSlide = 0;
+    const slides = sliderContainer.querySelectorAll('.hero-slide');
+    
+    if (slides.length <= 1) return;
+
+    if (window.heroCarouselInterval) {
+        clearInterval(window.heroCarouselInterval);
+    }
+
+    window.heroCarouselInterval = setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 5000);
 }
 
 // Aplicar catálogo y simulador
