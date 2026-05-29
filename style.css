@@ -248,17 +248,17 @@ a {
 }
 
 .navbar-logo-img {
-    height: 100px; /* Tamaño destacado (aumentado 15% adicional) */
+    height: 120px; /* Tamaño destacado (aumentado un 20%) */
     width: auto;
     object-fit: contain;
     display: block;
     transition: var(--transition-smooth);
-    margin: -10px 0; /* Evita que la barra de navegación se agrande */
+    margin: -18px 0; /* Evita que la barra de navegación se agrande */
 }
 
 .main-header.scrolled .navbar-logo-img {
-    height: 100px;
-    margin: -10px 0;
+    height: 120px;
+    margin: -18px 0;
 }
 
 /* Navigation */
@@ -768,6 +768,7 @@ a {
     font-size: 0.95rem;
     opacity: 0.9;
     letter-spacing: 0.5px;
+    color: HSL(var(--brand-hue), 95%, 72%); /* Rojo corporativo suavizado para altísima legibilidad y elegancia */
 }
 
 @keyframes marquee {
@@ -2091,7 +2092,7 @@ a {
 }
 
 .footer-logo-img {
-    height: 99px; /* Tamaño aumentado un 80% */
+    height: 150px; /* Aumentado un 50% para lograr presencia destacada */
     width: auto;
     object-fit: contain;
     display: block;
@@ -2154,8 +2155,8 @@ a {
     align-items: center;
     justify-content: center;
     gap: 30px;
-    background: linear-gradient(135deg, rgba(220, 30, 30, 0.03), rgba(24, 18, 12, 0.95));
-    border: 1px solid rgba(220, 30, 30, 0.2);
+    background: linear-gradient(135deg, rgba(220, 30, 30, 0.12), rgba(24, 18, 12, 0.98));
+    border: 1px solid rgba(220, 30, 30, 0.25);
     border-radius: var(--border-radius-md);
     padding: 30px;
     max-width: 750px;
@@ -2201,7 +2202,7 @@ a {
 
 .reviews-cta-content p {
     font-size: 0.95rem;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.88); /* Contraste ultra-legible sobre el fondo metálico oscuro */
     line-height: 1.5;
     margin: 0;
 }

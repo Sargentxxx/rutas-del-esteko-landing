@@ -474,7 +474,7 @@ function applyGlobalConfigVars(config) {
     const badgeEl = document.querySelector('.registration-badge');
     if (badgeEl && config.legajo) {
         badgeEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Legajo Oficial N° ${config.legajo} - 
-                            <a href="${config.legajo_url || 'https://www.agenciasdeviajes.ar/agencias/6QezBnKQ'}" target="_blank" class="top-bar-link">Buscador Nacional de Agencias <i class="fa-solid fa-qrcode" style="margin-left: 2px;" title="Verificar Habilitación Oficial (QR)"></i></a>`;
+                            <a href="https://www.agenciasdeviajes.ar/agencias/6QezBnKQ" target="_blank" class="top-bar-link">Buscador Nacional de Agencias <i class="fa-solid fa-qrcode" style="margin-left: 2px;" title="Verificar Habilitación Oficial (QR)"></i></a>`;
     }
 
     // WhatsApp enlaces dinámicos
