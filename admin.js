@@ -479,7 +479,8 @@ async function loadSectionsData() {
                         title: item.title,
                         subtitle: item.subtitle,
                         content: item.content,
-                        image_url: item.image_url
+                        image_url: item.image_url,
+                        extra_data: item.extra_data
                     };
                 });
                 // Actualizar caché local
@@ -501,6 +502,19 @@ async function loadSectionsData() {
     document.getElementById('hero-subtitle').value = sections.hero?.subtitle || "";
     document.getElementById('hero-text').value = sections.hero?.content || "";
 
+    // Carousel URLs from extra_data or fallbacks
+    let carouselUrls = "";
+    if (sections.hero?.extra_data && sections.hero.extra_data.hero_images) {
+        carouselUrls = sections.hero.extra_data.hero_images.join("\n");
+    } else {
+        carouselUrls = [
+            "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80",
+            "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80",
+            "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80"
+        ].join("\n");
+    }
+    document.getElementById('hero-carousel-urls').value = carouselUrls;
+
     // Nosotros
     document.getElementById('nosotros-title').value = sections.nosotros?.title || "";
     document.getElementById('nosotros-content').value = sections.nosotros?.content || "";
@@ -520,6 +534,7 @@ async function loadSectionsData() {
     initFileUploaderListeners('nosotros-file', 'nosotros-image');
     initFileUploaderListeners('fiesta-file', 'fiesta-image');
     initFileUploaderListeners('educativo-file', 'educativo-image');
+    initHeroCarouselUploader();
 }
 
 // Configurar formulario de guardado
@@ -531,12 +546,20 @@ if (formEditSections) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando Textos...';
 
+        const carouselUrlsText = document.getElementById('hero-carousel-urls').value;
+        const heroImages = carouselUrlsText.split('\n')
+            .map(url => url.trim())
+            .filter(url => url.length > 0);
+
         const updatedSections = {
             hero: {
                 title: document.getElementById('hero-title').value,
                 subtitle: document.getElementById('hero-subtitle').value,
                 content: document.getElementById('hero-text').value,
-                image_url: ""
+                image_url: "",
+                extra_data: {
+                    hero_images: heroImages
+                }
             },
             nosotros: {
                 title: document.getElementById('nosotros-title').value,
@@ -564,16 +587,20 @@ if (formEditSections) {
             try {
                 for (const sectionId of Object.keys(updatedSections)) {
                     const sec = updatedSections[sectionId];
+                    const payload = {
+                        id: sectionId,
+                        title: sec.title,
+                        subtitle: sec.subtitle || "",
+                        content: sec.content,
+                        image_url: sec.image_url,
+                        updated_at: new Date()
+                    };
+                    if (sec.extra_data) {
+                        payload.extra_data = sec.extra_data;
+                    }
                     const { error } = await supabaseClient
                         .from('landing_sections')
-                        .upsert({
-                            id: sectionId,
-                            title: sec.title,
-                            subtitle: sec.subtitle || "",
-                            content: sec.content,
-                            image_url: sec.image_url,
-                            updated_at: new Date()
-                        });
+                        .upsert(payload);
                     if (error) {
                         console.error(`Error guardando sección ${sectionId} en Supabase:`, error);
                         success = false;
@@ -1402,6 +1429,64 @@ function initFileUploaderListeners(fileInputId, targetInputId) {
 
             if (originalLabel) {
                 originalLabel.innerHTML = '<i class="fa-solid fa-upload"></i> Subir';
+            }
+        }
+    };
+}
+
+// Init hero carousel multiple file uploader
+function initHeroCarouselUploader() {
+    const fileInput = document.getElementById('hero-carousel-file');
+    const textarea = document.getElementById('hero-carousel-urls');
+
+    if (!fileInput || !textarea) return;
+
+    fileInput.onchange = async () => {
+        if (fileInput.files.length > 0) {
+            const originalLabel = fileInput.nextElementSibling;
+            
+            if (originalLabel) {
+                originalLabel.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Subiendo...';
+            }
+
+            for (let i = 0; i < fileInput.files.length; i++) {
+                const file = fileInput.files[i];
+                let fileUrl = "";
+
+                if (isDatabaseOnline && supabaseClient) {
+                    try {
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `hero-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+                        const filePath = `uploads/${fileName}`;
+
+                        const { data, error } = await supabaseClient.storage
+                            .from('landing-media')
+                            .upload(filePath, file);
+
+                        if (!error) {
+                            const { data: pubData } = supabaseClient.storage
+                                .from('landing-media')
+                                .getPublicUrl(filePath);
+                            fileUrl = pubData.publicUrl;
+                        } else {
+                            fileUrl = await convertFileToBase64(file);
+                        }
+                    } catch (err) {
+                        fileUrl = await convertFileToBase64(file);
+                    }
+                } else {
+                    fileUrl = await convertFileToBase64(file);
+                }
+
+                if (fileUrl) {
+                    textarea.value = textarea.value + (textarea.value ? '\n' : '') + fileUrl;
+                }
+            }
+
+            showToast("Imágenes agregadas al carrusel con éxito.");
+
+            if (originalLabel) {
+                originalLabel.innerHTML = '<i class="fa-solid fa-upload"></i> Subir Imágenes al Carrusel';
             }
         }
     };

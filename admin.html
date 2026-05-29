@@ -154,8 +154,12 @@
                                         <input type="text" id="hero-title" class="form-control-admin" placeholder="Ej. Tu viaje soñado, con la confianza de siempre.">
                                     </div>
                                     <div class="form-group-admin">
-                                        <label for="hero-subtitle">Subtítulo Flotante</label>
-                                        <input type="text" id="hero-subtitle" class="form-control-admin" placeholder="Ej. Desde Santiago del Estero al País">
+                                        <label for="hero-carousel-urls">Imágenes del Carrusel (Subir o pegar URLs, una por línea)</label>
+                                        <div class="file-uploader-wrapper" style="margin-bottom: 8px;">
+                                            <input type="file" id="hero-carousel-file" class="file-input-hidden" accept="image/*" multiple>
+                                            <label for="hero-carousel-file" class="btn-file-trigger" style="width: 100%; text-align: center;"><i class="fa-solid fa-upload"></i> Subir Imágenes al Carrusel</label>
+                                        </div>
+                                        <textarea id="hero-carousel-urls" class="form-control-admin" rows="3" placeholder="Pegá URLs de imágenes, una por línea..."></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group-admin">
@@ -195,13 +199,13 @@
                         <!-- La Fiesta Section Edit -->
                         <div class="admin-card">
                             <div class="card-title-bar">
-                                <h3><i class="fa-solid fa-guitar"></i> Sección La Fiesta de Rutas</h3>
+                                <h3><i class="fa-solid fa-guitar"></i> Sección Fiesta de Rutas</h3>
                             </div>
                             <div class="card-body-admin">
                                 <div class="grid-2-col">
                                     <div class="form-group-admin">
                                         <label for="fiesta-title">Título de la Sección</label>
-                                        <input type="text" id="fiesta-title" class="form-control-admin" placeholder="Ej. La Fiesta de Rutas del Esteko">
+                                        <input type="text" id="fiesta-title" class="form-control-admin" placeholder="Ej. Fiesta de Rutas del Esteko">
                                     </div>
                                     <div class="form-group-admin">
                                         <label for="fiesta-image">Imagen Portada de la Fiesta</label>
@@ -222,7 +226,7 @@
                         <!-- Educativos Section Edit -->
                         <div class="admin-card">
                             <div class="card-title-bar">
-                                <h3><i class="fa-solid fa-graduation-cap"></i> Sección Viajes Educativos</h3>
+                                <h3><i class="fa-solid fa-graduation-cap"></i> Sección Turismo Educativo</h3>
                             </div>
                             <div class="card-body-admin">
                                 <div class="grid-2-col">

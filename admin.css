@@ -5,14 +5,14 @@
 
 /* Variables and Theme overrides for Admin */
 :root {
-    --admin-bg: HSL(24, 18%, 6%);
-    --admin-surface: HSL(24, 14%, 10%);
-    --admin-surface-light: HSL(24, 10%, 15%);
+    --admin-bg: HSL(355, 18%, 6%);
+    --admin-surface: HSL(355, 14%, 10%);
+    --admin-surface-light: HSL(355, 10%, 15%);
     --admin-border: rgba(255, 255, 255, 0.08);
     --admin-text-main: HSL(0, 0%, 95%);
-    --admin-text-muted: HSL(24, 10%, 65%);
-    --admin-primary: HSL(24, 90%, 52%);
-    --admin-primary-hover: HSL(24, 95%, 45%);
+    --admin-text-muted: HSL(355, 10%, 65%);
+    --admin-primary: HSL(355, 90%, 52%);
+    --admin-primary-hover: HSL(355, 95%, 45%);
     --admin-glass-bg: rgba(20, 15, 12, 0.65);
     --admin-glass-border: rgba(255, 255, 255, 0.08);
     --admin-success: HSL(142, 70%, 45%);
