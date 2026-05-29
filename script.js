@@ -241,7 +241,8 @@ async function loadAndApplySections() {
                         title: item.title,
                         subtitle: item.subtitle,
                         content: item.content,
-                        image_url: item.image_url
+                        image_url: item.image_url,
+                        extra_data: item.extra_data
                     };
                 });
                 localStorage.setItem('esteko_landing_sections', JSON.stringify(sections));
@@ -261,13 +262,55 @@ async function loadAndApplySections() {
     // Hero
     if (sections.hero) {
         const hTitle = document.querySelector('.hero-title');
-        const hSub = document.querySelector('.hero-subtitle');
         const hText = document.querySelector('.hero-text');
 
         if (hTitle && sections.hero.title) hTitle.textContent = sections.hero.title;
-        if (hSub && sections.hero.subtitle) hSub.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${sections.hero.subtitle}`;
         if (hText && sections.hero.content) hText.textContent = sections.hero.content;
+
+        // Inicializar Carrusel Dinámico
+        let heroImages = [];
+        if (sections.hero.extra_data && sections.hero.extra_data.hero_images) {
+            heroImages = sections.hero.extra_data.hero_images;
+        }
+        initializeHeroCarousel(heroImages);
     }
+}
+
+function initializeHeroCarousel(images) {
+    const sliderContainer = document.getElementById('hero-slider');
+    if (!sliderContainer) return;
+
+    const defaultImages = [
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80",
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80",
+        "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80"
+    ];
+
+    const finalImages = (images && images.length > 0) ? images : defaultImages;
+
+    sliderContainer.innerHTML = '';
+    finalImages.forEach((imgUrl, index) => {
+        const slide = document.createElement('div');
+        slide.className = `hero-slide${index === 0 ? ' active' : ''}`;
+        slide.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('${imgUrl}')`;
+        sliderContainer.appendChild(slide);
+    });
+
+    let currentSlide = 0;
+    const slides = sliderContainer.querySelectorAll('.hero-slide');
+    
+    if (slides.length <= 1) return;
+
+    if (window.heroCarouselInterval) {
+        clearInterval(window.heroCarouselInterval);
+    }
+
+    window.heroCarouselInterval = setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 5000);
+}
 
     // Nosotros
     if (sections.nosotros) {

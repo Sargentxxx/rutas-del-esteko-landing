@@ -49,17 +49,39 @@
     <!-- Header & Navigation -->
     <header class="main-header" id="main-header">
         <div class="container header-container">
-            <a href="#inicio" class="logo logo-container" id="header-logo">
-                <img src="img/logo-horizontal-white.png" alt="Rutas del Esteko" class="navbar-logo-img">
-            </a>
-            
-            <nav class="nav-menu" id="nav-menu">
+            <!-- Left Desktop Navigation -->
+            <nav class="nav-menu nav-desktop-left">
                 <ul>
                     <li><a href="#inicio" class="active">Inicio</a></li>
                     <li><a href="#nosotros">Nosotros</a></li>
                     <li><a href="#temporadas">Destinos</a></li>
-                    <li><a href="#educativo">Educativos</a></li>
-                    <li><a href="#fiesta">La Fiesta</a></li>
+                    <li><a href="#educativo">Turismo Educativo</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Centered Logo -->
+            <a href="#inicio" class="logo logo-container-centered" id="header-logo">
+                <img src="img/logo.png" alt="Rutas del Esteko" class="navbar-logo-img">
+            </a>
+            
+            <!-- Right Desktop Navigation -->
+            <nav class="nav-menu nav-desktop-right">
+                <ul>
+                    <li><a href="#fiesta">Fiesta de Rutas</a></li>
+                    <li><a href="#sorteos">Sorteos</a></li>
+                    <li><a href="#pagos">Pagos</a></li>
+                    <li><a href="#contacto" class="btn-contact-nav">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <!-- Combined Mobile Menu Drawer (Hidden on desktop, targeted by JS) -->
+            <nav class="nav-menu mobile-menu-drawer" id="nav-menu">
+                <ul>
+                    <li><a href="#inicio" class="active">Inicio</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#temporadas">Destinos</a></li>
+                    <li><a href="#educativo">Turismo Educativo</a></li>
+                    <li><a href="#fiesta">Fiesta de Rutas</a></li>
                     <li><a href="#sorteos">Sorteos</a></li>
                     <li><a href="#pagos">Pagos</a></li>
                     <li><a href="#contacto" class="btn-contact-nav">Contacto</a></li>
@@ -76,9 +98,14 @@
     <div id="view-inicio" class="spa-view active-view">
         <!-- Hero Section -->
         <section class="hero" id="inicio">
+            <!-- Dynamic Hero Fading Slider -->
+            <div class="hero-slider" id="hero-slider">
+                <div class="hero-slide active" style="background-image: linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80')"></div>
+                <div class="hero-slide" style="background-image: linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80')"></div>
+                <div class="hero-slide" style="background-image: linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80')"></div>
+            </div>
             <div class="hero-overlay"></div>
             <div class="container hero-content">
-                <span class="hero-subtitle animate-fade-in"><i class="fa-solid fa-location-dot"></i> Desde Santiago del Estero al País</span>
                 <h1 class="hero-title animate-slide-up">Tu viaje soñado, con la confianza de siempre.</h1>
                 <p class="hero-text animate-fade-in">Salidas grupales con coordinadores permanentes, los mejores alojamientos y la alegría que nos caracteriza. ¡Sumate a los más de 15.000 pasajeros que ya cumplieron su sueño con nosotros!</p>
                 
@@ -145,10 +172,10 @@
                     <!-- Review 1 -->
                     <div class="review-card-premium">
                         <div class="review-header-prem">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="María José Alende" class="reviewer-avatar">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Maria Lujan Rojas" class="reviewer-avatar">
                             <div class="reviewer-meta">
-                                <h4>María José Alende</h4>
-                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> Local Guide • 12 reseñas</span>
+                                <h4>Maria Lujan Rojas</h4>
+                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> Local Guide · 20 reseñas</span>
                             </div>
                             <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
                         </div>
@@ -156,18 +183,18 @@
                             <div class="stars-gold">
                                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             </div>
-                            <span class="review-time">Hace 2 semanas</span>
+                            <span class="review-time">Hace 10 meses</span>
                         </div>
-                        <p class="review-comment">"El mejor viaje de mi vida a Cataratas. La coordinación de los chicos es impecable y súper humana. Rutas del Esteko te hace sentir seguro en cada tramo del camino. Sin dudas volveremos a viajar con ellos!"</p>
+                        <p class="review-comment">"Hermosa experiencia!!! Super recomendable, hemos elegido varias veces la empresa y siempre cumplen, el ultimo viaje a San Rafael, Mendoza estuvo genial la cabaña, el desayuno, las comidas, la coordinacion, 10/10"</p>
                     </div>
 
                     <!-- Review 2 -->
                     <div class="review-card-premium">
                         <div class="review-header-prem">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Carlos M." class="reviewer-avatar">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Carolina Yeck" class="reviewer-avatar">
                             <div class="reviewer-meta">
-                                <h4>Carlos M.</h4>
-                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> Pasajero Frecuente</span>
+                                <h4>Carolina Yeck</h4>
+                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> 1 reseña · 1 foto</span>
                             </div>
                             <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
                         </div>
@@ -175,18 +202,18 @@
                             <div class="stars-gold">
                                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             </div>
-                            <span class="review-time">Hace 1 mes</span>
+                            <span class="review-time">Hace 3 meses</span>
                         </div>
-                        <p class="review-comment">"Viajé a Camboriú y fue un sueño. La estadía en los departamentos fue súper cómoda, con todo equipado y cerca de la peatonal. Los micros de San Felipe son un lujo y los coordinadores los mejores del país."</p>
+                        <p class="review-comment">"Una experiencia inolvidable en Mar del Plata! El depto. Excelentemente equipado nos tocó con una hermosa vista al mar en frente del casino. La salida puntual. La coordinadora Ceci excelente responde todas las dudas al instante. Lo recomiendo al 100%. Volvería a contratar los servicios sin dudarlo y por más días. 😃"</p>
                     </div>
 
                     <!-- Review 3 -->
                     <div class="review-card-premium">
                         <div class="review-header-prem">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Marina S." class="reviewer-avatar">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80" alt="Andrea Apesteguia" class="reviewer-avatar">
                             <div class="reviewer-meta">
-                                <h4>Marina S.</h4>
-                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> Local Guide</span>
+                                <h4>Andrea Apesteguia</h4>
+                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> Local Guide · 9 reseñas · 25 fotos</span>
                             </div>
                             <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
                         </div>
@@ -194,18 +221,18 @@
                             <div class="stars-gold">
                                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             </div>
-                            <span class="review-time">Hace 3 semanas</span>
+                            <span class="review-time">Hace 3 meses</span>
                         </div>
-                        <p class="review-comment">"Fui con mi familia a San Rafael en julio. Las cabañas hermosas dentro del complejo con sala de juegos y parque al aire libre. La comida de media pensión excelente y abundante. Todo súper coordinado."</p>
+                        <p class="review-comment">"Es la primera ves que viajamos con la empresa y fué una hermosa experiencia con Rutas del Esteko,siempre atentos a cualquier inquietud,súper recomendables. Los volveríamos a elegir"</p>
                     </div>
 
                     <!-- Review 4 -->
                     <div class="review-card-premium">
                         <div class="review-header-prem">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" alt="Estela G." class="reviewer-avatar">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Lautaro Veron" class="reviewer-avatar">
                             <div class="reviewer-meta">
-                                <h4>Estela G.</h4>
-                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> Pasajera Esteko</span>
+                                <h4>Lautaro Veron</h4>
+                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> 7 reseñas</span>
                             </div>
                             <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
                         </div>
@@ -213,14 +240,52 @@
                             <div class="stars-gold">
                                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             </div>
-                            <span class="review-time">Hace 2 meses</span>
+                            <span class="review-time">Hace 3 meses</span>
                         </div>
-                        <p class="review-comment">"Excelente servicio, muy transparentes con los pagos. Pudimos congelar el precio de nuestro viaje a Mar del Plata y pagarlo mes a mes. Una tranquilidad enorme y la mejor onda de los chicos en todo momento."</p>
+                        <p class="review-comment">"2do viaje a Mar del Plata q viajo con Rutas del Esteko. Ofrecen facilidades de pago, el colectivo en buenas condiciones, salimos y llegamos a horario. Las paradas programadas estan bien organizadas. Los dptos q nos tocó estan a 3 cuadras del casino central. Super confiables"</p>
+                    </div>
+
+                    <!-- Review 5 -->
+                    <div class="review-card-premium">
+                        <div class="review-header-prem">
+                            <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=150&q=80" alt="Mar Marquez" class="reviewer-avatar">
+                            <div class="reviewer-meta">
+                                <h4>Mar Marquez</h4>
+                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> 1 reseña</span>
+                            </div>
+                            <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
+                        </div>
+                        <div class="review-rating-stars">
+                            <div class="stars-gold">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="review-time">Hace 4 meses</span>
+                        </div>
+                        <p class="review-comment">"Excelente servicio, super contenta un viaje excelente, departamento hermosos y sobre todo los coordinadores que estuvieron en todos los detalles acompañando antes con toda la información necesaria y durante el viaje , nos sentimos realmente acompañados , las mejores vacaciones gracias rutas del esteko 🏞️..."</p>
+                    </div>
+
+                    <!-- Review 6 -->
+                    <div class="review-card-premium">
+                        <div class="review-header-prem">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="anahi salvatierra" class="reviewer-avatar">
+                            <div class="reviewer-meta">
+                                <h4>anahi salvatierra</h4>
+                                <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> 1 reseña</span>
+                            </div>
+                            <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
+                        </div>
+                        <div class="review-rating-stars">
+                            <div class="stars-gold">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="review-time">Hace 3 meses</span>
+                        </div>
+                        <p class="review-comment">"Excelente servicio ,la atención muy buena de los coordinadores, siempre atentos ,lo ofrecido fue cumplido en todo !!! La ubicación de los departamentos un lujo pleno centro a cuadras de la playa"</p>
                     </div>
                 </div>
 
                 <div class="review-action-container">
-                    <a href="https://maps.app.goo.gl/y1Qp1N6R4Fq8Y6Q88" target="_blank" class="btn btn-google-review">
+                    <a href="https://www.google.com/maps/place/Rutas+del+Esteko+-+Agencia+de+Viajes+y+Turismo/@-27.8192068,-64.2676658,17z/data=!4m8!3m7!1s0x943b4d0000d981d3:0x7b8cfd201eae5f9f!8m2!3d-27.8192068!4d-64.2650909!9m1!1b1!16s%2Fg%2F11wvn7yj62?entry=ttu&g_ep=EgoyMDI2MDUyNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-google-review">
                         <i class="fa-brands fa-google"></i> Escribir Reseña en Google Maps
                     </a>
                 </div>
@@ -501,7 +566,7 @@
             <div class="container">
                 <div class="section-header">
                     <span class="section-tag tag-fiesta">¡El Sello Esteko!</span>
-                    <h2>La Fiesta de Rutas del Esteko</h2>
+                    <h2>Fiesta de Rutas del Esteko</h2>
                     <div class="header-line"></div>
                 </div>
                 
@@ -512,7 +577,7 @@
                     
                     <div class="fiesta-content">
                         <h3>Tradición, Música y Experiencias Inolvidables</h3>
-                        <p>Cada año, en Rutas del Esteko vivimos uno de los momentos más especiales junto a nuestros pasajeros y pasajeras: <strong>La Fiesta de Rutas del Esteko</strong>, un evento pensado para dar inicio oficial a nuestra temporada de verano.</p>
+                        <p>Cada año, en Rutas del Esteko vivimos uno de los momentos más especiales junto a nuestros pasajeros y pasajeras: <strong>Fiesta de Rutas del Esteko</strong>, un evento pensado para dar inicio oficial a nuestra temporada de verano.</p>
                         <p>Durante esta gran celebración presentamos todos nuestros destinos, paquetes turísticos y precios para la nueva temporada, compartiendo con el público cada una de las propuestas y experiencias que formarán parte del verano.</p>
                         <p>Además, la fiesta cuenta con sorteos de viajes, premios, shows en vivo y muchas sorpresas, creando un ambiente familiar, alegre y lleno de emoción para todas las personas que nos acompañan año tras año.</p>
                         
