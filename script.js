@@ -145,6 +145,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
+            // En secciones distintas a 'inicio', removemos la transparencia de la barra para legibilidad
+            const mainHeader = document.getElementById('main-header');
+            if (mainHeader) {
+                if (viewId === 'inicio') {
+                    mainHeader.classList.remove('solid-header');
+                } else {
+                    mainHeader.classList.add('solid-header');
+                }
+            }
+
             window.scrollTo({ top: 0, behavior: 'instant' });
             closeMobileMenu();
         }
@@ -464,7 +474,7 @@ function applyGlobalConfigVars(config) {
     const badgeEl = document.querySelector('.registration-badge');
     if (badgeEl && config.legajo) {
         badgeEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Legajo Oficial N° ${config.legajo} - 
-                            <a href="${config.legajo_url || 'https://www.agenciasdeviajes.ar/#buscador'}" target="_blank" class="top-bar-link">Buscador Nacional de Agencias</a>`;
+                            <a href="${config.legajo_url || 'https://www.agenciasdeviajes.ar/agencias/6QezBnKQ'}" target="_blank" class="top-bar-link">Buscador Nacional de Agencias <i class="fa-solid fa-qrcode" style="margin-left: 2px;" title="Verificar Habilitación Oficial (QR)"></i></a>`;
     }
 
     // WhatsApp enlaces dinámicos
