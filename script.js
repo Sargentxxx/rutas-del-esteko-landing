@@ -194,11 +194,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // 4. MARQUEE EFFECT BUFFER
+    // 3b. SCROLL PROGRESS READING BAR (Taste-Skill Feature)
+    const scrollProgress = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        if (scrollProgress) {
+            scrollProgress.style.width = scrollPercent + '%';
+        }
+    });
+
+    // 4. MARQUEE EFFECT BUFFER & HOVER PAUSE (Taste-Skill Feature)
     const marqueeText = document.querySelector('.marquee-text');
     if (marqueeText) {
         const doubleContent = marqueeText.innerHTML + " &nbsp;•&nbsp; " + marqueeText.innerHTML;
         marqueeText.innerHTML = doubleContent;
+        
+        // Pausar rotación en hover
+        marqueeText.addEventListener('mouseenter', () => {
+            marqueeText.style.animationPlayState = 'paused';
+        });
+        marqueeText.addEventListener('mouseleave', () => {
+            marqueeText.style.animationPlayState = 'running';
+        });
+    }
+
+    // 4b. SPOTLIGHT BORDER EVENT DELEGATION (Taste-Skill Feature)
+    const destinationsGrid = document.getElementById('destinations-grid');
+    if (destinationsGrid) {
+        destinationsGrid.addEventListener('mousemove', (e) => {
+            const card = e.target.closest('.destination-card');
+            if (card && !card.classList.contains('destination-card-skeleton')) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            }
+        });
     }
 });
 
@@ -512,11 +546,14 @@ function renderPublicCatalogGrid(destinations, config) {
 
     grid.innerHTML = '';
     
-    destinations.forEach(dest => {
+    destinations.forEach((dest, index) => {
         const card = document.createElement('div');
-        card.className = 'destination-card';
+        card.className = 'destination-card animate-fade-in';
         card.setAttribute('data-category', dest.category);
         card.id = `card-dynamic-${dest.id}`;
+        
+        // Estilo de delay escalonado para efecto cascada (Taste-Skill Feature)
+        card.style.animationDelay = `${index * 120}ms`;
 
         // Generar viñetas de servicios
         let servicesHtml = '';
