@@ -97,6 +97,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Probar conexión e inicializar datos dinámicos
     await testConnectionAndLoadContent();
 
+    // Registrar e inicializar efectos de GSAP & ScrollTrigger (Fase 2 Visual Upgrade)
+    initHeroParallax();
+    initScrollReveal();
+
     // 1. MOBILE MENU TOGGLE DRAWER
     const mobileToggle = document.getElementById('mobile-toggle');
     const navMenu = document.getElementById('nav-menu');
@@ -127,17 +131,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. SPA ROUTER & VIEW SWITCHER (Tabs Navigation)
     const spaViews = document.querySelectorAll('.spa-view');
 
+    let isTransitioning = false;
+    const sectionOrder = ['inicio', 'nosotros', 'temporadas', 'educativo', 'fiesta', 'sorteos', 'pagos', 'contacto'];
+
     function switchView(hash) {
         const viewId = hash.replace('#', '') || 'inicio';
         const targetViewElement = document.getElementById('view-' + viewId);
 
         if (targetViewElement) {
-            spaViews.forEach(view => {
-                view.classList.remove('active-view');
-            });
+            // Evitar doble transición
+            const currentActiveView = document.querySelector('.spa-view.active-view');
+            if (currentActiveView === targetViewElement) return;
 
-            targetViewElement.classList.add('active-view');
+            // Determinar dirección del deslizamiento
+            const oldIndex = currentActiveView ? sectionOrder.indexOf(currentActiveView.id.replace('view-', '')) : -1;
+            const newIndex = sectionOrder.indexOf(viewId);
+            const direction = newIndex > oldIndex ? 1 : -1; // 1 = adelante (izquierda), -1 = atrás (derecha)
 
+            // Si hay animaciones activas en las vistas, detenerlas
+            gsap.killTweensOf('.spa-view');
+
+            // Actualizar menú activo
             document.querySelectorAll('.nav-menu a').forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === '#' + viewId) {
@@ -155,8 +169,67 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            window.scrollTo({ top: 0, behavior: 'instant' });
             closeMobileMenu();
+
+            const tl = gsap.timeline({
+                onStart: () => {
+                    isTransitioning = true;
+                    // Ir al inicio de la página instantáneamente antes de empezar
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                },
+                onComplete: () => {
+                    isTransitioning = false;
+                    // Refrescar ScrollTrigger para recalcular alturas
+                    if (typeof ScrollTrigger !== "undefined") {
+                        ScrollTrigger.refresh();
+                    }
+                }
+            });
+
+            if (currentActiveView) {
+                // Desvanecer y deslizar la sección saliente
+                tl.to(currentActiveView, {
+                    opacity: 0,
+                    x: -80 * direction,
+                    duration: 0.45,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        currentActiveView.classList.remove('active-view');
+                        // Ocultar físicamente de la pantalla
+                        gsap.set(currentActiveView, { display: 'none', x: 0 });
+                    }
+                });
+            }
+
+            // Preparar y animar la sección entrante
+            if (currentActiveView) {
+                tl.set(targetViewElement, {
+                    display: 'block',
+                    opacity: 0,
+                    x: 80 * direction
+                });
+
+                tl.to(targetViewElement, {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.65,
+                    ease: "back.out(1.1)", // Curva elástica tipo resorte
+                    onStart: () => {
+                        targetViewElement.classList.add('active-view');
+                    }
+                }, "-=0.15"); // Pequeño solapamiento para suavidad
+            } else {
+                // Primera carga: simple fade-in sin deslizamiento
+                tl.set(targetViewElement, { display: 'block', opacity: 0 });
+                tl.to(targetViewElement, {
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: "power2.out",
+                    onStart: () => {
+                        targetViewElement.classList.add('active-view');
+                    }
+                });
+            }
         }
     }
 
@@ -838,4 +911,77 @@ function initLeadFormSubmission() {
             newForm.style.display = 'block';
         });
     }
+}
+
+// ==========================================================================
+// METODOS INTERACTIVOS PREMIUM (GSAP & ScrollTrigger & SplitText - Fase 2)
+// ==========================================================================
+
+function initHeroParallax() {
+    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Parallax del fondo del Hero (se desplaza más lento)
+    gsap.to(".hero-slider", {
+        yPercent: 25,
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true
+        }
+    });
+
+    // Parallax del contenido del Hero con desvanecimiento al bajar
+    gsap.to(".hero-content", {
+        yPercent: -10,
+        opacity: 0.4,
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true
+        }
+    });
+}
+
+function initScrollReveal() {
+    if (typeof gsap === "undefined" || typeof SplitText === "undefined" || typeof ScrollTrigger === "undefined") return;
+
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    // Encabezados h2 de las secciones principales
+    const headers = document.querySelectorAll(
+        '.opiniones-google .section-header h2, ' +
+        '.nosotros .section-header h2, ' +
+        '.temporadas .section-header h2, ' +
+        '.educativo-text h2, ' +
+        '.fiesta .section-header h2, ' +
+        '.sorteos-left h2, ' +
+        '.pagos .section-header h2, ' +
+        '.contacto .section-header h2'
+    );
+
+    headers.forEach(header => {
+        // Dividir el título en palabras
+        const split = new SplitText(header, { type: "words" });
+
+        // Animación de aparición (slide up + fade in)
+        gsap.from(split.words, {
+            opacity: 0,
+            y: 35,
+            duration: 0.85,
+            ease: "power3.out",
+            stagger: 0.05,
+            scrollTrigger: {
+                trigger: header,
+                start: "top 88%", // Comienza cuando el encabezado está cerca de entrar
+                toggleActions: "play none none none",
+                once: true // Ejecutar solo una vez
+            }
+        });
+    });
 }

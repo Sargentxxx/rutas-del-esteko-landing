@@ -408,11 +408,23 @@ a {
     background-repeat: no-repeat;
     opacity: 0;
     transition: opacity 1.5s ease-in-out;
+    transform: scale(1.03); /* Start slightly zoomed to avoid white spaces on edge cases */
 }
 
 .hero-slide.active {
     opacity: 1;
+    animation: kenBurns 18s infinite alternate ease-in-out;
 }
+
+@keyframes kenBurns {
+    0% {
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(1.12);
+    }
+}
+
 
 .hero-overlay {
     position: absolute;
@@ -1979,13 +1991,11 @@ a {
 .spa-view {
     display: none;
     opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* GSAP will control slide & fade transitions dynamically */
 }
 .spa-view.active-view {
     display: block;
     opacity: 1;
-    transform: translateY(0);
 }
 
 /* ==========================================================================
