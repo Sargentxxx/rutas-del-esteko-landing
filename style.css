@@ -9,8 +9,8 @@
     --primary-light: HSL(var(--brand-hue), 100%, 96%);
     
     /* Secondary Colors */
-    --secondary: HSL(42, 85%, 52%); /* Golden Sun */
-    --secondary-hover: HSL(42, 95%, 44%);
+    --secondary: HSL(var(--brand-hue), 95%, 72%); /* Light Red (instead of yellow) matching marquee reviews */
+    --secondary-hover: HSL(var(--brand-hue), 95%, 64%);
     
     /* Semantic Colors */
     --accent: HSL(184, 75%, 40%); /* Oasis Teal (representing travel, lakes, ocean) */
