@@ -593,6 +593,7 @@ CREATE TABLE IF NOT EXISTS public.landing_destinations (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name text NOT NULL,
     category text NOT NULL,
+    is_oferta boolean DEFAULT false,
     duration text NOT NULL,
     description text NOT NULL,
     image_url text NOT NULL,
