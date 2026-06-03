@@ -156,7 +156,11 @@ const DEFAULT_CONFIG = {
     whatsapp: "3855962089",
     facebook: "https://www.facebook.com/profile.php?id=100087455823485",
     instagram: "https://www.instagram.com/rutasdelesteko.sde/",
-    tiktok: "https://www.tiktok.com/@rutasdelesteko"
+    tiktok: "https://www.tiktok.com/@rutasdelesteko",
+    logo_header_url: "img/logo.png",
+    logo_footer_url: "img/logo-white.png",
+    badge_reviews_url: "img/google-reviews-badge.png",
+    qr_mintur_url: "img/qr-rnav.png"
 };
 
 // ==========================================================================
@@ -1244,6 +1248,18 @@ async function loadConfigData() {
     document.getElementById('config-instagram').value = config.instagram || "";
     document.getElementById('config-tiktok').value = config.tiktok || "";
 
+    // Imágenes globales
+    document.getElementById('config-logo-header').value = config.logo_header_url || "";
+    document.getElementById('config-logo-footer').value = config.logo_footer_url || "";
+    document.getElementById('config-badge-reviews').value = config.badge_reviews_url || "";
+    document.getElementById('config-qr-mintur').value = config.qr_mintur_url || "";
+
+    // Configurar listeners de file uploader para imágenes globales
+    initFileUploaderListeners('config-logo-header-file', 'config-logo-header');
+    initFileUploaderListeners('config-logo-footer-file', 'config-logo-footer');
+    initFileUploaderListeners('config-badge-reviews-file', 'config-badge-reviews');
+    initFileUploaderListeners('config-qr-mintur-file', 'config-qr-mintur');
+
     // Checkboxes de cuotas
     const quotas = config.quotas || [3, 6, 9, 12];
     document.getElementById('quota-3').checked = quotas.includes(3);
@@ -1278,7 +1294,11 @@ if (formSystemConfig) {
             whatsapp: document.getElementById('config-whatsapp').value.trim(),
             facebook: document.getElementById('config-facebook').value.trim(),
             instagram: document.getElementById('config-instagram').value.trim(),
-            tiktok: document.getElementById('config-tiktok').value.trim()
+            tiktok: document.getElementById('config-tiktok').value.trim(),
+            logo_header_url: document.getElementById('config-logo-header').value.trim(),
+            logo_footer_url: document.getElementById('config-logo-footer').value.trim(),
+            badge_reviews_url: document.getElementById('config-badge-reviews').value.trim(),
+            qr_mintur_url: document.getElementById('config-qr-mintur').value.trim()
         };
 
         // Guardar local
