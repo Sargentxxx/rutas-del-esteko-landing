@@ -26,6 +26,26 @@ try {
     console.warn("No se pudo cargar el cliente CDN de Supabase. Operando en modo offline.");
 }
 
+// ==========================================================================
+// 1.1 CONFIGURACIÓN Y CLIENTE DE FIREBASE STORAGE
+// ==========================================================================
+const firebaseConfig = {
+    apiKey: "AIzaSyAxSpYY8iZXcLylJStFx2GD3Ejyzq_wy_U",
+    authDomain: "rutas-del-esteko-landing.firebaseapp.com",
+    projectId: "rutas-del-esteko-landing",
+    storageBucket: "rutas-del-esteko-landing.firebasestorage.app",
+    messagingSenderId: "583115096942",
+    appId: "1:583115096942:web:62193426a24fdd0e19377f"
+};
+
+try {
+    if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+    }
+} catch (e) {
+    console.warn("No se pudo cargar el cliente CDN de Firebase.", e);
+}
+
 // Datos por defecto (Semilla inicial) por si no existe base de datos
 const DEFAULT_SECTIONS = {
     hero: {
@@ -989,38 +1009,27 @@ if (formUploadGallery) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cargando Imagen...';
 
-        // 1. Si hay archivo, subirlo a Supabase Storage
+        // 1. Si hay archivo, subirlo a Firebase Storage
         if (hasFile) {
             const file = fileInput.files[0];
             
-            if (isDatabaseOnline && supabaseClient) {
+            if (typeof firebase !== 'undefined') {
                 try {
                     const fileExt = file.name.split('.').pop();
                     const fileName = `${section}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
                     const filePath = `gallery/${fileName}`;
 
-                    // Subir archivo al bucket publico "landing-media"
-                    const { data, error } = await supabaseClient.storage
-                        .from('landing-media')
-                        .upload(filePath, file);
-
-                    if (!error) {
-                        const { data: pubData } = supabaseClient.storage
-                            .from('landing-media')
-                            .getPublicUrl(filePath);
-                        imageUrl = pubData.publicUrl;
-                    } else {
-                        console.error("Fallo de Storage Supabase, intentando fallback de lectura local base64:", error);
-                        // Convertir a Base64 localmente
-                        imageUrl = await convertFileToBase64(file);
-                        showToast("Bucket 'landing-media' sin acceso. Guardada como imagen local.");
-                    }
+                    // Subir archivo a Firebase Storage
+                    const storageRef = firebase.storage().ref().child(filePath);
+                    const uploadSnapshot = await storageRef.put(file);
+                    imageUrl = await uploadSnapshot.ref.getDownloadURL();
                 } catch (err) {
-                    console.error("Fallo de red en Storage:", err);
+                    console.error("Fallo de Storage Firebase, intentando fallback de lectura local base64:", err);
                     imageUrl = await convertFileToBase64(file);
+                    showToast("Fallo de subida a Firebase. Guardada localmente.");
                 }
             } else {
-                // Modo offline: guardar local en base64
+                // Modo offline / sin Firebase: guardar local en base64
                 imageUrl = await convertFileToBase64(file);
             }
         }
@@ -1403,32 +1412,23 @@ function initFileUploaderListeners(fileInputId, targetInputId) {
                 originalLabel.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Subiendo...';
             }
 
-            // 1. Si Supabase está en línea, subir a Storage
-            if (isDatabaseOnline && supabaseClient) {
+            // 1. Si Firebase está cargado, subir a Storage
+            if (typeof firebase !== 'undefined') {
                 try {
                     const fileExt = file.name.split('.').pop();
                     const fileName = `media-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
                     const filePath = `uploads/${fileName}`;
 
-                    const { data, error } = await supabaseClient.storage
-                        .from('landing-media')
-                        .upload(filePath, file);
-
-                    if (!error) {
-                        const { data: pubData } = supabaseClient.storage
-                            .from('landing-media')
-                            .getPublicUrl(filePath);
-                        targetInput.value = pubData.publicUrl;
-                        showToast("Archivo subido a Supabase Storage!");
-                    } else {
-                        // Fallback a base64
-                        const b64 = await convertFileToBase64(file);
-                        targetInput.value = b64;
-                        showToast("Bucket cerrado. Subido en formato de lectura local.");
-                    }
+                    const storageRef = firebase.storage().ref().child(filePath);
+                    const uploadSnapshot = await storageRef.put(file);
+                    const url = await uploadSnapshot.ref.getDownloadURL();
+                    targetInput.value = url;
+                    showToast("Archivo subido a Firebase Storage!");
                 } catch (err) {
+                    console.error("Error al subir a Firebase Storage:", err);
                     const b64 = await convertFileToBase64(file);
                     targetInput.value = b64;
+                    showToast("Error de subida. Guardado en formato local.");
                 }
             } else {
                 // Sencillo convertidor offline
@@ -1463,25 +1463,17 @@ function initHeroCarouselUploader() {
                 const file = fileInput.files[i];
                 let fileUrl = "";
 
-                if (isDatabaseOnline && supabaseClient) {
+                if (typeof firebase !== 'undefined') {
                     try {
                         const fileExt = file.name.split('.').pop();
                         const fileName = `hero-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
                         const filePath = `uploads/${fileName}`;
 
-                        const { data, error } = await supabaseClient.storage
-                            .from('landing-media')
-                            .upload(filePath, file);
-
-                        if (!error) {
-                            const { data: pubData } = supabaseClient.storage
-                                .from('landing-media')
-                                .getPublicUrl(filePath);
-                            fileUrl = pubData.publicUrl;
-                        } else {
-                            fileUrl = await convertFileToBase64(file);
-                        }
+                        const storageRef = firebase.storage().ref().child(filePath);
+                        const uploadSnapshot = await storageRef.put(file);
+                        fileUrl = await uploadSnapshot.ref.getDownloadURL();
                     } catch (err) {
+                        console.error("Error subiendo carrusel a Firebase:", err);
                         fileUrl = await convertFileToBase64(file);
                     }
                 } else {
