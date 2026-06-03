@@ -636,6 +636,29 @@ function applyGlobalConfigVars(config) {
         }
     });
     if (config.tiktok) tkLinks.forEach(link => link.setAttribute('href', config.tiktok));
+
+    // Aplicar logos e imágenes globales de la landing
+    if (config.logo_header_url) {
+        const headerLogoImg = document.querySelector('.navbar-logo-img');
+        if (headerLogoImg) headerLogoImg.src = config.logo_header_url;
+    }
+    if (config.logo_footer_url) {
+        const footerLogoImg = document.querySelector('.footer-logo-img');
+        if (footerLogoImg) footerLogoImg.src = config.logo_footer_url;
+        const sidebarLogoImg = document.querySelector('.sidebar-logo'); // Para sincronizar logo lateral en el panel admin
+        if (sidebarLogoImg) sidebarLogoImg.src = config.logo_footer_url;
+    }
+    if (config.badge_reviews_url) {
+        const badgeReviewsImg = document.querySelector('.reviews-badge-img');
+        if (badgeReviewsImg) badgeReviewsImg.src = config.badge_reviews_url;
+    }
+    if (config.qr_mintur_url) {
+        const qrMinturImg = document.querySelector('.mintur-qr-img');
+        if (qrMinturImg) qrMinturImg.src = config.qr_mintur_url;
+        
+        const footerQrImg = document.querySelector('.footer-qr-img');
+        if (footerQrImg) footerQrImg.src = config.qr_mintur_url;
+    }
 }
 
 function renderPublicCatalogGrid(destinations, config) {
