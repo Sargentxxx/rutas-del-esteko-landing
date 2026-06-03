@@ -466,7 +466,10 @@ async function loadSectionsData() {
     // Inyectar datos en inputs
     // Hero
     document.getElementById('hero-title').value = sections.hero?.title || "";
-    document.getElementById('hero-subtitle').value = sections.hero?.subtitle || "";
+    const heroSubtitleEl = document.getElementById('hero-subtitle');
+    if (heroSubtitleEl) {
+        heroSubtitleEl.value = sections.hero?.subtitle || "";
+    }
     document.getElementById('hero-text').value = sections.hero?.content || "";
 
     // Carousel URLs from extra_data or fallbacks
@@ -521,7 +524,7 @@ if (formEditSections) {
         const updatedSections = {
             hero: {
                 title: document.getElementById('hero-title').value,
-                subtitle: document.getElementById('hero-subtitle').value,
+                subtitle: document.getElementById('hero-subtitle') ? document.getElementById('hero-subtitle').value : "",
                 content: document.getElementById('hero-text').value,
                 image_url: "",
                 extra_data: {
@@ -1072,12 +1075,46 @@ if (formUploadGallery) {
     });
 }
 
-// Convertidor a Base64 para fallback offline de imágenes
+// Convertidor a Base64 comprimido para fallback offline de imágenes para evitar QuotaExceededError en LocalStorage
 function convertFileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                const max_size = 1000; // Dimensiones máximas recomendables para web
+                
+                if (width > height) {
+                    if (width > max_size) {
+                        height *= max_size / width;
+                        width = max_size;
+                    }
+                } else {
+                    if (height > max_size) {
+                        width *= max_size / height;
+                        height = max_size;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Comprimir a JPEG con calidad 0.7 para reducir drásticamente el peso (de 3MB a ~50KB)
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                resolve(compressedBase64);
+            };
+            img.onerror = (err) => {
+                // Si falla o no es imagen válida, retornar base64 original como resguardo
+                resolve(event.target.result);
+            };
+        };
         reader.onerror = error => reject(error);
     });
 }
