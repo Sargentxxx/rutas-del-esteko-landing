@@ -2000,6 +2000,19 @@ a {
     display: block;
     opacity: 1;
 }
+.spa-view:not(#view-inicio) {
+    padding-top: 170px;
+}
+@media (max-width: 1024px) {
+    .spa-view:not(#view-inicio) {
+        padding-top: 140px;
+    }
+}
+@media (max-width: 768px) {
+    .spa-view:not(#view-inicio) {
+        padding-top: 180px;
+    }
+}
 
 /* ==========================================================================
    GOOGLE MAPS PREMIUM REVIEWS

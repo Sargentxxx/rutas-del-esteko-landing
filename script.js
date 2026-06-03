@@ -418,6 +418,18 @@ async function loadAndApplySections() {
         }
 
         if (nImage && sections.nosotros.image_url) nImage.src = sections.nosotros.image_url;
+
+        // Nosotros sub-photos rendering
+        if (sections.nosotros.extra_data) {
+            const subPhoto1 = document.querySelector('.sub-photo-1 img');
+            const subPhoto2 = document.querySelector('.sub-photo-2 img');
+            if (subPhoto1 && sections.nosotros.extra_data.sub_photo_1) {
+                subPhoto1.src = sections.nosotros.extra_data.sub_photo_1;
+            }
+            if (subPhoto2 && sections.nosotros.extra_data.sub_photo_2) {
+                subPhoto2.src = sections.nosotros.extra_data.sub_photo_2;
+            }
+        }
     }
 
     // La Fiesta
@@ -468,6 +480,19 @@ async function loadAndApplySections() {
             eContentWrapper.innerHTML = parasHtml;
             if (features) eContentWrapper.appendChild(features);
             if (btn) eContentWrapper.appendChild(btn);
+        }
+    }
+
+    // Sorteos
+    if (sections.sorteos) {
+        const sTitle = document.querySelector('.sorteos-content h2');
+        const sContentWrapper = document.querySelector('.sorteos-content > p');
+        const sBanner = document.querySelector('.sorteos-banner');
+
+        if (sTitle && sections.sorteos.title) sTitle.textContent = sections.sorteos.title;
+        if (sContentWrapper && sections.sorteos.content) sContentWrapper.textContent = sections.sorteos.content;
+        if (sBanner && sections.sorteos.image_url) {
+            sBanner.style.backgroundImage = `linear-gradient(135deg, rgba(24, 18, 12, 0.95), rgba(24, 18, 12, 0.85)), url('${sections.sorteos.image_url}')`;
         }
     }
 }
@@ -976,6 +1001,17 @@ function initScrollReveal() {
     headers.forEach(header => {
         // Dividir el título en palabras
         const split = new SplitText(header, { type: "words" });
+
+        // Asegurar que haya un espacio en blanco después de cada palabra div (corrige bug de SplitText)
+        if (split.words && split.words.length > 0) {
+            for (let i = 0; i < split.words.length - 1; i++) {
+                const word = split.words[i];
+                const next = word.nextSibling;
+                if (!next || next.nodeType !== 3 || next.nodeValue !== ' ') {
+                    word.parentNode.insertBefore(document.createTextNode(' '), word.nextSibling);
+                }
+            }
+        }
 
         // Animación de aparición (slide up + fade in)
         gsap.from(split.words, {
