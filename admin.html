@@ -87,7 +87,6 @@
                     <li><a href="#" class="sidebar-link" data-tab="galeria"><i class="fa-solid fa-images"></i> Galerías Escolares/Fiestas</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="configuracion"><i class="fa-solid fa-sliders"></i> Simulador y Datos</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="leads"><i class="fa-solid fa-users-viewfinder"></i> Leads Capturados <span class="badge-leads-count" id="nav-leads-badge">0</span></a></li>
-                    <li><a href="#" class="sidebar-link" data-tab="usuarios" id="nav-usuarios-tab" style="display: none;"><i class="fa-solid fa-users-gear"></i> Gestión de Usuarios</a></li>
                 </ul>
             </nav>
             
@@ -361,6 +360,11 @@
                                         <input type="number" id="config-seña-percent" class="form-control-admin" min="5" max="90" value="20">
                                     </div>
                                     
+                                    <div class="form-group-admin" style="margin-top: 15px;">
+                                        <label for="config-descuento-oferta" style="color: var(--accent);"><i class="fa-solid fa-tags"></i> Descuento Global para Productos en Oferta (%)</label>
+                                        <input type="number" id="config-descuento-oferta" class="form-control-admin" min="0" max="99" value="15">
+                                    </div>
+                                    
                                     <div class="form-group-admin">
                                         <label>Planes de Cuotas Disponibles por Defecto:</label>
                                         <div class="checkbox-group-admin">
@@ -467,38 +471,7 @@
                     </div>
                 </section>
 
-                <!-- 6. TAB: USUARIOS -->
-                <section class="tab-pane" id="tab-usuarios">
-                    <div class="pane-header header-flex">
-                        <div>
-                            <h2><i class="fa-solid fa-users text-primary"></i> Gestión de Usuarios y Permisos</h2>
-                            <p>Registrá nuevos miembros del regimiento, asigná roles y controlá su estado de acceso para la Landing y el ERP.</p>
-                        </div>
-                        <button class="btn-admin btn-admin-primary" id="btn-open-create-user-modal"><i class="fa-solid fa-user-plus"></i> Nuevo Usuario</button>
-                    </div>
 
-                    <div class="admin-card">
-                        <div class="card-body-admin table-responsive-admin">
-                            <table class="leads-table-admin">
-                                <thead>
-                                    <tr>
-                                        <th>Usuario / Nombre</th>
-                                        <th>Correo Electrónico</th>
-                                        <th>Rol Asignado</th>
-                                        <th>Estado de Acceso</th>
-                                        <th>Fecha de Alta</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="users-table-body">
-                                    <tr>
-                                        <td colspan="6" class="table-empty-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Cargando usuarios militarmente...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
 
             </div>
         </main>
@@ -528,6 +501,10 @@
                                 <option value="invierno">Invierno</option>
                                 <option value="mas">Más Escapadas</option>
                             </select>
+                            <div class="form-checkbox" style="margin-top: 10px;">
+                                <input type="checkbox" id="dest-is-oferta">
+                                <label for="dest-is-oferta" style="color: var(--accent); font-weight: 600;"><i class="fa-solid fa-tag"></i> Marcar Producto en Oferta</label>
+                            </div>
                         </div>
                     </div>
                     

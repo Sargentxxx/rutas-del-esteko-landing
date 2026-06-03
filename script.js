@@ -642,6 +642,7 @@ function renderPublicCatalogGrid(destinations, config) {
         card.innerHTML = `
             <div class="card-image">
                 <img src="${dest.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=500&q=80'}" alt="${dest.name}">
+                ${dest.is_oferta ? `<span class="card-badge badge-offer" style="background-color: var(--accent); top: 15px; left: 15px; z-index: 10;">🔥 ${config.descuento_oferta || 15}% OFF</span>` : ''}
                 <span class="card-badge badge-${dest.category === 'verano' ? 'summer' : dest.category === 'invierno' ? 'winter' : 'escape'}">${dest.category}</span>
             </div>
             <div class="card-body">
@@ -709,9 +710,16 @@ function initSavingsSimulator(destinations, config) {
     // Poblar destinos dinámicamente
     selectDestiny.innerHTML = '';
     destinations.forEach(dest => {
+        let finalCost = parseInt(dest.cost, 10) || 0;
+        let nameSuffix = "";
+        if (dest.is_oferta && config.descuento_oferta) {
+            finalCost = finalCost - (finalCost * (config.descuento_oferta / 100));
+            nameSuffix = ` (Oferta ${config.descuento_oferta}% OFF)`;
+        }
+        
         const opt = document.createElement('option');
-        opt.value = dest.cost;
-        opt.textContent = `${dest.name} ($${parseInt(dest.cost, 10).toLocaleString('es-AR')})`;
+        opt.value = finalCost;
+        opt.textContent = `${dest.name}${nameSuffix} ($${parseInt(finalCost, 10).toLocaleString('es-AR')})`;
         selectDestiny.appendChild(opt);
     });
 
