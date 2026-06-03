@@ -119,6 +119,7 @@ const DEFAULT_DESTINATIONS = [
 
 const DEFAULT_CONFIG = {
     seña_percent: 20,
+    descuento_oferta: 15,
     quotas: [3, 6, 9, 12],
     legajo: "19.515",
     legajo_url: "https://www.agenciasdeviajes.ar/#buscador",
@@ -375,45 +376,11 @@ function showDashboardView(userEmail) {
     dashboardContainer.style.display = 'flex';
     userEmailEl.textContent = userEmail;
 
-    // Configurar menú de usuarios si corresponde
-    checkAdminRoleAndConfigureMenu();
-
     // Cargar los datos de la pestaña activa inicial
     loadTabContent('secciones');
 }
 
-async function checkAdminRoleAndConfigureMenu() {
-    const navUsuariosTab = document.getElementById('nav-usuarios-tab');
-    if (!navUsuariosTab) return;
 
-    if (supabaseClient) {
-        try {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                const { data: profile, error } = await supabaseClient
-                    .from('profiles')
-                    .select('rol')
-                    .eq('id', session.user.id)
-                    .single();
-
-                if (!error && profile && profile.rol === 'admin') {
-                    navUsuariosTab.style.display = 'block';
-                    return;
-                }
-            }
-        } catch (e) {
-            console.error("Error validando rol de admin en Supabase:", e);
-        }
-    }
-
-    // Fallback local: si el email contiene "Local Admin", "alberto" o "admin"
-    const sessionToken = localStorage.getItem('esteko_admin_session');
-    if (sessionToken && (sessionToken.includes("Local Admin") || sessionToken.includes("admin") || sessionToken.includes("alberto"))) {
-        navUsuariosTab.style.display = 'block';
-    } else {
-        navUsuariosTab.style.display = 'none';
-    }
-}
 
 // ==========================================================================
 // 4. SISTEMA DE TABS Y NAVEGACIÓN
@@ -681,6 +648,7 @@ function renderAdminDestinations() {
                 <p class="dest-desc-admin">${dest.description}</p>
                 <div class="dest-card-financials">
                     <span>Precio Simulador: <strong>$${parseInt(dest.cost, 10).toLocaleString('es-AR')} ARS</strong></span>
+                    ${dest.is_oferta ? `<br><span style="color: var(--accent); font-size: 0.85rem;"><i class="fa-solid fa-tag"></i> Producto en Oferta</span>` : ''}
                 </div>
                 <div class="dest-card-actions">
                     <button class="btn-edit-admin" onclick="openEditDestModal('${dest.id}')"><i class="fa-solid fa-pen-to-square"></i> Editar</button>
@@ -724,6 +692,7 @@ window.openEditDestModal = function(destId) {
     document.getElementById('dest-id').value = dest.id;
     document.getElementById('dest-name').value = dest.name;
     document.getElementById('dest-category').value = dest.category;
+    document.getElementById('dest-is-oferta').checked = dest.is_oferta || false;
     document.getElementById('dest-duration').value = dest.duration;
     document.getElementById('dest-price-info').value = dest.price_info;
     document.getElementById('dest-whatsapp-text').value = dest.whatsapp_text;
@@ -753,6 +722,7 @@ if (formDestCrud) {
         const id = document.getElementById('dest-id').value;
         const name = document.getElementById('dest-name').value.trim();
         const category = document.getElementById('dest-category').value;
+        const is_oferta = document.getElementById('dest-is-oferta').checked;
         const duration = document.getElementById('dest-duration').value.trim();
         const price_info = document.getElementById('dest-price-info').value.trim();
         const whatsapp_text = document.getElementById('dest-whatsapp-text').value.trim();
@@ -779,6 +749,7 @@ if (formDestCrud) {
             id: finalId,
             name,
             category,
+            is_oferta,
             duration,
             description,
             image_url,
@@ -1178,6 +1149,7 @@ async function loadConfigData() {
 
     // Inyectar datos en inputs
     document.getElementById('config-seña-percent').value = config.seña_percent || 20;
+    document.getElementById('config-descuento-oferta').value = config.descuento_oferta || 15;
     document.getElementById('config-legajo').value = config.legajo || "";
     document.getElementById('config-legajo-url').value = config.legajo_url || "";
     document.getElementById('config-email').value = config.email || "";
@@ -1214,6 +1186,7 @@ if (formSystemConfig) {
 
         const updatedConfig = {
             seña_percent: parseInt(document.getElementById('config-seña-percent').value, 10),
+            descuento_oferta: parseInt(document.getElementById('config-descuento-oferta').value, 10),
             quotas: quotas,
             legajo: document.getElementById('config-legajo').value.trim(),
             legajo_url: document.getElementById('config-legajo-url').value.trim(),
