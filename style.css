@@ -337,6 +337,7 @@ a {
 }
 
 .btn-contact-nav {
+    display: inline-block;
     background-color: var(--primary);
     color: var(--text-light) !important;
     padding: 10px 20px !important;
@@ -349,8 +350,10 @@ a {
     display: none !important;
 }
 
-.btn-contact-nav:hover {
+.btn-contact-nav:hover,
+.btn-contact-nav.active {
     background-color: var(--primary-hover);
+    color: var(--text-light) !important;
     transform: translateY(-1px);
     box-shadow: 0 8px 18px rgba(220, 30, 30, 0.4);
 }
@@ -1872,33 +1875,8 @@ a {
     .pagos-simulator {
         position: static;
     }
-}
-
-@media (max-width: 768px) {
-    .top-bar-content {
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-    }
     
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .hero-text {
-        font-size: 1rem;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-    }
-    
-    .hero-stats {
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-    
-    /* Header menu mobile */
+    /* Header menu mobile - Triggered at 1024px breakpoint */
     .nav-desktop-left, .nav-desktop-right {
         display: none !important;
     }
@@ -1959,6 +1937,31 @@ a {
     .btn-contact-nav {
         width: 100%;
         text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar-content {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-text {
+        font-size: 1rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .hero-stats {
+        flex-wrap: wrap;
+        gap: 20px;
     }
     
     .steps-raffle {
