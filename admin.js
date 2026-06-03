@@ -56,7 +56,11 @@ const DEFAULT_SECTIONS = {
     nosotros: {
         title: "¡Bienvenidos a Rutas del Esteko!",
         content: "Somos un emprendimiento familiar nacido en el año 2022, creado con el objetivo de brindar una alternativa turística accesible, confiable y de calidad para todas las personas que desean cumplir el sueño de viajar.\n\nNos destacamos por ser la primera agencia de Santiago del Estero en innovar con una propuesta alternativa de turismo, ofreciendo durante la temporada de verano paquetes de traslado + departamento, con alojamientos equipados, cómodos y ubicados cerca de la playa en los principales destinos turísticos del país, extendiéndonos también a Camboriú, en el vecino país de Brasil.\n\nEn Rutas del Esteko buscamos que cada viajero se sienta acompañado desde el primer momento, brindando un ambiente familiar, cálido y agradable para que pueda disfrutar plenamente de cada experiencia.",
-        image_url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=800&q=80"
+        image_url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=800&q=80",
+        extra_data: {
+            sub_photo_1: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=500&q=80",
+            sub_photo_2: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=500&q=80"
+        }
     },
     fiesta: {
         title: "La Fiesta de Rutas del Esteko",
@@ -67,6 +71,11 @@ const DEFAULT_SECTIONS = {
         title: "Paseos con Escuelas y Colegios",
         content: "Creamos experiencias educativas seguras, dinámicas y divertidas fuera del aula. Viajes de estudio y recreativos planificados con absoluta rigurosidad legal y la máxima diversión para los alumnos.",
         image_url: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80"
+    },
+    sorteos: {
+        title: "¡Vos podés ser el próximo ganador!",
+        content: "En cada uno de nuestros destinos y salidas, realizamos sorteos especiales de valijas, excursiones opcionales gratuitas y hasta vouchers de descuento para tu próximo viaje. ¡La suerte está siempre de tu lado con el Esteko!",
+        image_url: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80"
     }
 };
 
@@ -509,6 +518,12 @@ async function loadSectionsData() {
     document.getElementById('nosotros-title').value = sections.nosotros?.title || "";
     document.getElementById('nosotros-content').value = sections.nosotros?.content || "";
     document.getElementById('nosotros-image').value = sections.nosotros?.image_url || "";
+    if (document.getElementById('nosotros-image-sub1')) {
+        document.getElementById('nosotros-image-sub1').value = sections.nosotros?.extra_data?.sub_photo_1 || "";
+    }
+    if (document.getElementById('nosotros-image-sub2')) {
+        document.getElementById('nosotros-image-sub2').value = sections.nosotros?.extra_data?.sub_photo_2 || "";
+    }
 
     // La Fiesta
     document.getElementById('fiesta-title').value = sections.fiesta?.title || "";
@@ -520,10 +535,24 @@ async function loadSectionsData() {
     document.getElementById('educativo-content').value = sections.educativo?.content || "";
     document.getElementById('educativo-image').value = sections.educativo?.image_url || "";
 
+    // Sorteos
+    if (document.getElementById('sorteos-title')) {
+        document.getElementById('sorteos-title').value = sections.sorteos?.title || "";
+    }
+    if (document.getElementById('sorteos-content')) {
+        document.getElementById('sorteos-content').value = sections.sorteos?.content || "";
+    }
+    if (document.getElementById('sorteos-bg-image')) {
+        document.getElementById('sorteos-bg-image').value = sections.sorteos?.image_url || "";
+    }
+
     // Configurar listeners de file uploader local
     initFileUploaderListeners('nosotros-file', 'nosotros-image');
+    initFileUploaderListeners('nosotros-file-sub1', 'nosotros-image-sub1');
+    initFileUploaderListeners('nosotros-file-sub2', 'nosotros-image-sub2');
     initFileUploaderListeners('fiesta-file', 'fiesta-image');
     initFileUploaderListeners('educativo-file', 'educativo-image');
+    initFileUploaderListeners('sorteos-bg-file', 'sorteos-bg-image');
     initHeroCarouselUploader();
 }
 
@@ -554,7 +583,11 @@ if (formEditSections) {
             nosotros: {
                 title: document.getElementById('nosotros-title').value,
                 content: document.getElementById('nosotros-content').value,
-                image_url: document.getElementById('nosotros-image').value
+                image_url: document.getElementById('nosotros-image').value,
+                extra_data: {
+                    sub_photo_1: document.getElementById('nosotros-image-sub1') ? document.getElementById('nosotros-image-sub1').value : "",
+                    sub_photo_2: document.getElementById('nosotros-image-sub2') ? document.getElementById('nosotros-image-sub2').value : ""
+                }
             },
             fiesta: {
                 title: document.getElementById('fiesta-title').value,
@@ -565,6 +598,11 @@ if (formEditSections) {
                 title: document.getElementById('educativo-title').value,
                 content: document.getElementById('educativo-content').value,
                 image_url: document.getElementById('educativo-image').value
+            },
+            sorteos: {
+                title: document.getElementById('sorteos-title') ? document.getElementById('sorteos-title').value : "",
+                content: document.getElementById('sorteos-content') ? document.getElementById('sorteos-content').value : "",
+                image_url: document.getElementById('sorteos-bg-image') ? document.getElementById('sorteos-bg-image').value : ""
             }
         };
 
