@@ -89,6 +89,7 @@
                     <li><a href="#" class="sidebar-link" data-tab="galeria"><i class="fa-solid fa-images"></i> Galerías Escolares/Fiestas</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="configuracion"><i class="fa-solid fa-sliders"></i> Simulador y Datos</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="leads"><i class="fa-solid fa-users-viewfinder"></i> Leads Capturados <span class="badge-leads-count" id="nav-leads-badge">0</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="usuarios"><i class="fa-solid fa-users-gear"></i> Administrar Usuarios</a></li>
                 </ul>
             </nav>
             
@@ -559,7 +560,39 @@
                     </div>
                 </section>
 
+                <!-- 6. TAB: USUARIOS -->
+                <section class="tab-pane" id="tab-usuarios">
+                    <div class="pane-header header-flex">
+                        <div>
+                            <h2><i class="fa-solid fa-users-gear text-primary"></i> Administrar Usuarios (Landing Page)</h2>
+                            <p>Creá, editá y eliminá los perfiles que tienen acceso al panel de administración de la landing page.</p>
+                        </div>
+                        <button class="btn-admin btn-admin-primary" id="btn-open-create-user-modal"><i class="fa-solid fa-user-plus"></i> Registrar Usuario</button>
+                    </div>
 
+                    <div class="admin-card">
+                        <div class="card-body-admin table-responsive-admin">
+                            <table class="leads-table-admin">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre Completo</th>
+                                        <th>Correo Electrónico</th>
+                                        <th>Rol</th>
+                                        <th>Estado</th>
+                                        <th>Fecha Registro</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <!-- Inyectado por JS -->
+                                    <tr>
+                                        <td colspan="6" class="table-empty-placeholder">No hay usuarios registrados.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
 
             </div>
         </main>

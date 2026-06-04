@@ -1630,7 +1630,7 @@ async function loadUsersData() {
     if (isDatabaseOnline && supabaseClient) {
         try {
             const { data, error } = await supabaseClient
-                .from('profiles')
+                .from('landing_profiles')
                 .select('*')
                 .order('created_at', { ascending: true });
 
@@ -1818,7 +1818,7 @@ function initUserModalListeners() {
                 try {
                     // Actualización directa en la tabla de perfiles usando política RLS de administrador
                     const { error } = await supabaseClient
-                        .from('profiles')
+                        .from('landing_profiles')
                         .update({
                             full_name: edit_name,
                             rol: edit_rol,
