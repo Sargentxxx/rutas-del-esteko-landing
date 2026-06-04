@@ -1941,14 +1941,40 @@ a {
 }
 
 @media (max-width: 768px) {
+    .top-bar {
+        padding: 6px 0;
+    }
+    
     .top-bar-content {
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
         text-align: center;
     }
     
+    .registration-badge {
+        font-size: 0.72rem;
+    }
+    
+    .top-bar-socials {
+        gap: 12px;
+    }
+    
+    .top-bar-socials a {
+        font-size: 1.15rem;
+    }
+    
+    .stats-counter {
+        font-size: 0.72rem;
+        padding: 2px 8px;
+    }
+    
     .main-header {
-        top: 70px;
+        top: 54px;
+    }
+    
+    .navbar-logo-img {
+        height: 52px !important;
+        margin: 0 !important;
     }
     
     .hero-title {
