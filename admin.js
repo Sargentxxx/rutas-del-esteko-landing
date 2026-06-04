@@ -322,7 +322,7 @@ function initLoginListeners() {
                         localStorage.setItem('esteko_admin_session', email);
                         showDashboardView(email);
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión Militar</span>';
+                        submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
                         return;
                     }
                 } catch (err) {
@@ -342,7 +342,7 @@ function initLoginListeners() {
             }
 
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión Militar</span>';
+            submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
         });
     }
 
