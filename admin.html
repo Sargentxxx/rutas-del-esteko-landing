@@ -89,6 +89,7 @@
                     <li><a href="#" class="sidebar-link" data-tab="galeria"><i class="fa-solid fa-images"></i> Galerías Escolares/Fiestas</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="configuracion"><i class="fa-solid fa-sliders"></i> Simulador y Datos</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="leads"><i class="fa-solid fa-users-viewfinder"></i> Leads Capturados <span class="badge-leads-count" id="nav-leads-badge">0</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="postulaciones"><i class="fa-solid fa-file-pdf"></i> Postulaciones CV <span class="badge-leads-count" id="nav-postulaciones-badge" style="background: var(--accent);">0</span></a></li>
                     <li><a href="#" class="sidebar-link" data-tab="usuarios"><i class="fa-solid fa-users-gear"></i> Administrar Usuarios</a></li>
                 </ul>
             </nav>
@@ -211,6 +212,34 @@
                                     <label for="nosotros-content">Contenido / Quiénes Somos (Párrafos, puedes separar con saltos de línea)</label>
                                     <textarea id="nosotros-content" class="form-control-admin" rows="6" placeholder="Detalle completo de la historia y habilitación de la agencia..."></textarea>
                                 </div>
+                                <div class="form-group-admin" style="grid-column: span 2; margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px;">
+                                    <h4 style="margin-bottom: 10px; color: var(--text-dark);"><i class="fa-solid fa-star"></i> Slogan de Experiencia</h4>
+                                </div>
+                                <div class="grid-2-col">
+                                    <div class="form-group-admin">
+                                        <label for="nosotros-slogan-year">Año del Slogan</label>
+                                        <input type="text" id="nosotros-slogan-year" class="form-control-admin" placeholder="Ej. 2022">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="nosotros-slogan-text">Texto del Slogan</label>
+                                        <input type="text" id="nosotros-slogan-text" class="form-control-admin" placeholder="Ej. Desde hace años viajando juntos">
+                                    </div>
+                                </div>
+                                <div class="form-group-admin" style="grid-column: span 2; margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px;">
+                                    <h4 style="margin-bottom: 10px; color: var(--text-dark);"><i class="fa-solid fa-list-check"></i> 3 Frases Destacadas (Debajo del Registro RNAV)</h4>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="nosotros-bullet-1">Frase Destacada 1</label>
+                                    <input type="text" id="nosotros-bullet-1" class="form-control-admin" placeholder="Ej. Coordinación permanente y propia durante todo el viaje.">
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="nosotros-bullet-2">Frase Destacada 2</label>
+                                    <input type="text" id="nosotros-bullet-2" class="form-control-admin" placeholder="Ej. Unidades de larga distancia premium de la empresa San Felipe.">
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="nosotros-bullet-3">Frase Destacada 3</label>
+                                    <input type="text" id="nosotros-bullet-3" class="form-control-admin" placeholder="Ej. Departamentos equipados y ubicaciones céntricas inigualables.">
+                                </div>
                             </div>
                         </div>
 
@@ -238,6 +267,21 @@
                                     <label for="fiesta-content">Contenido Histórico de la Fiesta (Párrafos)</label>
                                     <textarea id="fiesta-content" class="form-control-admin" rows="5" placeholder="Detalle de las ediciones, artistas invitados y sorteos de la fiesta..."></textarea>
                                 </div>
+                                <div class="form-group-admin" style="grid-column: span 2; margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px;">
+                                    <h4 style="margin-bottom: 10px; color: var(--text-dark);"><i class="fa-solid fa-quote-left"></i> Contenido Histórico y Frase Destacada (Cita)</h4>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="fiesta-history-title">Título del Contenido Histórico</label>
+                                    <input type="text" id="fiesta-history-title" class="form-control-admin" placeholder="Ej. Tradición, Música y Experiencias Inolvidables">
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="fiesta-quote-text">Texto de la Cita (Debajo del Contenido Histórico)</label>
+                                    <textarea id="fiesta-quote-text" class="form-control-admin" rows="3" placeholder="Ej. A lo largo de las distintas ediciones participaron..."></textarea>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="fiesta-quote-cite">Autor/Firma de la Cita</label>
+                                    <input type="text" id="fiesta-quote-cite" class="form-control-admin" placeholder="Ej. — Tradición & Alegría Esteko">
+                                </div>
                             </div>
                         </div>
 
@@ -263,7 +307,29 @@
                                 </div>
                                 <div class="form-group-admin">
                                     <label for="educativo-content">Descripción del Enfoque Pedagógico / Escolar</label>
-                                    <textarea id="educativo-content" class="form-control-admin" rows="4" placeholder="Redacción sobre la seguridad, seguros de viaje y coordinadores especializados para escuelas..."></textarea>
+                                </div>
+                                <div class="form-group-admin" style="grid-column: span 2; margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px;">
+                                    <h4 style="margin-bottom: 10px; color: var(--text-dark);"><i class="fa-solid fa-shield-cat"></i> Items del Enfoque (2 Características)</h4>
+                                </div>
+                                <div class="grid-2-col">
+                                    <div class="form-group-admin">
+                                        <label for="educativo-feat-1-title">Característica 1 - Título</label>
+                                        <input type="text" id="educativo-feat-1-title" class="form-control-admin" placeholder="Ej. 100% de Seguridad y Seguros">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="educativo-feat-1-desc">Característica 1 - Descripción</label>
+                                        <input type="text" id="educativo-feat-1-desc" class="form-control-admin" placeholder="Seguros de Responsabilidad Civil...">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="educativo-feat-2-title">Característica 2 - Título</label>
+                                        <input type="text" id="educativo-feat-2-title" class="form-control-admin" placeholder="Ej. Coordinadores Especializados">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="educativo-feat-2-desc">Característica 2 - Descripción</label>
+                                        <input type="text" id="educativo-feat-2-desc" class="form-control-admin" placeholder="Personal capacitado en recreación...">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Sorteos Section Edit -->
@@ -553,6 +619,40 @@
                                     <!-- Injected by JS -->
                                     <tr>
                                         <td colspan="6" class="table-empty-placeholder">No hay leads capturados todavía.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5b. TAB: POSTULACIONES CV -->
+                <section class="tab-pane" id="tab-postulaciones">
+                    <div class="pane-header header-flex">
+                        <div>
+                            <h2><i class="fa-solid fa-file-pdf text-primary"></i> Postulaciones de CV</h2>
+                            <p>Consultá el listado de personas interesadas en formar parte del equipo y sus currículums.</p>
+                        </div>
+                        <button class="btn-admin btn-admin-secondary" id="btn-clear-postulaciones"><i class="fa-solid fa-trash-can"></i> Vaciar Postulaciones</button>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="card-body-admin table-responsive-admin">
+                            <table class="leads-table-admin">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Registro</th>
+                                        <th>Nombre y Apellido</th>
+                                        <th>WhatsApp / Teléfono</th>
+                                        <th>Correo Electrónico</th>
+                                        <th>CV / Adjunto</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="postulaciones-table-body">
+                                    <!-- Injected by JS -->
+                                    <tr>
+                                        <td colspan="6" class="table-empty-placeholder">No hay postulaciones registradas todavía.</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -409,6 +409,9 @@ function showDashboardView(userEmail) {
     dashboardContainer.style.display = 'flex';
     userEmailEl.textContent = userEmail;
 
+    // Cargar conteo de badges
+    updateBadgesCount();
+
     // Cargar los datos de la pestaña activa inicial
     loadTabContent('secciones');
 }
@@ -455,6 +458,8 @@ function loadTabContent(tabId) {
         loadConfigData();
     } else if (tabId === 'leads') {
         loadLeadsData();
+    } else if (tabId === 'postulaciones') {
+        loadPostulacionesData();
     } else if (tabId === 'usuarios') {
         loadUsersData();
     }
@@ -528,16 +533,28 @@ async function loadSectionsData() {
     if (document.getElementById('nosotros-image-sub2')) {
         document.getElementById('nosotros-image-sub2').value = sections.nosotros?.extra_data?.sub_photo_2 || "";
     }
+    document.getElementById('nosotros-slogan-year').value = sections.nosotros?.extra_data?.slogan_year || "2022";
+    document.getElementById('nosotros-slogan-text').value = sections.nosotros?.extra_data?.slogan_text || "Desde hace años viajando juntos";
+    document.getElementById('nosotros-bullet-1').value = sections.nosotros?.extra_data?.bullet_1 || "Coordinación permanente y propia durante todo el viaje.";
+    document.getElementById('nosotros-bullet-2').value = sections.nosotros?.extra_data?.bullet_2 || "Unidades de larga distancia premium de la empresa San Felipe.";
+    document.getElementById('nosotros-bullet-3').value = sections.nosotros?.extra_data?.bullet_3 || "Departamentos equipados y ubicaciones céntricas inigualables.";
 
     // La Fiesta
     document.getElementById('fiesta-title').value = sections.fiesta?.title || "";
     document.getElementById('fiesta-content').value = sections.fiesta?.content || "";
     document.getElementById('fiesta-image').value = sections.fiesta?.image_url || "";
+    document.getElementById('fiesta-history-title').value = sections.fiesta?.extra_data?.history_title || "Tradición, Música y Experiencias Inolvidables";
+    document.getElementById('fiesta-quote-text').value = sections.fiesta?.extra_data?.quote_text || "A lo largo de las distintas ediciones participaron reconocidos artistas como Orellana Lucca, Dani Hoyos y Juan Saavedra, entre otros artistas invitados que hicieron de cada encuentro una verdadera fiesta.";
+    document.getElementById('fiesta-quote-cite').value = sections.fiesta?.extra_data?.quote_cite || "— Tradición & Alegría Esteko";
 
     // Educativo
     document.getElementById('educativo-title').value = sections.educativo?.title || "";
     document.getElementById('educativo-content').value = sections.educativo?.content || "";
     document.getElementById('educativo-image').value = sections.educativo?.image_url || "";
+    document.getElementById('educativo-feat-1-title').value = sections.educativo?.extra_data?.feat_1_title || "100% de Seguridad y Seguros";
+    document.getElementById('educativo-feat-1-desc').value = sections.educativo?.extra_data?.feat_1_desc || "Seguros de Responsabilidad Civil, Accidentes Personales y Asistencia Médica total cubiertos desde la salida de la escuela.";
+    document.getElementById('educativo-feat-2-title').value = sections.educativo?.extra_data?.feat_2_title || "Coordinadores Especializados";
+    document.getElementById('educativo-feat-2-desc').value = sections.educativo?.extra_data?.feat_2_desc || "Personal capacitado en recreación, primeros auxilios y dinámicas de grupo escolar para contención total de los chicos.";
 
     // Sorteos
     if (document.getElementById('sorteos-title')) {
@@ -590,18 +607,34 @@ if (formEditSections) {
                 image_url: document.getElementById('nosotros-image').value,
                 extra_data: {
                     sub_photo_1: document.getElementById('nosotros-image-sub1') ? document.getElementById('nosotros-image-sub1').value : "",
-                    sub_photo_2: document.getElementById('nosotros-image-sub2') ? document.getElementById('nosotros-image-sub2').value : ""
+                    sub_photo_2: document.getElementById('nosotros-image-sub2') ? document.getElementById('nosotros-image-sub2').value : "",
+                    slogan_year: document.getElementById('nosotros-slogan-year').value,
+                    slogan_text: document.getElementById('nosotros-slogan-text').value,
+                    bullet_1: document.getElementById('nosotros-bullet-1').value,
+                    bullet_2: document.getElementById('nosotros-bullet-2').value,
+                    bullet_3: document.getElementById('nosotros-bullet-3').value
                 }
             },
             fiesta: {
                 title: document.getElementById('fiesta-title').value,
                 content: document.getElementById('fiesta-content').value,
-                image_url: document.getElementById('fiesta-image').value
+                image_url: document.getElementById('fiesta-image').value,
+                extra_data: {
+                    history_title: document.getElementById('fiesta-history-title').value,
+                    quote_text: document.getElementById('fiesta-quote-text').value,
+                    quote_cite: document.getElementById('fiesta-quote-cite').value
+                }
             },
             educativo: {
                 title: document.getElementById('educativo-title').value,
                 content: document.getElementById('educativo-content').value,
-                image_url: document.getElementById('educativo-image').value
+                image_url: document.getElementById('educativo-image').value,
+                extra_data: {
+                    feat_1_title: document.getElementById('educativo-feat-1-title').value,
+                    feat_1_desc: document.getElementById('educativo-feat-1-desc').value,
+                    feat_2_title: document.getElementById('educativo-feat-2-title').value,
+                    feat_2_desc: document.getElementById('educativo-feat-2-desc').value
+                }
             },
             sorteos: {
                 title: document.getElementById('sorteos-title') ? document.getElementById('sorteos-title').value : "",
@@ -1914,4 +1947,206 @@ window.deleteUserTrigger = async function(userId) {
         alert("Error al eliminar usuario: " + errorMsg);
     }
 };
+
+// ==========================================================================
+// 11. SISTEMA DE POSTULACIONES Y ACTUALIZACIÓN DE BADGES
+// ==========================================================================
+async function updateBadgesCount() {
+    if (isDatabaseOnline && supabaseClient) {
+        try {
+            // Count Leads
+            const { count: leadsCount, error: leadsErr } = await supabaseClient
+                .from('landing_leads')
+                .select('*', { count: 'exact', head: true });
+            if (!leadsErr && leadsCount !== null) {
+                const navLeadsBadge = document.getElementById('nav-leads-badge');
+                if (navLeadsBadge) navLeadsBadge.textContent = leadsCount;
+            }
+
+            // Count Postulaciones
+            const { count: postCount, error: postErr } = await supabaseClient
+                .from('landing_applications')
+                .select('*', { count: 'exact', head: true });
+            if (!postErr && postCount !== null) {
+                const navPostBadge = document.getElementById('nav-postulaciones-badge');
+                if (navPostBadge) navPostBadge.textContent = postCount;
+            }
+        } catch (e) {
+            console.warn("Fallo cargando conteo de badges.");
+        }
+    } else {
+        // Fallback local counts
+        const localLeads = JSON.parse(localStorage.getItem('esteko_leads') || '[]');
+        const navLeadsBadge = document.getElementById('nav-leads-badge');
+        if (navLeadsBadge) navLeadsBadge.textContent = localLeads.length;
+
+        const localApps = JSON.parse(localStorage.getItem('esteko_cv_applications') || '[]');
+        const navPostBadge = document.getElementById('nav-postulaciones-badge');
+        if (navPostBadge) navPostBadge.textContent = localApps.length;
+    }
+}
+
+let allPostulaciones = [];
+
+async function loadPostulacionesData() {
+    const tableBody = document.getElementById('postulaciones-table-body');
+    const navPostBadge = document.getElementById('nav-postulaciones-badge');
+    
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="table-empty-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Cargando postulaciones...</td></tr>';
+    }
+
+    allPostulaciones = [];
+
+    if (isDatabaseOnline && supabaseClient) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('landing_applications')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (!error && data) {
+                allPostulaciones = data;
+            } else {
+                console.warn("Fallo al leer postulaciones de la nube, cargando locales.", error);
+            }
+        } catch (e) {
+            console.warn("Fallo al leer postulaciones de la nube, cargando locales.");
+        }
+    }
+
+    // Cargar locales (LocalStorage de postulaciones combinados)
+    const localApps = JSON.parse(localStorage.getItem('esteko_cv_applications') || '[]');
+    if (allPostulaciones.length === 0) {
+        allPostulaciones = localApps.reverse(); // Mostrar los más recientes primero
+    }
+
+    if (navPostBadge) {
+        navPostBadge.textContent = allPostulaciones.length;
+    }
+
+    renderPostulacionesTable();
+}
+
+function renderPostulacionesTable() {
+    const tableBody = document.getElementById('postulaciones-table-body');
+    if (!tableBody) return;
+
+    if (allPostulaciones.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="table-empty-placeholder">No hay postulaciones registradas todavía.</td></tr>';
+        return;
+    }
+
+    tableBody.innerHTML = '';
+    allPostulaciones.forEach(app => {
+        const tr = document.createElement('tr');
+        
+        const dateObj = new Date(app.created_at || new Date());
+        const formattedDate = dateObj.toLocaleDateString('es-AR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        const cleanPhone = app.phone ? app.phone.replace(/[^0-9]/g, '') : '';
+        const waLink = `https://wa.me/54${cleanPhone}`;
+
+        // Truncate download URL or make a button
+        const cvDownloadBtn = app.cv_url 
+            ? `<a href="${app.cv_url}" target="_blank" class="lead-whatsapp-btn" style="background-color: var(--accent); margin: 0;"><i class="fa-solid fa-file-arrow-down"></i> Descargar CV</a>` 
+            : `<span class="text-muted">Sin archivo</span>`;
+
+        tr.innerHTML = `
+            <td class="lead-date-cell">${formattedDate}</td>
+            <td class="lead-name-cell">${app.full_name || app.name || 'Sin nombre'}</td>
+            <td>+54 ${app.phone}</td>
+            <td>${app.email}</td>
+            <td>${cvDownloadBtn}</td>
+            <td>
+                <div style="display: flex; gap: 8px;">
+                    <a href="${waLink}" target="_blank" class="lead-whatsapp-btn" style="margin: 0;"><i class="fa-brands fa-whatsapp"></i> Chat</a>
+                    <button class="btn-admin-danger" onclick="deletePostulacion('${app.id}')" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: none; cursor: pointer; color: white;"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+// Eliminar postulación individual
+window.deletePostulacion = async function(appId) {
+    if (!confirm("¿Está seguro de eliminar esta postulación? Esta acción no se puede deshacer.")) {
+        return;
+    }
+
+    let deleted = true;
+    if (isDatabaseOnline && supabaseClient && appId && appId !== 'undefined') {
+        try {
+            const { error } = await supabaseClient
+                .from('landing_applications')
+                .delete()
+                .eq('id', appId);
+
+            if (error) {
+                console.error("Error al eliminar de Supabase:", error);
+                deleted = false;
+            }
+        } catch (e) {
+            deleted = false;
+        }
+    } else {
+        // Local fallback
+        let localApps = JSON.parse(localStorage.getItem('esteko_cv_applications') || '[]');
+        localApps = localApps.filter(app => app.id !== appId);
+        localStorage.setItem('esteko_cv_applications', JSON.stringify(localApps));
+    }
+
+    if (deleted) {
+        showToast("Postulación eliminada.");
+        loadPostulacionesData();
+        updateBadgesCount();
+    } else {
+        alert("No se pudo eliminar la postulación. Intente de nuevo.");
+    }
+};
+
+// Vaciar todas las postulaciones
+const btnClearPostulaciones = document.getElementById('btn-clear-postulaciones');
+if (btnClearPostulaciones) {
+    btnClearPostulaciones.addEventListener('click', async () => {
+        if (!confirm("¿Está seguro de vaciar el listado de postulaciones? Se eliminarán de forma permanente. Esta acción no se puede deshacer.")) {
+            return;
+        }
+
+        localStorage.setItem('esteko_cv_applications', JSON.stringify([]));
+
+        let success = true;
+        if (isDatabaseOnline && supabaseClient) {
+            try {
+                const { error } = await supabaseClient
+                    .from('landing_applications')
+                    .delete()
+                    .not('id', 'is', null); // Delete all rows
+
+                if (error) {
+                    console.error("Error vaciando postulaciones de Supabase:", error);
+                    success = false;
+                }
+            } catch (e) {
+                success = false;
+            }
+        }
+
+        if (success) {
+            showToast("Listado de postulaciones vaciado.");
+            loadPostulacionesData();
+            updateBadgesCount();
+        } else {
+            alert("No se pudieron eliminar todos los registros de la nube.");
+        }
+    });
+}
+
 
