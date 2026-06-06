@@ -89,6 +89,24 @@ try {
     console.warn("Librería de Supabase no disponible. Operando en modo Local Fallback.");
 }
 
+// Inicialización de Firebase Storage para CVs públicos
+const firebaseConfig = {
+    apiKey: "AIzaSyAxSpYY8iZXcLylJStFx2GD3Ejyzq_wy_U",
+    authDomain: "rutas-del-esteko-landing.firebaseapp.com",
+    projectId: "rutas-del-esteko-landing",
+    storageBucket: "rutas-del-esteko-landing.firebasestorage.app",
+    messagingSenderId: "583115096942",
+    appId: "1:583115096942:web:62193426a24fdd0e19377f"
+};
+
+try {
+    if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+    }
+} catch (e) {
+    console.warn("No se pudo iniciar Firebase en la landing page pública.", e);
+}
+
 // ==========================================================================
 // 2. INICIO Y CARGA DINÁMICA DE CONTENIDO
 // ==========================================================================
@@ -132,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const spaViews = document.querySelectorAll('.spa-view');
 
     let isTransitioning = false;
-    const sectionOrder = ['inicio', 'nosotros', 'temporadas', 'educativo', 'fiesta', 'sorteos', 'pagos', 'contacto'];
+    const sectionOrder = ['inicio', 'nosotros', 'temporadas', 'educativo', 'fiesta', 'sorteos', 'pagos', 'unete', 'contacto'];
 
     function switchView(hash) {
         const viewId = hash.replace('#', '') || 'inicio';
@@ -339,6 +357,9 @@ async function testConnectionAndLoadContent() {
 
     // 4. Inicializar los Leads Forms
     initLeadFormSubmission();
+    
+    // 5. Inicializar el formulario de CV
+    initCVFormSubmission();
 }
 
 // Aplicar textos dinámicos
@@ -429,6 +450,30 @@ async function loadAndApplySections() {
             if (subPhoto2 && sections.nosotros.extra_data.sub_photo_2) {
                 subPhoto2.src = sections.nosotros.extra_data.sub_photo_2;
             }
+            
+            // Slogan Year and Text
+            const sloganYear = document.getElementById('nosotros-badge-year');
+            const sloganText = document.getElementById('nosotros-badge-text');
+            if (sloganYear && sections.nosotros.extra_data.slogan_year) {
+                sloganYear.textContent = sections.nosotros.extra_data.slogan_year;
+            }
+            if (sloganText && sections.nosotros.extra_data.slogan_text) {
+                sloganText.textContent = sections.nosotros.extra_data.slogan_text;
+            }
+            
+            // 3 bullet phrases
+            const bullet1 = document.getElementById('nosotros-bullet-1-text');
+            const bullet2 = document.getElementById('nosotros-bullet-2-text');
+            const bullet3 = document.getElementById('nosotros-bullet-3-text');
+            if (bullet1 && sections.nosotros.extra_data.bullet_1) {
+                bullet1.textContent = sections.nosotros.extra_data.bullet_1;
+            }
+            if (bullet2 && sections.nosotros.extra_data.bullet_2) {
+                bullet2.textContent = sections.nosotros.extra_data.bullet_2;
+            }
+            if (bullet3 && sections.nosotros.extra_data.bullet_3) {
+                bullet3.textContent = sections.nosotros.extra_data.bullet_3;
+            }
         }
     }
 
@@ -443,12 +488,22 @@ async function loadAndApplySections() {
         
         if (fContentWrapper && sections.fiesta.content) {
             const paras = sections.fiesta.content.split('\n\n');
-            let parasHtml = `<h3>Tradición, Música y Experiencias Inolvidables</h3>`;
+            const historyTitle = (sections.fiesta.extra_data && sections.fiesta.extra_data.history_title) 
+                                 ? sections.fiesta.extra_data.history_title 
+                                 : 'Tradición, Música y Experiencias Inolvidables';
+            let parasHtml = `<h3>${historyTitle}</h3>`;
             paras.forEach(p => {
                 if (p.trim()) parasHtml += `<p>${p.trim()}</p>`;
             });
             
             const quote = document.querySelector('.fiesta-quote');
+            if (quote && sections.fiesta.extra_data) {
+                const quoteP = quote.querySelector('p');
+                const quoteCite = quote.querySelector('cite');
+                if (quoteP && sections.fiesta.extra_data.quote_text) quoteP.innerHTML = sections.fiesta.extra_data.quote_text;
+                if (quoteCite && sections.fiesta.extra_data.quote_cite) quoteCite.textContent = sections.fiesta.extra_data.quote_cite;
+            }
+            
             const perks = document.querySelector('.fiesta-perks');
             
             fContentWrapper.innerHTML = parasHtml;
@@ -475,6 +530,18 @@ async function loadAndApplySections() {
             });
 
             const features = document.querySelector('.edu-features');
+            if (features && sections.educativo.extra_data) {
+                const featItems = features.querySelectorAll('.edu-feat-item');
+                if (featItems.length >= 2) {
+                    const feat1 = featItems[0];
+                    const feat2 = featItems[1];
+                    if (sections.educativo.extra_data.feat_1_title) feat1.querySelector('h5').textContent = sections.educativo.extra_data.feat_1_title;
+                    if (sections.educativo.extra_data.feat_1_desc) feat1.querySelector('p').textContent = sections.educativo.extra_data.feat_1_desc;
+                    if (sections.educativo.extra_data.feat_2_title) feat2.querySelector('h5').textContent = sections.educativo.extra_data.feat_2_title;
+                    if (sections.educativo.extra_data.feat_2_desc) feat2.querySelector('p').textContent = sections.educativo.extra_data.feat_2_desc;
+                }
+            }
+
             const btn = document.querySelector('.btn-edu');
 
             eContentWrapper.innerHTML = parasHtml;
@@ -965,6 +1032,209 @@ function initLeadFormSubmission() {
             newForm.reset();
             if (leadSuccessMsg) leadSuccessMsg.style.display = 'none';
             newForm.style.display = 'block';
+        });
+    }
+}
+
+// ==========================================================================
+// 5b. REGISTRO Y ENVÍO DE POSTULACIONES DE CV A LA NUBE
+// ==========================================================================
+function initCVFormSubmission() {
+    const cvForm = document.getElementById('cv-upload-form');
+    const dragDropZone = document.getElementById('cv-drag-drop');
+    const fileInput = document.getElementById('cv-file-input');
+    const fileDisplay = document.getElementById('cv-file-display');
+    const progressContainer = document.getElementById('cv-upload-progress-container');
+    const progressBar = document.getElementById('cv-upload-progress-bar');
+    const successMsg = document.getElementById('cv-success-msg');
+    const successName = document.getElementById('cv-success-user-name');
+    const btnReset = document.getElementById('btn-reset-cv-form');
+
+    if (!cvForm) return;
+
+    let selectedFile = null;
+
+    // Trigger file input click
+    dragDropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            handleFileSelection(e.target.files[0]);
+        }
+    });
+
+    // Drag over/leave/drop
+    dragDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragDropZone.classList.add('dragover');
+    });
+
+    dragDropZone.addEventListener('dragleave', () => {
+        dragDropZone.classList.remove('dragover');
+    });
+
+    dragDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragDropZone.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleFileSelection(e.dataTransfer.files[0]);
+        }
+    });
+
+    function handleFileSelection(file) {
+        // Validate type (.pdf, .doc, .docx)
+        const allowedExtensions = /(\.pdf|\.doc|\.docx)$/i;
+        if (!allowedExtensions.exec(file.name)) {
+            alert('Formato no permitido. Por favor adjuntá un archivo PDF o Word (.doc, .docx).');
+            selectedFile = null;
+            fileDisplay.style.display = 'none';
+            fileInput.value = '';
+            return;
+        }
+
+        // Validate size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('El archivo supera los 5MB permitidos. Por favor subí un archivo más chico.');
+            selectedFile = null;
+            fileDisplay.style.display = 'none';
+            fileInput.value = '';
+            return;
+        }
+
+        selectedFile = file;
+        fileDisplay.textContent = `📄 ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+        fileDisplay.style.display = 'block';
+    }
+
+    // Submit handler
+    cvForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!selectedFile) {
+            alert('Por favor adjuntá tu currículum (CV) antes de enviar.');
+            return;
+        }
+
+        const submitBtn = document.getElementById('btn-submit-cv');
+        const submitText = document.getElementById('btn-submit-cv-text');
+
+        submitBtn.disabled = true;
+        submitText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+
+        const name = document.getElementById('cv-name').value.trim();
+        const phone = document.getElementById('cv-phone').value.trim();
+        const email = document.getElementById('cv-email').value.trim();
+
+        // 1. Upload CV to Firebase Storage
+        let cvUrl = "";
+        let uploadSuccess = false;
+
+        if (typeof firebase !== 'undefined') {
+            try {
+                progressContainer.style.display = 'block';
+                const timestamp = Date.now();
+                const cleanFileName = selectedFile.name.replace(/[^a-zA-Z0-9.]/g, '_');
+                const filePath = `cvs/${timestamp}_${cleanFileName}`;
+                
+                const storageRef = firebase.storage().ref().child(filePath);
+                const uploadTask = storageRef.put(selectedFile);
+
+                await new Promise((resolve, reject) => {
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            progressBar.style.width = `${progress}%`;
+                        }, 
+                        (error) => {
+                            console.error("Firebase Storage Upload Error:", error);
+                            reject(error);
+                        }, 
+                        async () => {
+                            try {
+                                cvUrl = await storageRef.getDownloadURL();
+                                uploadSuccess = true;
+                                resolve();
+                            } catch (err) {
+                                reject(err);
+                            }
+                        }
+                    );
+                });
+            } catch (err) {
+                console.error("Error al subir archivo a Firebase:", err);
+                alert("Hubo un problema al subir tu archivo a la nube. Por favor, intentalo de nuevo.");
+                submitBtn.disabled = false;
+                submitText.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Postulación';
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+                return;
+            }
+        } else {
+            alert("El servicio de subida de archivos no está disponible en este momento. Por favor intentá más tarde.");
+            submitBtn.disabled = false;
+            submitText.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Postulación';
+            return;
+        }
+
+        // 2. Insert Application to Supabase
+        if (uploadSuccess && cvUrl) {
+            const applicationData = {
+                full_name: name,
+                phone: phone,
+                email: email,
+                cv_url: cvUrl,
+                created_at: new Date().toISOString()
+            };
+
+            let dbSaved = true;
+            if (isDbOnlinePublic && supabasePublic) {
+                try {
+                    const { error } = await supabasePublic
+                        .from('landing_applications')
+                        .insert(applicationData);
+
+                    if (error) {
+                        console.error("Error al registrar postulación en Supabase:", error);
+                        dbSaved = false;
+                    }
+                } catch (err) {
+                    console.error("Fallo de red enviando postulación:", err);
+                    dbSaved = false;
+                }
+            } else {
+                dbSaved = false;
+            }
+
+            if (!dbSaved) {
+                // Fallback local
+                let localApps = JSON.parse(localStorage.getItem('esteko_cv_applications') || '[]');
+                localApps.push(applicationData);
+                localStorage.setItem('esteko_cv_applications', JSON.stringify(localApps));
+            }
+
+            // Show Success
+            if (successName) successName.textContent = name;
+            cvForm.style.display = 'none';
+            if (successMsg) successMsg.style.display = 'block';
+        }
+
+        submitBtn.disabled = false;
+        submitText.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Postulación';
+        progressContainer.style.display = 'none';
+        progressBar.style.width = '0%';
+    });
+
+    if (btnReset) {
+        btnReset.addEventListener('click', () => {
+            cvForm.reset();
+            selectedFile = null;
+            fileDisplay.style.display = 'none';
+            fileInput.value = '';
+            if (successMsg) successMsg.style.display = 'none';
+            cvForm.style.display = 'block';
         });
     }
 }
