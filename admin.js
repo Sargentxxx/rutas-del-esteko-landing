@@ -525,6 +525,7 @@ async function loadSectionsData() {
 
     // Nosotros
     document.getElementById('nosotros-title').value = sections.nosotros?.title || "";
+    document.getElementById('nosotros-subtitle').value = sections.nosotros?.subtitle || "";
     document.getElementById('nosotros-content').value = sections.nosotros?.content || "";
     document.getElementById('nosotros-image').value = sections.nosotros?.image_url || "";
     if (document.getElementById('nosotros-image-sub1')) {
@@ -541,6 +542,7 @@ async function loadSectionsData() {
 
     // La Fiesta
     document.getElementById('fiesta-title').value = sections.fiesta?.title || "";
+    document.getElementById('fiesta-subtitle').value = sections.fiesta?.subtitle || "";
     document.getElementById('fiesta-content').value = sections.fiesta?.content || "";
     document.getElementById('fiesta-image').value = sections.fiesta?.image_url || "";
     document.getElementById('fiesta-history-title').value = sections.fiesta?.extra_data?.history_title || "Tradición, Música y Experiencias Inolvidables";
@@ -549,6 +551,7 @@ async function loadSectionsData() {
 
     // Educativo
     document.getElementById('educativo-title').value = sections.educativo?.title || "";
+    document.getElementById('educativo-subtitle').value = sections.educativo?.subtitle || "";
     document.getElementById('educativo-content').value = sections.educativo?.content || "";
     document.getElementById('educativo-image').value = sections.educativo?.image_url || "";
     document.getElementById('educativo-feat-1-title').value = sections.educativo?.extra_data?.feat_1_title || "100% de Seguridad y Seguros";
@@ -559,6 +562,9 @@ async function loadSectionsData() {
     // Sorteos
     if (document.getElementById('sorteos-title')) {
         document.getElementById('sorteos-title').value = sections.sorteos?.title || "";
+    }
+    if (document.getElementById('sorteos-subtitle')) {
+        document.getElementById('sorteos-subtitle').value = sections.sorteos?.subtitle || "";
     }
     if (document.getElementById('sorteos-content')) {
         document.getElementById('sorteos-content').value = sections.sorteos?.content || "";
@@ -603,6 +609,7 @@ if (formEditSections) {
             },
             nosotros: {
                 title: document.getElementById('nosotros-title').value,
+                subtitle: document.getElementById('nosotros-subtitle') ? document.getElementById('nosotros-subtitle').value : "",
                 content: document.getElementById('nosotros-content').value,
                 image_url: document.getElementById('nosotros-image').value,
                 extra_data: {
@@ -617,6 +624,7 @@ if (formEditSections) {
             },
             fiesta: {
                 title: document.getElementById('fiesta-title').value,
+                subtitle: document.getElementById('fiesta-subtitle') ? document.getElementById('fiesta-subtitle').value : "",
                 content: document.getElementById('fiesta-content').value,
                 image_url: document.getElementById('fiesta-image').value,
                 extra_data: {
@@ -627,6 +635,7 @@ if (formEditSections) {
             },
             educativo: {
                 title: document.getElementById('educativo-title').value,
+                subtitle: document.getElementById('educativo-subtitle') ? document.getElementById('educativo-subtitle').value : "",
                 content: document.getElementById('educativo-content').value,
                 image_url: document.getElementById('educativo-image').value,
                 extra_data: {
@@ -638,6 +647,7 @@ if (formEditSections) {
             },
             sorteos: {
                 title: document.getElementById('sorteos-title') ? document.getElementById('sorteos-title').value : "",
+                subtitle: document.getElementById('sorteos-subtitle') ? document.getElementById('sorteos-subtitle').value : "",
                 content: document.getElementById('sorteos-content') ? document.getElementById('sorteos-content').value : "",
                 image_url: document.getElementById('sorteos-bg-image') ? document.getElementById('sorteos-bg-image').value : ""
             }
@@ -747,6 +757,7 @@ function renderAdminDestinations() {
                 <div class="dest-card-financials">
                     <span>Precio Simulador: <strong>$${parseInt(dest.cost, 10).toLocaleString('es-AR')} ARS</strong></span>
                     ${dest.is_oferta ? `<br><span style="color: var(--accent); font-size: 0.85rem;"><i class="fa-solid fa-tag"></i> Producto en Oferta</span>` : ''}
+                    ${dest.is_active === false ? `<br><span style="color: #e74c3c; font-size: 0.85rem; font-weight: bold;"><i class="fa-solid fa-ban"></i> No Disponible (Deshabilitado)</span>` : `<br><span style="color: #2ec4b6; font-size: 0.85rem; font-weight: bold;"><i class="fa-solid fa-circle-check"></i> Disponible (Habilitado)</span>`}
                 </div>
                 <div class="dest-card-actions">
                     <button class="btn-edit-admin" onclick="openEditDestModal('${dest.id}')"><i class="fa-solid fa-pen-to-square"></i> Editar</button>
@@ -791,6 +802,7 @@ window.openEditDestModal = function(destId) {
     document.getElementById('dest-name').value = dest.name;
     document.getElementById('dest-category').value = dest.category;
     document.getElementById('dest-is-oferta').checked = dest.is_oferta || false;
+    document.getElementById('dest-is-active').checked = dest.is_active !== false;
     document.getElementById('dest-duration').value = dest.duration;
     document.getElementById('dest-price-info').value = dest.price_info;
     document.getElementById('dest-whatsapp-text').value = dest.whatsapp_text;
@@ -821,6 +833,7 @@ if (formDestCrud) {
         const name = document.getElementById('dest-name').value.trim();
         const category = document.getElementById('dest-category').value;
         const is_oferta = document.getElementById('dest-is-oferta').checked;
+        const is_active = document.getElementById('dest-is-active').checked;
         const duration = document.getElementById('dest-duration').value.trim();
         const price_info = document.getElementById('dest-price-info').value.trim();
         const whatsapp_text = document.getElementById('dest-whatsapp-text').value.trim();
@@ -848,6 +861,7 @@ if (formDestCrud) {
             name,
             category,
             is_oferta,
+            is_active,
             duration,
             description,
             image_url,

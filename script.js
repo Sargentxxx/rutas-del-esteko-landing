@@ -420,6 +420,8 @@ async function loadAndApplySections() {
         const nImage = document.querySelector('.main-photo img');
 
         if (nTitle && sections.nosotros.title) nTitle.textContent = sections.nosotros.title;
+        const nTag = document.getElementById('nosotros-tag');
+        if (nTag && sections.nosotros.subtitle) nTag.textContent = sections.nosotros.subtitle;
         
         // Re-escribir párrafos
         if (nContentWrapper && sections.nosotros.content) {
@@ -484,6 +486,8 @@ async function loadAndApplySections() {
         const fContentWrapper = document.querySelector('.fiesta-content');
 
         if (fTitle && sections.fiesta.title) fTitle.textContent = sections.fiesta.title;
+        const fTag = document.getElementById('fiesta-tag');
+        if (fTag && sections.fiesta.subtitle) fTag.textContent = sections.fiesta.subtitle;
         if (fImage && sections.fiesta.image_url) fImage.src = sections.fiesta.image_url;
         
         if (fContentWrapper && sections.fiesta.content) {
@@ -523,7 +527,7 @@ async function loadAndApplySections() {
         
         if (eContentWrapper && sections.educativo.content) {
             const paras = sections.educativo.content.split('\n\n');
-            let parasHtml = `<span class="badge-edu"><i class="fa-solid fa-graduation-cap"></i> División Educativa</span>
+            let parasHtml = `<span class="badge-edu"><i class="fa-solid fa-graduation-cap"></i> ${sections.educativo.subtitle || 'División Educativa'}</span>
                              <h2>${sections.educativo.title || 'Paseos con Escuelas y Colegios'}</h2>`;
             paras.forEach(p => {
                 if (p.trim()) parasHtml += `<p class="edu-intro">${p.trim()}</p>`;
@@ -557,6 +561,10 @@ async function loadAndApplySections() {
         const sBanner = document.querySelector('.sorteos-banner');
 
         if (sTitle && sections.sorteos.title) sTitle.textContent = sections.sorteos.title;
+        const sTag = document.getElementById('sorteos-tag');
+        if (sTag && sections.sorteos.subtitle) {
+            sTag.innerHTML = `<i class="fa-solid fa-ticket"></i> ${sections.sorteos.subtitle}`;
+        }
         if (sContentWrapper && sections.sorteos.content) sContentWrapper.textContent = sections.sorteos.content;
         if (sBanner && sections.sorteos.image_url) {
             sBanner.style.backgroundImage = `linear-gradient(135deg, rgba(24, 18, 12, 0.95), rgba(24, 18, 12, 0.85)), url('${sections.sorteos.image_url}')`;
@@ -735,8 +743,9 @@ function renderPublicCatalogGrid(destinations, config) {
     grid.innerHTML = '';
     
     destinations.forEach((dest, index) => {
+        const isInactive = dest.is_active === false;
         const card = document.createElement('div');
-        card.className = 'destination-card animate-fade-in';
+        card.className = `destination-card animate-fade-in${isInactive ? ' card-disabled' : ''}`;
         card.setAttribute('data-category', dest.category);
         card.id = `card-dynamic-${dest.id}`;
         
@@ -758,6 +767,7 @@ function renderPublicCatalogGrid(destinations, config) {
             <div class="card-image">
                 <img src="${dest.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=500&q=80'}" alt="${dest.name}">
                 ${dest.is_oferta ? `<span class="card-badge badge-offer" style="background-color: var(--accent); top: 15px; left: 15px; z-index: 10;">🔥 ${config.descuento_oferta || 15}% OFF</span>` : ''}
+                ${isInactive ? `<span class="card-badge badge-inactive" style="background-color: #7f8c8d; top: 15px; right: 15px; z-index: 10; font-weight: bold;"><i class="fa-solid fa-ban"></i> No Disponible</span>` : ''}
                 <span class="card-badge badge-${dest.category === 'verano' ? 'summer' : dest.category === 'invierno' ? 'winter' : 'escape'}">${dest.category}</span>
             </div>
             <div class="card-body">
@@ -769,7 +779,10 @@ function renderPublicCatalogGrid(destinations, config) {
                 </ul>
                 <div class="card-footer">
                     <span class="price-info">${dest.price_info}</span>
-                    <a href="https://wa.me/54${phone}?text=${waText}" target="_blank" class="btn-card">Consultar <i class="fa-solid fa-arrow-right"></i></a>
+                    ${isInactive ? 
+                      `<span class="btn-card" style="color: #95a5a6; cursor: not-allowed; pointer-events: none;">No Disponible <i class="fa-solid fa-ban"></i></span>` : 
+                      `<a href="https://wa.me/54${phone}?text=${waText}" target="_blank" class="btn-card">Consultar <i class="fa-solid fa-arrow-right"></i></a>`
+                    }
                 </div>
             </div>
         `;
@@ -824,7 +837,8 @@ function initSavingsSimulator(destinations, config) {
 
     // Poblar destinos dinámicamente
     selectDestiny.innerHTML = '';
-    destinations.forEach(dest => {
+    const activeDests = destinations.filter(dest => dest.is_active !== false);
+    activeDests.forEach(dest => {
         let finalCost = parseInt(dest.cost, 10) || 0;
         let nameSuffix = "";
         if (dest.is_oferta && config.descuento_oferta) {
@@ -946,7 +960,8 @@ function initLeadFormSubmission() {
 
     // Cargar selector de destinos dinámico en el formulario de registro
     const leadDestSelect = document.getElementById('lead-destiny-select');
-    const localDests = JSON.parse(localStorage.getItem('esteko_landing_destinations')) || DEFAULT_DESTINATIONS;
+    const localDests = (JSON.parse(localStorage.getItem('esteko_landing_destinations')) || DEFAULT_DESTINATIONS)
+                       .filter(dest => dest.is_active !== false);
     
     if (leadDestSelect && localDests.length > 0) {
         leadDestSelect.innerHTML = '';
