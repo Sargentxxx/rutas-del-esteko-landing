@@ -878,6 +878,17 @@ a {
     background: radial-gradient(800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(220, 30, 30, 0.04), transparent 40%), var(--text-light);
 }
 
+.destination-card.card-disabled {
+    filter: grayscale(0.6);
+    opacity: 0.8;
+}
+
+.destination-card.card-disabled .btn-card {
+    color: #95a5a6 !important;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 .destination-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-diffusion);
@@ -2033,16 +2044,16 @@ a {
     opacity: 1;
 }
 .spa-view:not(#view-inicio) {
-    padding-top: 220px;
+    padding-top: 140px;
 }
 @media (max-width: 1024px) {
     .spa-view:not(#view-inicio) {
-        padding-top: 180px;
+        padding-top: 110px;
     }
 }
 @media (max-width: 768px) {
     .spa-view:not(#view-inicio) {
-        padding-top: 210px;
+        padding-top: 130px;
     }
 }
 

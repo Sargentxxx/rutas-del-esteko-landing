@@ -184,6 +184,10 @@
                                         <input type="text" id="nosotros-title" class="form-control-admin" placeholder="Ej. ¡Bienvenidos a Rutas del Esteko!">
                                     </div>
                                     <div class="form-group-admin">
+                                        <label for="nosotros-subtitle">Sello / Subtítulo</label>
+                                        <input type="text" id="nosotros-subtitle" class="form-control-admin" placeholder="Ej. ¿Quiénes Somos?">
+                                    </div>
+                                    <div class="form-group-admin">
                                         <label for="nosotros-image">Imagen de Portada (Subir archivo o pegar URL)</label>
                                         <div class="file-uploader-wrapper">
                                             <input type="text" id="nosotros-image" class="form-control-admin url-input-fallback" placeholder="Pegar URL de imagen o subir ->">
@@ -255,6 +259,10 @@
                                         <input type="text" id="fiesta-title" class="form-control-admin" placeholder="Ej. Fiesta de Rutas del Esteko">
                                     </div>
                                     <div class="form-group-admin">
+                                        <label for="fiesta-subtitle">Sello / Subtítulo</label>
+                                        <input type="text" id="fiesta-subtitle" class="form-control-admin" placeholder="Ej. ¡El Sello Esteko!">
+                                    </div>
+                                    <div class="form-group-admin">
                                         <label for="fiesta-image">Imagen Portada de la Fiesta</label>
                                         <div class="file-uploader-wrapper">
                                             <input type="text" id="fiesta-image" class="form-control-admin url-input-fallback" placeholder="Pegar URL o subir archivo ->">
@@ -297,6 +305,10 @@
                                         <input type="text" id="educativo-title" class="form-control-admin" placeholder="Ej. Paseos con Escuelas y Colegios">
                                     </div>
                                     <div class="form-group-admin">
+                                        <label for="educativo-subtitle">Sello / Subtítulo</label>
+                                        <input type="text" id="educativo-subtitle" class="form-control-admin" placeholder="Ej. División Educativa">
+                                    </div>
+                                    <div class="form-group-admin">
                                         <label for="educativo-image">Imagen de Portada Educativos</label>
                                         <div class="file-uploader-wrapper">
                                             <input type="text" id="educativo-image" class="form-control-admin url-input-fallback" placeholder="Pegar URL o subir archivo ->">
@@ -307,6 +319,7 @@
                                 </div>
                                 <div class="form-group-admin">
                                     <label for="educativo-content">Descripción del Enfoque Pedagógico / Escolar</label>
+                                    <textarea id="educativo-content" class="form-control-admin" rows="4" placeholder="Redacción sobre la seguridad, seguros de viaje y coordinadores especializados para escuelas..."></textarea>
                                 </div>
                                 <div class="form-group-admin" style="grid-column: span 2; margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px;">
                                     <h4 style="margin-bottom: 10px; color: var(--text-dark);"><i class="fa-solid fa-shield-cat"></i> Items del Enfoque (2 Características)</h4>
@@ -342,6 +355,10 @@
                                     <div class="form-group-admin">
                                         <label for="sorteos-title">Título de la Sección</label>
                                         <input type="text" id="sorteos-title" class="form-control-admin" placeholder="Ej. ¡Vos podés ser el próximo ganador!">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="sorteos-subtitle">Sello / Subtítulo</label>
+                                        <input type="text" id="sorteos-subtitle" class="form-control-admin" placeholder="Ej. Sorteo Activo">
                                     </div>
                                     <div class="form-group-admin">
                                         <label for="sorteos-bg-image">Imagen de Fondo Sorteos</label>
@@ -724,6 +741,10 @@
                         <div class="form-checkbox" style="margin-top: 10px;">
                             <input type="checkbox" id="dest-is-oferta">
                             <label for="dest-is-oferta" style="color: var(--accent); font-weight: 600;"><i class="fa-solid fa-tag"></i> Marcar Producto en Oferta</label>
+                        </div>
+                        <div class="form-checkbox" style="margin-top: 10px;">
+                            <input type="checkbox" id="dest-is-active" checked>
+                            <label for="dest-is-active" style="color: var(--success, #2ec4b6); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Destino Habilitado / Disponible</label>
                         </div>
                     </div>
                 </div>
