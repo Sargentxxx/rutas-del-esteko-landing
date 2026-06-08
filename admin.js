@@ -158,7 +158,7 @@ const DEFAULT_CONFIG = {
     instagram: "https://www.instagram.com/rutasdelesteko.sde/",
     tiktok: "https://www.tiktok.com/@rutasdelesteko",
     logo_header_url: "img/logo.png",
-    logo_footer_url: "img/logo-white.png",
+    logo_footer_url: "img/logo.png",
     badge_reviews_url: "img/google-reviews-badge.png",
     qr_mintur_url: "img/qr-rnav.png"
 };
@@ -545,6 +545,9 @@ async function loadSectionsData() {
     document.getElementById('fiesta-subtitle').value = sections.fiesta?.subtitle || "";
     document.getElementById('fiesta-content').value = sections.fiesta?.content || "";
     document.getElementById('fiesta-image').value = sections.fiesta?.image_url || "";
+    if (document.getElementById('fiesta-image-2')) {
+        document.getElementById('fiesta-image-2').value = sections.fiesta?.extra_data?.sub_photo_2 || "";
+    }
     document.getElementById('fiesta-history-title').value = sections.fiesta?.extra_data?.history_title || "Tradición, Música y Experiencias Inolvidables";
     document.getElementById('fiesta-quote-text').value = sections.fiesta?.extra_data?.quote_text || "A lo largo de las distintas ediciones participaron reconocidos artistas como Orellana Lucca, Dani Hoyos y Juan Saavedra, entre otros artistas invitados que hicieron de cada encuentro una verdadera fiesta.";
     document.getElementById('fiesta-quote-cite').value = sections.fiesta?.extra_data?.quote_cite || "— Tradición & Alegría Esteko";
@@ -572,12 +575,24 @@ async function loadSectionsData() {
     if (document.getElementById('sorteos-bg-image')) {
         document.getElementById('sorteos-bg-image').value = sections.sorteos?.image_url || "";
     }
+    if (document.getElementById('sorteos-card1-num')) {
+        document.getElementById('sorteos-card1-num').value = sections.sorteos?.extra_data?.card1_num || "01";
+        document.getElementById('sorteos-card1-title').value = sections.sorteos?.extra_data?.card1_title || "Seguinos";
+        document.getElementById('sorteos-card1-desc').value = sections.sorteos?.extra_data?.card1_desc || "";
+        document.getElementById('sorteos-card2-num').value = sections.sorteos?.extra_data?.card2_num || "02";
+        document.getElementById('sorteos-card2-title').value = sections.sorteos?.extra_data?.card2_title || "Registrate";
+        document.getElementById('sorteos-card2-desc').value = sections.sorteos?.extra_data?.card2_desc || "";
+        document.getElementById('sorteos-card3-num').value = sections.sorteos?.extra_data?.card3_num || "03";
+        document.getElementById('sorteos-card3-title').value = sections.sorteos?.extra_data?.card3_title || "¡Participá!";
+        document.getElementById('sorteos-card3-desc').value = sections.sorteos?.extra_data?.card3_desc || "";
+    }
 
     // Configurar listeners de file uploader local
     initFileUploaderListeners('nosotros-file', 'nosotros-image');
     initFileUploaderListeners('nosotros-file-sub1', 'nosotros-image-sub1');
     initFileUploaderListeners('nosotros-file-sub2', 'nosotros-image-sub2');
     initFileUploaderListeners('fiesta-file', 'fiesta-image');
+    initFileUploaderListeners('fiesta-file-2', 'fiesta-image-2');
     initFileUploaderListeners('educativo-file', 'educativo-image');
     initFileUploaderListeners('sorteos-bg-file', 'sorteos-bg-image');
     initHeroCarouselUploader();
@@ -628,6 +643,7 @@ if (formEditSections) {
                 content: document.getElementById('fiesta-content').value,
                 image_url: document.getElementById('fiesta-image').value,
                 extra_data: {
+                    sub_photo_2: document.getElementById('fiesta-image-2') ? document.getElementById('fiesta-image-2').value : "",
                     history_title: document.getElementById('fiesta-history-title').value,
                     quote_text: document.getElementById('fiesta-quote-text').value,
                     quote_cite: document.getElementById('fiesta-quote-cite').value
@@ -649,7 +665,18 @@ if (formEditSections) {
                 title: document.getElementById('sorteos-title') ? document.getElementById('sorteos-title').value : "",
                 subtitle: document.getElementById('sorteos-subtitle') ? document.getElementById('sorteos-subtitle').value : "",
                 content: document.getElementById('sorteos-content') ? document.getElementById('sorteos-content').value : "",
-                image_url: document.getElementById('sorteos-bg-image') ? document.getElementById('sorteos-bg-image').value : ""
+                image_url: document.getElementById('sorteos-bg-image') ? document.getElementById('sorteos-bg-image').value : "",
+                extra_data: {
+                    card1_num: document.getElementById('sorteos-card1-num') ? document.getElementById('sorteos-card1-num').value : "01",
+                    card1_title: document.getElementById('sorteos-card1-title') ? document.getElementById('sorteos-card1-title').value : "Seguinos",
+                    card1_desc: document.getElementById('sorteos-card1-desc') ? document.getElementById('sorteos-card1-desc').value : "",
+                    card2_num: document.getElementById('sorteos-card2-num') ? document.getElementById('sorteos-card2-num').value : "02",
+                    card2_title: document.getElementById('sorteos-card2-title') ? document.getElementById('sorteos-card2-title').value : "Registrate",
+                    card2_desc: document.getElementById('sorteos-card2-desc') ? document.getElementById('sorteos-card2-desc').value : "",
+                    card3_num: document.getElementById('sorteos-card3-num') ? document.getElementById('sorteos-card3-num').value : "03",
+                    card3_title: document.getElementById('sorteos-card3-title') ? document.getElementById('sorteos-card3-title').value : "¡Participá!",
+                    card3_desc: document.getElementById('sorteos-card3-desc') ? document.getElementById('sorteos-card3-desc').value : ""
+                }
             }
         };
 

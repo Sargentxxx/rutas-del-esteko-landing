@@ -482,13 +482,20 @@ async function loadAndApplySections() {
     // La Fiesta
     if (sections.fiesta) {
         const fTitle = document.querySelector('.fiesta h2');
-        const fImage = document.querySelector('.fiesta-visual img');
+        const fImage1 = document.getElementById('fiesta-img-1');
+        const fImage2 = document.getElementById('fiesta-img-2');
         const fContentWrapper = document.querySelector('.fiesta-content');
 
         if (fTitle && sections.fiesta.title) fTitle.textContent = sections.fiesta.title;
         const fTag = document.getElementById('fiesta-tag');
         if (fTag && sections.fiesta.subtitle) fTag.textContent = sections.fiesta.subtitle;
-        if (fImage && sections.fiesta.image_url) fImage.src = sections.fiesta.image_url;
+        if (fImage1 && sections.fiesta.image_url) fImage1.src = sections.fiesta.image_url;
+        if (fImage2 && sections.fiesta.extra_data?.sub_photo_2) {
+            fImage2.src = sections.fiesta.extra_data.sub_photo_2;
+            fImage2.style.display = 'block';
+        } else if (fImage2) {
+            fImage2.src = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80";
+        }
         
         if (fContentWrapper && sections.fiesta.content) {
             const paras = sections.fiesta.content.split('\n\n');
@@ -569,6 +576,46 @@ async function loadAndApplySections() {
         if (sBanner && sections.sorteos.image_url) {
             sBanner.style.backgroundImage = `linear-gradient(135deg, rgba(24, 18, 12, 0.95), rgba(24, 18, 12, 0.85)), url('${sections.sorteos.image_url}')`;
         }
+
+        // Render step cards dynamically
+        const extra = sections.sorteos.extra_data || {};
+        const c1Num = document.getElementById('sorteos-card1-num');
+        const c1Title = document.getElementById('sorteos-card1-title');
+        const c1Desc = document.getElementById('sorteos-card1-desc');
+        const c2Num = document.getElementById('sorteos-card2-num');
+        const c2Title = document.getElementById('sorteos-card2-title');
+        const c2Desc = document.getElementById('sorteos-card2-desc');
+        const c3Num = document.getElementById('sorteos-card3-num');
+        const c3Title = document.getElementById('sorteos-card3-title');
+        const c3Desc = document.getElementById('sorteos-card3-desc');
+
+        if (c1Num) c1Num.textContent = extra.card1_num || "01";
+        if (c1Title) c1Title.textContent = extra.card1_title || "Seguinos";
+        if (c1Desc) c1Desc.innerHTML = extra.card1_desc || `Dale follow a nuestro <a href="https://www.instagram.com/rutasdelesteko.sde/" target="_blank">Instagram oficial</a>.`;
+
+        if (c2Num) c2Num.textContent = extra.card2_num || "02";
+        if (c2Title) c2Title.textContent = extra.card2_title || "Registrate";
+        if (c2Desc) c2Desc.innerHTML = extra.card2_desc || `Ingresá tu correo en el <a href="#contacto" class="raffle-link-contacto">formulario</a> de la pestaña Contacto.`;
+
+        if (c3Num) c3Num.textContent = extra.card3_num || "03";
+        if (c3Title) c3Title.textContent = extra.card3_title || "¡Participá!";
+        if (c3Desc) c3Desc.innerHTML = extra.card3_desc || `Ya estás en la base de sorteos mensuales de viajes.`;
+
+        // Retarget contact links
+        const contactLinks = document.querySelectorAll('.raffle-link-contacto');
+        contactLinks.forEach(link => {
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            newLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                const viewContacto = document.getElementById('view-contacto');
+                if (viewContacto) {
+                    document.querySelectorAll('.spa-view').forEach(v => v.classList.remove('active-view'));
+                    viewContacto.classList.add('active-view');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        });
     }
 }
 
@@ -697,9 +744,9 @@ function applyGlobalConfigVars(config) {
     }
 
     // Redes Sociales enlaces
-    const fbLinks = document.querySelectorAll('a[aria-label="Facebook"], .footer-copyright a[href*="facebook"]');
-    const igLinks = document.querySelectorAll('a[aria-label="Instagram"], .footer-copyright a[href*="instagram"], .sorteos-banner a[href*="instagram"]');
-    const tkLinks = document.querySelectorAll('a[aria-label="TikTok"], .footer-copyright a[href*="tiktok"]');
+    const fbLinks = document.querySelectorAll('a[aria-label*="Facebook"], a[href*="facebook"]');
+    const igLinks = document.querySelectorAll('a[aria-label*="Instagram"], a[href*="instagram"]');
+    const tkLinks = document.querySelectorAll('a[aria-label*="TikTok"], a[href*="tiktok"]');
 
     if (config.facebook) fbLinks.forEach(link => link.setAttribute('href', config.facebook));
     if (config.instagram) igLinks.forEach(link => {
