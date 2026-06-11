@@ -617,6 +617,68 @@ async function loadAndApplySections() {
             });
         });
     }
+
+    // Pagos (Medios de Pago)
+    if (sections.pagos) {
+        const pTag = document.querySelector('.pagos .section-tag');
+        const pTitle = document.querySelector('.pagos .section-header h2');
+        const pSubtitle = document.querySelector('.pagos .section-subtitle');
+        const pInfoTitle = document.querySelector('.pagos-info h3');
+        const pInfoContent = document.querySelector('.pagos-info > p');
+
+        if (pTag && sections.pagos.extra_data?.section_tag) {
+            pTag.textContent = sections.pagos.extra_data.section_tag;
+        }
+        if (pTitle && sections.pagos.title) {
+            pTitle.textContent = sections.pagos.title;
+        }
+        if (pSubtitle && sections.pagos.subtitle) {
+            pSubtitle.textContent = sections.pagos.subtitle;
+        }
+        if (pInfoTitle && sections.pagos.extra_data?.info_title) {
+            pInfoTitle.textContent = sections.pagos.extra_data.info_title;
+        }
+        if (pInfoContent && sections.pagos.content) {
+            pInfoContent.textContent = sections.pagos.content;
+        }
+
+        const cards = document.querySelectorAll('.payment-methods-grid .method-card');
+        const extra = sections.pagos.extra_data || {};
+        
+        if (cards.length >= 4) {
+            // Card 1
+            const c1Icon = cards[0].querySelector('.method-icon i');
+            const c1Title = cards[0].querySelector('h4');
+            const c1Desc = cards[0].querySelector('p');
+            if (c1Icon && extra.card1_icon) c1Icon.className = `fa-solid ${extra.card1_icon}`;
+            if (c1Title && extra.card1_title) c1Title.textContent = extra.card1_title;
+            if (c1Desc && extra.card1_desc) c1Desc.innerHTML = extra.card1_desc;
+
+            // Card 2
+            const c2Icon = cards[1].querySelector('.method-icon i');
+            const c2Title = cards[1].querySelector('h4');
+            const c2Desc = cards[1].querySelector('p');
+            if (c2Icon && extra.card2_icon) c2Icon.className = `fa-solid ${extra.card2_icon}`;
+            if (c2Title && extra.card2_title) c2Title.textContent = extra.card2_title;
+            if (c2Desc && extra.card2_desc) c2Desc.innerHTML = extra.card2_desc;
+
+            // Card 3
+            const c3Icon = cards[2].querySelector('.method-icon i');
+            const c3Title = cards[2].querySelector('h4');
+            const c3Desc = cards[2].querySelector('p');
+            if (c3Icon && extra.card3_icon) c3Icon.className = `fa-solid ${extra.card3_icon}`;
+            if (c3Title && extra.card3_title) c3Title.textContent = extra.card3_title;
+            if (c3Desc && extra.card3_desc) c3Desc.innerHTML = extra.card3_desc;
+
+            // Card 4
+            const c4Icon = cards[3].querySelector('.method-icon i');
+            const c4Title = cards[3].querySelector('h4');
+            const c4Desc = cards[3].querySelector('p');
+            if (c4Icon && extra.card4_icon) c4Icon.className = `fa-solid ${extra.card4_icon}`;
+            if (c4Title && extra.card4_title) c4Title.textContent = extra.card4_title;
+            if (c4Desc && extra.card4_desc) c4Desc.innerHTML = extra.card4_desc;
+        }
+    }
 }
 
 function initializeHeroCarousel(images) {

@@ -76,6 +76,27 @@ const DEFAULT_SECTIONS = {
         title: "¡Vos podés ser el próximo ganador!",
         content: "En cada uno de nuestros destinos y salidas, realizamos sorteos especiales de valijas, excursiones opcionales gratuitas y hasta vouchers de descuento para tu próximo viaje. ¡La suerte está siempre de tu lado con el Esteko!",
         image_url: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80"
+    },
+    pagos: {
+        title: "Viajar nunca fue tan fácil y accesible",
+        subtitle: "Queremos que tu única preocupación sea disfrutar. Contamos con planes de financiamiento a tu medida.",
+        content: "Entendemos la realidad de nuestras familias. Por eso, diseñamos esquemas de pago flexibles para que puedas congelar el valor de tu viaje y pagarlo a tu propio ritmo.",
+        extra_data: {
+            section_tag: "Medios de Pago",
+            info_title: "Todas las facilidades a tu disposición",
+            card1_icon: "fa-piggy-bank",
+            card1_title: "Pagos Parciales",
+            card1_desc: "Congelá el precio con una seña mínima y andá pagando el saldo de manera flexible hasta 10 días antes de la salida.",
+            card2_icon: "fa-credit-card",
+            card2_title: "Cuotas Sin Interés",
+            card2_desc: "Trabajamos con promociones bancarias vigentes y todas las tarjetas de crédito para darte cuotas sin recargo.",
+            card3_icon: "fa-id-card",
+            card3_title: "Crédito solo con DNI",
+            card3_desc: "Aprobación inmediata en nuestra sucursal. Financiá tu viaje solo presentando tu documento nacional de identidad.",
+            card4_icon: "fa-wallet",
+            card4_title: "Transferencias y Efectivo",
+            card4_desc: "Descuentos especiales abonando en nuestra oficina o vía transferencia bancaria directa."
+        }
     }
 };
 
@@ -587,6 +608,31 @@ async function loadSectionsData() {
         document.getElementById('sorteos-card3-desc').value = sections.sorteos?.extra_data?.card3_desc || "";
     }
 
+    // Pagos (Medios de Pago)
+    if (document.getElementById('pagos-title')) {
+        document.getElementById('pagos-title').value = sections.pagos?.title || "";
+        document.getElementById('pagos-subtitle').value = sections.pagos?.subtitle || "";
+        document.getElementById('pagos-content').value = sections.pagos?.content || "";
+        document.getElementById('pagos-section-tag').value = sections.pagos?.extra_data?.section_tag || "Medios de Pago";
+        document.getElementById('pagos-info-title').value = sections.pagos?.extra_data?.info_title || "Todas las facilidades a tu disposición";
+        
+        document.getElementById('pagos-card1-icon').value = sections.pagos?.extra_data?.card1_icon || "fa-piggy-bank";
+        document.getElementById('pagos-card1-title').value = sections.pagos?.extra_data?.card1_title || "Pagos Parciales";
+        document.getElementById('pagos-card1-desc').value = sections.pagos?.extra_data?.card1_desc || "";
+        
+        document.getElementById('pagos-card2-icon').value = sections.pagos?.extra_data?.card2_icon || "fa-credit-card";
+        document.getElementById('pagos-card2-title').value = sections.pagos?.extra_data?.card2_title || "Cuotas Sin Interés";
+        document.getElementById('pagos-card2-desc').value = sections.pagos?.extra_data?.card2_desc || "";
+        
+        document.getElementById('pagos-card3-icon').value = sections.pagos?.extra_data?.card3_icon || "fa-id-card";
+        document.getElementById('pagos-card3-title').value = sections.pagos?.extra_data?.card3_title || "Crédito solo con DNI";
+        document.getElementById('pagos-card3-desc').value = sections.pagos?.extra_data?.card3_desc || "";
+        
+        document.getElementById('pagos-card4-icon').value = sections.pagos?.extra_data?.card4_icon || "fa-wallet";
+        document.getElementById('pagos-card4-title').value = sections.pagos?.extra_data?.card4_title || "Transferencias y Efectivo";
+        document.getElementById('pagos-card4-desc').value = sections.pagos?.extra_data?.card4_desc || "";
+    }
+
     // Configurar listeners de file uploader local
     initFileUploaderListeners('nosotros-file', 'nosotros-image');
     initFileUploaderListeners('nosotros-file-sub1', 'nosotros-image-sub1');
@@ -676,6 +722,28 @@ if (formEditSections) {
                     card3_num: document.getElementById('sorteos-card3-num') ? document.getElementById('sorteos-card3-num').value : "03",
                     card3_title: document.getElementById('sorteos-card3-title') ? document.getElementById('sorteos-card3-title').value : "¡Participá!",
                     card3_desc: document.getElementById('sorteos-card3-desc') ? document.getElementById('sorteos-card3-desc').value : ""
+                }
+            },
+            pagos: {
+                title: document.getElementById('pagos-title') ? document.getElementById('pagos-title').value : "",
+                subtitle: document.getElementById('pagos-subtitle') ? document.getElementById('pagos-subtitle').value : "",
+                content: document.getElementById('pagos-content') ? document.getElementById('pagos-content').value : "",
+                image_url: "",
+                extra_data: {
+                    section_tag: document.getElementById('pagos-section-tag') ? document.getElementById('pagos-section-tag').value : "Medios de Pago",
+                    info_title: document.getElementById('pagos-info-title') ? document.getElementById('pagos-info-title').value : "Todas las facilidades a tu disposición",
+                    card1_icon: document.getElementById('pagos-card1-icon') ? document.getElementById('pagos-card1-icon').value : "fa-piggy-bank",
+                    card1_title: document.getElementById('pagos-card1-title') ? document.getElementById('pagos-card1-title').value : "Pagos Parciales",
+                    card1_desc: document.getElementById('pagos-card1-desc') ? document.getElementById('pagos-card1-desc').value : "",
+                    card2_icon: document.getElementById('pagos-card2-icon') ? document.getElementById('pagos-card2-icon').value : "fa-credit-card",
+                    card2_title: document.getElementById('pagos-card2-title') ? document.getElementById('pagos-card2-title').value : "Cuotas Sin Interés",
+                    card2_desc: document.getElementById('pagos-card2-desc') ? document.getElementById('pagos-card2-desc').value : "",
+                    card3_icon: document.getElementById('pagos-card3-icon') ? document.getElementById('pagos-card3-icon').value : "fa-id-card",
+                    card3_title: document.getElementById('pagos-card3-title') ? document.getElementById('pagos-card3-title').value : "Crédito solo con DNI",
+                    card3_desc: document.getElementById('pagos-card3-desc') ? document.getElementById('pagos-card3-desc').value : "",
+                    card4_icon: document.getElementById('pagos-card4-icon') ? document.getElementById('pagos-card4-icon').value : "fa-wallet",
+                    card4_title: document.getElementById('pagos-card4-title') ? document.getElementById('pagos-card4-title').value : "Transferencias y Efectivo",
+                    card4_desc: document.getElementById('pagos-card4-desc') ? document.getElementById('pagos-card4-desc').value : ""
                 }
             }
         };

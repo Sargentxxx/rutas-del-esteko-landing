@@ -431,6 +431,107 @@
                                         <div class="form-group-admin" style="margin-bottom: 0;">
                                             <label for="sorteos-card3-desc" style="font-size: 0.8rem; margin-bottom: 4px;">Descripción (Soporta HTML)</label>
                                             <textarea id="sorteos-card3-desc" class="form-control-admin" rows="3" placeholder="Ej. Ya estás en la base..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medios de Pago Section Edit -->
+                        <div class="admin-card">
+                            <div class="card-title-bar">
+                                <h3><i class="fa-solid fa-credit-card"></i> Sección Medios de Pago (Pagos)</h3>
+                            </div>
+                            <div class="card-body-admin">
+                                <div class="grid-2-col">
+                                    <div class="form-group-admin">
+                                        <label for="pagos-title">Título de la Sección</label>
+                                        <input type="text" id="pagos-title" class="form-control-admin" placeholder="Ej. Viajar nunca fue tan fácil y accesible">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="pagos-subtitle">Sello / Subtítulo</label>
+                                        <input type="text" id="pagos-subtitle" class="form-control-admin" placeholder="Ej. Queremos que tu única preocupación sea disfrutar. Contamos con planes de financiamiento a tu medida.">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="pagos-section-tag">Etiqueta de Sección</label>
+                                        <input type="text" id="pagos-section-tag" class="form-control-admin" placeholder="Ej. Medios de Pago">
+                                    </div>
+                                    <div class="form-group-admin">
+                                        <label for="pagos-info-title">Título Informativo</label>
+                                        <input type="text" id="pagos-info-title" class="form-control-admin" placeholder="Ej. Todas las facilidades a tu disposición">
+                                    </div>
+                                </div>
+                                <div class="form-group-admin">
+                                    <label for="pagos-content">Contenido Informativo Principal</label>
+                                    <textarea id="pagos-content" class="form-control-admin" rows="4" placeholder="Redacción sobre los esquemas de pagos flexibles..."></textarea>
+                                </div>
+                                <div class="form-group-admin" style="grid-column: span 2; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
+                                    <h4 style="margin-bottom: 10px; color: var(--admin-text-main);"><i class="fa-solid fa-list-check"></i> 4 Tarjetas de Medios de Pago</h4>
+                                </div>
+                                <div class="form-group-admin" style="grid-column: span 2; margin-top: 10px;">
+                                    <div class="grid-4-col">
+                                        <!-- Tarjeta 1 -->
+                                        <div style="border: 1px solid var(--admin-border); padding: 16px; border-radius: var(--border-radius-sm); background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px;">
+                                            <h5 style="margin-bottom: 4px; color: var(--admin-primary); font-weight: 700;">Tarjeta 1</h5>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card1-icon" style="font-size: 0.8rem; margin-bottom: 4px;">Ícono (Clase FontAwesome)</label>
+                                                <input type="text" id="pagos-card1-icon" class="form-control-admin" placeholder="Ej. fa-piggy-bank">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card1-title" style="font-size: 0.8rem; margin-bottom: 4px;">Título</label>
+                                                <input type="text" id="pagos-card1-title" class="form-control-admin" placeholder="Ej. Pagos Parciales">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card1-desc" style="font-size: 0.8rem; margin-bottom: 4px;">Descripción</label>
+                                                <textarea id="pagos-card1-desc" class="form-control-admin" rows="4" placeholder="Ej. Congelá el precio..."></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- Tarjeta 2 -->
+                                        <div style="border: 1px solid var(--admin-border); padding: 16px; border-radius: var(--border-radius-sm); background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px;">
+                                            <h5 style="margin-bottom: 4px; color: var(--admin-primary); font-weight: 700;">Tarjeta 2</h5>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card2-icon" style="font-size: 0.8rem; margin-bottom: 4px;">Ícono (Clase FontAwesome)</label>
+                                                <input type="text" id="pagos-card2-icon" class="form-control-admin" placeholder="Ej. fa-credit-card">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card2-title" style="font-size: 0.8rem; margin-bottom: 4px;">Título</label>
+                                                <input type="text" id="pagos-card2-title" class="form-control-admin" placeholder="Ej. Cuotas Sin Interés">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card2-desc" style="font-size: 0.8rem; margin-bottom: 4px;">Descripción</label>
+                                                <textarea id="pagos-card2-desc" class="form-control-admin" rows="4" placeholder="Ej. Trabajamos con..."></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- Tarjeta 3 -->
+                                        <div style="border: 1px solid var(--admin-border); padding: 16px; border-radius: var(--border-radius-sm); background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px;">
+                                            <h5 style="margin-bottom: 4px; color: var(--admin-primary); font-weight: 700;">Tarjeta 3</h5>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card3-icon" style="font-size: 0.8rem; margin-bottom: 4px;">Ícono (Clase FontAwesome)</label>
+                                                <input type="text" id="pagos-card3-icon" class="form-control-admin" placeholder="Ej. fa-id-card">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card3-title" style="font-size: 0.8rem; margin-bottom: 4px;">Título</label>
+                                                <input type="text" id="pagos-card3-title" class="form-control-admin" placeholder="Ej. Crédito solo con DNI">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card3-desc" style="font-size: 0.8rem; margin-bottom: 4px;">Descripción</label>
+                                                <textarea id="pagos-card3-desc" class="form-control-admin" rows="4" placeholder="Ej. Aprobación inmediata..."></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- Tarjeta 4 -->
+                                        <div style="border: 1px solid var(--admin-border); padding: 16px; border-radius: var(--border-radius-sm); background: rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px;">
+                                            <h5 style="margin-bottom: 4px; color: var(--admin-primary); font-weight: 700;">Tarjeta 4</h5>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card4-icon" style="font-size: 0.8rem; margin-bottom: 4px;">Ícono (Clase FontAwesome)</label>
+                                                <input type="text" id="pagos-card4-icon" class="form-control-admin" placeholder="Ej. fa-wallet">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card4-title" style="font-size: 0.8rem; margin-bottom: 4px;">Título</label>
+                                                <input type="text" id="pagos-card4-title" class="form-control-admin" placeholder="Ej. Transferencias y Efectivo">
+                                            </div>
+                                            <div class="form-group-admin" style="margin-bottom: 0;">
+                                                <label for="pagos-card4-desc" style="font-size: 0.8rem; margin-bottom: 4px;">Descripción</label>
+                                                <textarea id="pagos-card4-desc" class="form-control-admin" rows="4" placeholder="Ej. Descuentos especiales..."></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
