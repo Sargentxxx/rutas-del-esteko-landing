@@ -1360,11 +1360,7 @@ function initScrollReveal() {
         // Asegurar que haya un espacio en blanco después de cada palabra div (corrige bug de SplitText)
         if (split.words && split.words.length > 0) {
             for (let i = 0; i < split.words.length - 1; i++) {
-                const word = split.words[i];
-                const next = word.nextSibling;
-                if (!next || next.nodeType !== 3 || next.nodeValue !== ' ') {
-                    word.parentNode.insertBefore(document.createTextNode(' '), word.nextSibling);
-                }
+                split.words[i].after(document.createTextNode(' '));
             }
         }
 
