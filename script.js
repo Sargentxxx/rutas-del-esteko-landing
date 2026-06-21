@@ -371,11 +371,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                     zIndex: 1
                 });
 
+                // Preparar e inyectar inmediatamente la sección entrante en el flujo para mantener la altura y que el footer no suba
+                gsap.set(targetViewElement, {
+                    display: 'block',
+                    position: 'relative',
+                    opacity: 0,
+                    x: 60 * direction,
+                    zIndex: 2
+                });
+
                 // Desvanecer y deslizar la sección saliente
                 tl.to(currentActiveView, {
                     opacity: 0,
                     x: -60 * direction,
-                    duration: 0.4,
+                    duration: 0.45,
                     ease: "power2.inOut",
                     onComplete: () => {
                         currentActiveView.classList.remove('active-view');
@@ -390,19 +399,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                             zIndex: ''
                         });
                     }
-                });
-            }
+                }, 0);
 
-            // Preparar y animar la sección entrante
-            if (currentActiveView) {
-                tl.set(targetViewElement, {
-                    display: 'block',
-                    position: 'relative', // Mantener en el flujo normal
-                    opacity: 0,
-                    x: 60 * direction,
-                    zIndex: 2
-                });
-
+                // Animar la sección entrante
                 tl.to(targetViewElement, {
                     opacity: 1,
                     x: 0,
@@ -420,7 +419,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             x: ''
                         });
                     }
-                }, "-=0.2"); // Pequeño solapamiento para suavidad
+                }, 0.1); // Pequeño delay de 0.1s para un cruce ultra suave
             } else {
                 // Primera carga: simple fade-in sin deslizamiento
                 tl.set(targetViewElement, { display: 'block', opacity: 0 });
