@@ -165,6 +165,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Scroll progress bar
     initScrollProgress();
+
+    // Ejecutar animaciones de entrada dinámicas
+    animateDestPageEntrance();
 });
 
 // ============================================================
@@ -509,5 +512,80 @@ function getWhatsappPhone() {
         return config.whatsapp || '3855962089';
     } catch (e) {
         return '3855962089';
+    }
+}
+
+// ============================================================
+// ANIMATIONS & TYPEWRITER UTILS
+// ============================================================
+function runTypewriter(element, text, speed = 30) {
+    if (!element) return;
+    if (element.typewriterInterval) {
+        clearInterval(element.typewriterInterval);
+    }
+    element.innerHTML = '<span class="typing-text"></span><span class="typing-cursor">|</span>';
+    const textSpan = element.querySelector('.typing-text');
+    const cursorSpan = element.querySelector('.typing-cursor');
+    let index = 0;
+    element.typewriterInterval = setInterval(() => {
+        if (index < text.length) {
+            textSpan.textContent += text.charAt(index);
+            index++;
+        } else {
+            clearInterval(element.typewriterInterval);
+            element.typewriterInterval = null;
+            if (typeof gsap !== 'undefined') {
+                gsap.to(cursorSpan, {
+                    opacity: 0,
+                    repeat: 3,
+                    yoyo: true,
+                    duration: 0.4,
+                    onComplete: () => {
+                        cursorSpan.remove();
+                    }
+                });
+            } else {
+                cursorSpan.remove();
+            }
+        }
+    }, speed);
+}
+
+function triggerTypewriter(element, speed = 30) {
+    if (!element) return;
+    let text = element.dataset.originalText;
+    if (!text) {
+        text = element.textContent.trim();
+        element.dataset.originalText = text;
+    }
+    runTypewriter(element, text, speed);
+}
+
+function animateDestPageEntrance() {
+    const heroTitle = document.getElementById('dest-hero-title');
+    if (heroTitle) {
+        gsap.set(heroTitle, { opacity: 1, y: 0, animation: 'none' });
+        triggerTypewriter(heroTitle, 25);
+    }
+
+    const leftCol = document.querySelector('.dest-info-col');
+    const rightCol = document.querySelector('.dest-cta-col');
+    if (leftCol && rightCol) {
+        gsap.fromTo(leftCol,
+            { opacity: 0, x: -80 },
+            { opacity: 1, x: 0, duration: 0.9, ease: "power3.out", delay: 0.1 }
+        );
+        gsap.fromTo(rightCol,
+            { opacity: 0, x: 80 },
+            { opacity: 1, x: 0, duration: 0.9, ease: "power3.out", delay: 0.1 }
+        );
+    }
+
+    const galleryItems = document.querySelectorAll('.dest-gallery-item');
+    if (galleryItems.length > 0) {
+        gsap.fromTo(galleryItems,
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power2.out", delay: 0.4 }
+        );
     }
 }

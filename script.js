@@ -172,18 +172,64 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isTransitioning = false;
     const sectionOrder = ['inicio', 'nosotros', 'temporadas', 'educativo', 'fiesta', 'sorteos', 'pagos', 'unete', 'contacto'];
 
+    // ============================================================
+    // TYPEWRITER ANIMATION UTILS (Scoped to DOMContentLoaded)
+    // ============================================================
+    function runTypewriter(element, text, speed = 30) {
+        if (!element) return;
+        if (element.typewriterInterval) {
+            clearInterval(element.typewriterInterval);
+        }
+        element.innerHTML = '<span class="typing-text"></span><span class="typing-cursor">|</span>';
+        const textSpan = element.querySelector('.typing-text');
+        const cursorSpan = element.querySelector('.typing-cursor');
+        let index = 0;
+        element.typewriterInterval = setInterval(() => {
+            if (index < text.length) {
+                textSpan.textContent += text.charAt(index);
+                index++;
+            } else {
+                clearInterval(element.typewriterInterval);
+                element.typewriterInterval = null;
+                gsap.to(cursorSpan, {
+                    opacity: 0,
+                    repeat: 3,
+                    yoyo: true,
+                    duration: 0.4,
+                    onComplete: () => {
+                        cursorSpan.remove();
+                    }
+                });
+            }
+        }, speed);
+    }
+
+    function triggerTypewriter(element, speed = 30) {
+        if (!element) return;
+        let text = element.dataset.originalText;
+        if (!text) {
+            text = element.textContent.trim();
+            element.dataset.originalText = text;
+        }
+        runTypewriter(element, text, speed);
+    }
+
+    // Expose triggerTypewriter globally for overlay/other files
+    window.triggerTypewriterGlobal = triggerTypewriter;
+
     function animateViewEntrance(viewId) {
         const view = document.getElementById('view-' + viewId);
         if (!view) return;
 
         // Target elements inside the active view
         const sectionTag = view.querySelector('.section-tag');
-        const h2 = view.querySelector('h2');
-        const subtitle = view.querySelector('.section-subtitle');
+        const h2 = view.querySelector('.section-header h2, .educativo-text h2, .sorteos-content h2');
+        const heroTitle = view.querySelector('.hero-title');
+        const subtitle = view.querySelector('.section-subtitle, .sorteos-content > p');
         const headerLine = view.querySelector('.header-line');
         
         // Clear any running tweens on these elements
-        gsap.killTweensOf([sectionTag, h2, subtitle, headerLine]);
+        gsap.killTweensOf([sectionTag, h2, heroTitle, subtitle, headerLine]);
 
         const tl = gsap.timeline();
 
@@ -194,19 +240,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
         }
         
+        // Typewriter title effects
+        if (heroTitle) {
+            gsap.set(heroTitle, { opacity: 1, y: 0, scale: 1 });
+            triggerTypewriter(heroTitle, 20);
+        }
+        
         if (h2) {
-            tl.fromTo(h2, 
-                { opacity: 0, y: 30, scale: 0.98 },
-                { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" },
-                sectionTag ? "-=0.25" : "0"
-            );
+            gsap.set(h2, { opacity: 1, y: 0, scale: 1 });
+            triggerTypewriter(h2, 30);
         }
 
         if (headerLine) {
             tl.fromTo(headerLine,
                 { width: 0 },
                 { width: "80px", duration: 0.5, ease: "power2.inOut" },
-                "-=0.45"
+                sectionTag ? "-=0.25" : "0"
             );
         }
 
@@ -214,17 +263,48 @@ document.addEventListener('DOMContentLoaded', async () => {
             tl.fromTo(subtitle,
                 { opacity: 0, y: 15 },
                 { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" },
-                "-=0.4"
+                "-=0.3"
             );
         }
 
-        // Animación de los elementos del contenido (tarjetas, etc.)
-        const gridItems = view.querySelectorAll('.destinations-grid > .destination-card, .review-card-premium-wrapper, .payment-methods-grid > .method-card, .gallery-grid-dynamic > .gallery-item-dynamic, .nosotros-grid, .fiesta-grid, .educativo-grid, .sorteos-grid, .contacto-grid, .steps-raffle > .step-card');
+        // Side slide-in columns (se desplazan desde los costados)
+        const leftCols = view.querySelectorAll('.nosotros-content, .educativo-text, .fiesta-visual, .pagos-info, .unete-info-box, .contacto-info-box');
+        const rightCols = view.querySelectorAll('.nosotros-visual, .educativo-gallery, .fiesta-content, .pagos-simulator, .unete-form-box, .contacto-form-box');
+        
+        gsap.killTweensOf([...leftCols, ...rightCols]);
+
+        if (leftCols.length > 0) {
+            tl.fromTo(leftCols,
+                { opacity: 0, x: -80 },
+                { opacity: 1, x: 0, duration: 0.85, ease: "power3.out" },
+                "-=0.35"
+            );
+        }
+
+        if (rightCols.length > 0) {
+            tl.fromTo(rightCols,
+                { opacity: 0, x: 80 },
+                { opacity: 1, x: 0, duration: 0.85, ease: "power3.out" },
+                leftCols.length > 0 ? "-=0.85" : "-=0.35"
+            );
+        }
+
+        // Stagger inner list/grid cards
+        const gridItems = view.querySelectorAll(
+            '.destinations-grid > .destination-card, ' +
+            '.review-card-premium-wrapper, ' +
+            '.payment-methods-grid > .method-card, ' +
+            '.gallery-grid-dynamic > .gallery-item-dynamic, ' +
+            '.steps-raffle > .step-card'
+        );
+        
+        gsap.killTweensOf(gridItems);
+        
         if (gridItems.length > 0) {
             tl.fromTo(gridItems,
-                { opacity: 0, y: 25 },
-                { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: "power2.out" },
-                "-=0.3"
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.65, stagger: 0.08, ease: "power2.out" },
+                "-=0.45"
             );
         }
     }
@@ -1713,6 +1793,37 @@ window.openDestinationOverlay = function(destId) {
     overlay.offsetHeight;
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Animación de los elementos internos del overlay
+    const overlayTitle = document.getElementById('overlay-title');
+    if (overlayTitle) {
+        gsap.set(overlayTitle, { opacity: 1, x: 0 });
+        window.triggerTypewriterGlobal(overlayTitle, 20);
+    }
+
+    const overlayLeft = overlay.querySelector('.dest-info-col');
+    const overlayRight = overlay.querySelector('.dest-cta-col');
+    if (overlayLeft && overlayRight) {
+        gsap.killTweensOf([overlayLeft, overlayRight]);
+        gsap.fromTo(overlayLeft,
+            { opacity: 0, x: -80 },
+            { opacity: 1, x: 0, duration: 0.85, ease: "power3.out" }
+        );
+        gsap.fromTo(overlayRight,
+            { opacity: 0, x: 80 },
+            { opacity: 1, x: 0, duration: 0.85, ease: "power3.out" }
+        );
+    }
+
+    // Stagger gallery items inside the overlay
+    const overlayGalleryItems = overlay.querySelectorAll('.dest-gallery-item');
+    if (overlayGalleryItems.length > 0) {
+        gsap.killTweensOf(overlayGalleryItems);
+        gsap.fromTo(overlayGalleryItems,
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power2.out", delay: 0.25 }
+        );
+    }
 };
 
 window.closeDestinationOverlay = function() {

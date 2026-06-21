@@ -67,6 +67,10 @@ body {
     overflow-x: hidden;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', var(--font-main);
+}
+
 img {
     max-width: 100%;
     height: auto;
@@ -579,7 +583,7 @@ a {
 }
 
 .section-header h2 {
-    font-family: 'Syne', var(--font-main);
+    font-family: 'Outfit', var(--font-main);
     font-size: 3rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -2184,16 +2188,16 @@ a {
     opacity: 1;
 }
 .spa-view:not(#view-inicio) {
-    padding-top: 140px;
+    padding-top: 105px;
 }
 @media (max-width: 1024px) {
     .spa-view:not(#view-inicio) {
-        padding-top: 110px;
+        padding-top: 85px;
     }
 }
 @media (max-width: 768px) {
     .spa-view:not(#view-inicio) {
-        padding-top: 130px;
+        padding-top: 95px;
     }
 }
 
@@ -2426,6 +2430,7 @@ a {
 .main-header.solid-header {
     background-color: var(--dark-surface) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 0 !important;
 }
 
 /* Diseño premium interactivo para el botón/caja de Reseñas Oficiales */
@@ -2756,6 +2761,61 @@ a {
     height: 100%;
     background-color: var(--primary);
     width: 0%;
+}
+
+/* Typewriter Cursor */
+.typing-cursor {
+    color: var(--primary);
+    font-weight: 300;
+    margin-left: 4px;
+    display: inline-block;
+    animation: typingBlink 0.7s infinite alternate;
+}
+
+@keyframes typingBlink {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Premium Card Hover Effects */
+.method-card, .step-card, .mintur-safety-card, .sim-box, .contacto-form-box, .unete-form-box {
+    transition: var(--transition-smooth) !important;
+}
+
+.method-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(220, 30, 30, 0.15) !important;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.mintur-safety-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(220, 30, 30, 0.25) !important;
+}
+
+.sim-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(220, 30, 30, 0.15) !important;
+}
+
+.contacto-form-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(220, 30, 30, 0.15) !important;
+}
+
+.unete-form-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(220, 30, 30, 0.15) !important;
 }
 
 
