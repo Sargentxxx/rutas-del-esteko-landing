@@ -198,6 +198,129 @@ const DEFAULT_CONFIG = {
     qr_mintur_url: "img/qr-rnav.png"
 };
 
+const SEED_REVIEWS = [
+    {
+        id: "review-1a",
+        name: "Maria Lujan Rojas",
+        title: "Local Guide · 20 reseñas",
+        stars: 5,
+        time: "Hace 10 meses",
+        comment: "Hermosa experiencia!!! Super recomendable, hemos elegido varias veces la empresa y siempre cumplen, el ultimo viaje a San Rafael, Mendoza estuvo genial la cabaña, el desayuno, las comidas, la coordinacion, 10/10",
+        avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
+        order: 10
+    },
+    {
+        id: "review-1b",
+        name: "Gabriela Roldán",
+        title: "Local Guide · 12 reseñas",
+        stars: 5,
+        time: "Hace 2 meses",
+        comment: "Excelente viaje a Carlos Paz! Los coordinadores estuvieron en cada detalle y el hotel tenía una atención fantástica. Las excursiones súper completas. Ya estamos planeando el próximo destino con ellos.",
+        avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+        order: 20
+    },
+    {
+        id: "review-2a",
+        name: "Carolina Yeck",
+        title: "1 reseña · 1 foto",
+        stars: 5,
+        time: "Hace 3 meses",
+        comment: "Una experiencia inolvidable en Mar del Plata! El depto. Excelentemente equipado nos tocó con una hermosa vista al mar en frente del casino. La salida puntual. La coordinadora Ceci excelente responde todas las dudas al instante. Lo recomiendo al 100%. Volvería a contratar los servicios sin dudarlo y por más días. 😃",
+        avatar_url: "https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&w=150&q=80",
+        order: 30
+    },
+    {
+        id: "review-2b",
+        name: "Esteban Gimenez",
+        title: "7 reseñas · 2 fotos",
+        stars: 5,
+        time: "Hace 1 mes",
+        comment: "Increíble viaje grupal a Camboriú. El micro de San Felipe súper cómodo y el chofer excelente. El departamento a media cuadra de la playa era un lujo. Excelente organización de todo el equipo de Rutas del Esteko.",
+        avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
+        order: 40
+    },
+    {
+        id: "review-3a",
+        name: "Andrea Apesteguia",
+        title: "Local Guide · 9 reseñas · 25 fotos",
+        stars: 5,
+        time: "Hace 3 meses",
+        comment: "Es la primera ves que viajamos con la empresa y fué una hermosa experiencia con Rutas del Esteko,siempre atentos a cualquier inquietud,súper recomendables. Los volveríamos a elegir",
+        avatar_url: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=80",
+        order: 50
+    },
+    {
+        id: "review-3b",
+        name: "Patricia Sanchez",
+        title: "Local Guide · 15 reseñas",
+        stars: 5,
+        time: "Hace 5 meses",
+        comment: "Viajamos en familia a Tafí del Valle y la pasamos espectacular. Los departamentos impecables y muy cómodos. Todo coordinado de diez. Es una empresa muy familiar y confiable. 100% recomendados!",
+        avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80",
+        order: 60
+    },
+    {
+        id: "review-4a",
+        name: "Lautaro Veron",
+        title: "7 reseñas",
+        stars: 5,
+        time: "Hace 3 meses",
+        comment: "2do viaje a Mar del Plata q viajo con Rutas del Esteko. Ofrecen facilidades de pago, el colectivo en buenas condiciones, salimos y llegamos a horario. Las paradas programadas estan bien organizadas. Los dptos q nos tocó estan a 3 cuadras del casino central. Super confiables",
+        avatar_url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=150&q=80",
+        order: 70
+    },
+    {
+        id: "review-4b",
+        name: "Santiago Coronel",
+        title: "4 reseñas · 1 foto",
+        stars: 5,
+        time: "Hace 6 meses",
+        comment: "Fuimos al viaje de invierno a Bariloche. El hotel hermoso y con excelente calefacción. Los coordinadores siempre presentes y cuidándonos en las excursiones. La comida abundante y rica. Sin dudas volveremos a viajar!",
+        avatar_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80",
+        order: 80
+    },
+    {
+        id: "review-5a",
+        name: "Mar Marquez",
+        title: "1 reseña",
+        stars: 5,
+        time: "Hace 4 meses",
+        comment: "Excelente servicio, super contenta un viaje excelente, departamento hermosos y sobre todo los coordinadores que estuvieron en todos los detalles acompañando antes con toda la información necesaria y durante el viaje , nos sentimos realmente acompañados , las mejores vacaciones gracias rutas del esteko 🏞️...",
+        avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80",
+        order: 90
+    },
+    {
+        id: "review-5b",
+        name: "Julieta Mansilla",
+        title: "Local Guide · 31 reseñas",
+        stars: 5,
+        time: "Hace 1 mes",
+        comment: "Viajé a Villa Gesell con amigas y fue soñado. Depto amplio, luminoso y cerca de todo. Cecy una divina, nos guió en todo momento. La relación precio-calidad es insuperable en Santiago del Estero. Gracias por todo!",
+        avatar_url: "https://images.unsplash.com/photo-1546961329-78bef0414d7c?auto=format&fit=crop&w=150&q=80",
+        order: 100
+    },
+    {
+        id: "review-6a",
+        name: "anahi salvatierra",
+        title: "1 reseña",
+        stars: 5,
+        time: "Hace 3 meses",
+        comment: "Excelente servicio ,la atención muy buena de los coordinadores, siempre atentos ,lo ofrecido fue cumplido en todo !!! La ubicación de los departamentos un lujo pleno centro a cuadras de la playa",
+        avatar_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80",
+        order: 110
+    },
+    {
+        id: "review-6b",
+        name: "Ramon Juarez",
+        title: "9 reseñas · 5 fotos",
+        stars: 5,
+        time: "Hace 2 meses",
+        comment: "Muy buena experiencia en San Bernardo. Muy puntuales con los horarios del colectivo de San Felipe. Los departamentos son tal cual te muestran en las fotos. La coordinación permanente te da mucha tranquilidad.",
+        avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
+        order: 120
+    }
+];
+
 // ==========================================================================
 // 2. INICIALIZACIÓN DE LA APLICACIÓN & DETECCIÓN DE CONEXIÓN
 // ==========================================================================
@@ -214,6 +337,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (!localStorage.getItem('esteko_landing_gallery')) {
         localStorage.setItem('esteko_landing_gallery', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('esteko_landing_reviews')) {
+        localStorage.setItem('esteko_landing_reviews', JSON.stringify(SEED_REVIEWS));
     }
 
     // Actualizar fecha militar en cabecera
@@ -554,6 +680,8 @@ function loadTabContent(tabId) {
         loadLeadsData();
     } else if (tabId === 'postulaciones') {
         loadPostulacionesData();
+    } else if (tabId === 'opiniones') {
+        loadOpinionsData();
     } else if (tabId === 'usuarios') {
         loadUsersData();
     }
@@ -2407,6 +2535,265 @@ if (btnClearPostulaciones) {
             alert("No se pudieron eliminar todos los registros de la nube.");
         }
     });
+}
+
+// ==========================================================================
+// 10. PESTAÑA: OPINIONES DE GOOGLE (CRUD)
+// ==========================================================================
+let allOpinions = [];
+let opinionModalsInitialized = false;
+
+async function loadOpinionsData() {
+    const tableBody = document.getElementById('opiniones-table-body');
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="8" class="table-empty-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Sincronizando opiniones...</td></tr>';
+    }
+
+    allOpinions = [];
+
+    // Cargar opiniones de Firestore
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        try {
+            const snapshot = await firebase.firestore().collection('landing_reviews').get();
+            if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => {
+                    list.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                // Ordenar por orden
+                list.sort((a, b) => (a.order || 10) - (b.order || 10));
+                allOpinions = list;
+            }
+        } catch (e) {
+            console.warn("Fallo de red al obtener opiniones de Firestore, usando local.", e);
+        }
+    }
+
+    // Fallback local
+    if (allOpinions.length === 0) {
+        const local = localStorage.getItem('esteko_landing_reviews');
+        if (local) {
+            try {
+                allOpinions = JSON.parse(local);
+            } catch (err) {
+                console.warn("Error parsing local reviews", err);
+            }
+        }
+    }
+
+    renderOpinionsTable();
+    initOpinionModalListeners();
+}
+
+function renderOpinionsTable() {
+    const tableBody = document.getElementById('opiniones-table-body');
+    if (!tableBody) return;
+
+    if (allOpinions.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="8" class="table-empty-placeholder">No hay opiniones cargadas.</td></tr>';
+        return;
+    }
+
+    tableBody.innerHTML = '';
+    allOpinions.forEach(op => {
+        const row = document.createElement('tr');
+        
+        let starsHTML = '';
+        const starCount = parseInt(op.stars) || 5;
+        for (let s = 0; s < 5; s++) {
+            starsHTML += s < starCount ? '<i class="fa-solid fa-star" style="color: #ffc107;"></i>' : '<i class="fa-regular fa-star" style="color: #ccc;"></i>';
+        }
+
+        row.innerHTML = `
+            <td>
+                <img src="${op.avatar_url || 'img/default-avatar.png'}" alt="Avatar" class="avatar-table-admin" onerror="this.src='img/default-avatar.png'" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+            </td>
+            <td><strong>${op.name}</strong></td>
+            <td><span class="badge-role" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid rgba(255,255,255,0.1);">${op.title || 'Pasajero'}</span></td>
+            <td><div>${starsHTML}</div></td>
+            <td>${op.time}</td>
+            <td><div class="review-text-truncate" style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${op.comment}">${op.comment}</div></td>
+            <td><strong>${op.order || 10}</strong></td>
+            <td>
+                <div class="table-action-btns">
+                    <button class="btn-table-action btn-edit-opinion" data-id="${op.id}" title="Editar Opinión"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="btn-table-action btn-delete-opinion" data-id="${op.id}" style="color: var(--primary);" title="Eliminar Opinión"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+
+    // Event listeners
+    tableBody.querySelectorAll('.btn-edit-opinion').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            editOpinion(id);
+        });
+    });
+
+    tableBody.querySelectorAll('.btn-delete-opinion').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            deleteOpinion(id);
+        });
+    });
+}
+
+function initOpinionModalListeners() {
+    if (opinionModalsInitialized) return;
+    opinionModalsInitialized = true;
+
+    // Configurar file uploader para avatar
+    initFileUploaderListeners('opinion-avatar-file', 'opinion-avatar');
+
+    const openBtn = document.getElementById('btn-open-create-opinion-modal');
+    const modal = document.getElementById('opinion-modal');
+    const closeBtn = document.getElementById('btn-close-opinion-modal');
+    const cancelBtn = document.getElementById('btn-cancel-opinion-modal');
+    const form = document.getElementById('form-opinion-crud');
+
+    if (openBtn) {
+        openBtn.addEventListener('click', () => {
+            document.getElementById('opinion-modal-title').innerHTML = '<i class="fa-solid fa-star"></i> Registrar Opinión de Google';
+            document.getElementById('opinion-id').value = '';
+            form.reset();
+            document.getElementById('opinion-order').value = (allOpinions.length * 10) + 10;
+            modal.style.display = 'flex';
+        });
+    }
+
+    const closeModal = () => {
+        modal.style.display = 'none';
+        form.reset();
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('btn-save-opinion-submit');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+            const id = document.getElementById('opinion-id').value.trim();
+            const name = document.getElementById('opinion-name').value.trim();
+            const title = document.getElementById('opinion-title').value.trim();
+            const avatar_url = document.getElementById('opinion-avatar').value.trim();
+            const stars = parseInt(document.getElementById('opinion-stars').value);
+            const time = document.getElementById('opinion-time').value.trim();
+            const order = parseInt(document.getElementById('opinion-order').value) || 10;
+            const comment = document.getElementById('opinion-comment').value.trim();
+
+            const opinionData = {
+                name,
+                title,
+                avatar_url,
+                stars,
+                time,
+                order,
+                comment,
+                updated_at: new Date().toISOString()
+            };
+
+            let success = true;
+
+            if (isDatabaseOnline && typeof firebase !== 'undefined') {
+                try {
+                    if (id && !id.startsWith('local-')) {
+                        await firebase.firestore().collection('landing_reviews').doc(id).set(opinionData, { merge: true });
+                    } else {
+                        // Crear nuevo documento en Firestore
+                        const docRef = await firebase.firestore().collection('landing_reviews').add({
+                            ...opinionData,
+                            created_at: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        opinionData.id = docRef.id;
+                    }
+                } catch (err) {
+                    console.error("Error guardando opinión en Firestore:", err);
+                    success = false;
+                }
+            }
+
+            // Guardar localmente
+            let localList = JSON.parse(localStorage.getItem('esteko_landing_reviews') || '[]');
+            if (id) {
+                const idx = localList.findIndex(o => o.id === id);
+                if (idx !== -1) {
+                    localList[idx] = { ...localList[idx], ...opinionData };
+                }
+            } else {
+                const newId = opinionData.id || 'local-' + Date.now();
+                localList.push({ id: newId, ...opinionData });
+            }
+            localList.sort((a,b) => (a.order || 10) - (b.order || 10));
+            localStorage.setItem('esteko_landing_reviews', JSON.stringify(localList));
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Opinión';
+
+            if (success) {
+                showToast(id ? "Opinión actualizada correctamente." : "Opinión registrada correctamente.");
+                closeModal();
+                loadOpinionsData();
+            } else {
+                alert("Ocurrió un error al guardar en la base de datos.");
+            }
+        });
+    }
+}
+
+function editOpinion(id) {
+    const op = allOpinions.find(o => o.id === id);
+    if (!op) return;
+
+    document.getElementById('opinion-modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editar Opinión de Google';
+    document.getElementById('opinion-id').value = op.id;
+    document.getElementById('opinion-name').value = op.name;
+    document.getElementById('opinion-title').value = op.title || '';
+    document.getElementById('opinion-avatar').value = op.avatar_url || '';
+    document.getElementById('opinion-stars').value = op.stars || 5;
+    document.getElementById('opinion-time').value = op.time || 'Hace poco';
+    document.getElementById('opinion-order').value = op.order || 10;
+    document.getElementById('opinion-comment').value = op.comment;
+
+    document.getElementById('opinion-modal').style.display = 'flex';
+}
+
+async function deleteOpinion(id) {
+    if (!confirm("¿Estás seguro de que querés eliminar esta opinión de Google?")) return;
+
+    let success = true;
+
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        try {
+            if (id && !id.startsWith('local-')) {
+                await firebase.firestore().collection('landing_reviews').doc(id).delete();
+            }
+        } catch (err) {
+            console.error("Error al borrar opinión de Firestore:", err);
+            success = false;
+        }
+    }
+
+    // Local
+    let localList = JSON.parse(localStorage.getItem('esteko_landing_reviews') || '[]');
+    localList = localList.filter(o => o.id !== id);
+    localStorage.setItem('esteko_landing_reviews', JSON.stringify(localList));
+
+    if (success) {
+        showToast("Opinión eliminada.");
+        loadOpinionsData();
+    } else {
+        alert("Ocurrió un error al eliminar de la base de datos.");
+    }
 }
 
 

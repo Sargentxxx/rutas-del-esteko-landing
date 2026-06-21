@@ -542,6 +542,9 @@ async function testConnectionAndLoadContent() {
     
     // 5. Inicializar el formulario de CV
     initCVFormSubmission();
+
+    // 6. Cargar opiniones de Google Maps
+    await loadGoogleReviews();
 }
 
 // Aplicar textos dinámicos
@@ -1912,3 +1915,139 @@ function updateOverlayLightboxImage() {
     if (img) img.src = overlayGalleryImages[overlayLightboxIndex];
     if (counter) counter.textContent = `${overlayLightboxIndex + 1} / ${overlayGalleryImages.length}`;
 }
+
+// ==========================================================================
+// 12. CARGA DINÁMICA DE OPINIONES DE GOOGLE MAPS
+// ==========================================================================
+async function loadGoogleReviews() {
+    const reviewsGrid = document.querySelector('.reviews-grid-premium');
+    if (!reviewsGrid) return;
+
+    let reviewsList = [];
+
+    if (isDbOnlinePublic && firestoreDb) {
+        try {
+            const snapshot = await firestoreDb.collection('landing_reviews').get();
+            if (!snapshot.empty) {
+                snapshot.forEach(doc => {
+                    reviewsList.push({ id: doc.id, ...doc.data() });
+                });
+                // Ordenar por orden
+                reviewsList.sort((a, b) => (a.order || 10) - (b.order || 10));
+            }
+        } catch (e) {
+            console.warn("Fallo leyendo opiniones de Firestore, usando locales.", e);
+        }
+    }
+
+    // Fallback: Si no hay opiniones en Firestore, usar localStorage si existen
+    if (reviewsList.length === 0) {
+        const local = localStorage.getItem('esteko_landing_reviews');
+        if (local) {
+            try {
+                reviewsList = JSON.parse(local);
+            } catch (err) {
+                console.warn("Error parsing local reviews", err);
+            }
+        }
+    }
+
+    if (reviewsList.length > 0) {
+        renderGoogleReviews(reviewsList);
+    }
+}
+
+function renderGoogleReviews(reviewsList) {
+    const reviewsGrid = document.querySelector('.reviews-grid-premium');
+    if (!reviewsGrid) return;
+
+    reviewsGrid.innerHTML = '';
+
+    // Agrupar opiniones en pares (frente y dorso de las flip cards)
+    for (let i = 0; i < reviewsList.length; i += 2) {
+        const frontReview = reviewsList[i];
+        const backReview = reviewsList[i + 1] || null;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'review-card-premium-wrapper';
+
+        const card = document.createElement('div');
+        card.className = 'review-card-premium';
+
+        // Frente
+        let starsHTML = '';
+        const starCount = parseInt(frontReview.stars) || 5;
+        for (let s = 0; s < 5; s++) {
+            starsHTML += s < starCount ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+        }
+
+        const frontFace = document.createElement('div');
+        frontFace.className = 'review-card-front';
+        frontFace.innerHTML = `
+            <div class="review-header-prem">
+                <img src="${frontReview.avatar_url || 'img/default-avatar.png'}" alt="${frontReview.name}" class="reviewer-avatar" onerror="this.src='img/default-avatar.png'">
+                <div class="reviewer-meta">
+                    <h4>${frontReview.name}</h4>
+                    <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> ${frontReview.title || 'Pasajero verificado'}</span>
+                </div>
+                ${backReview ? '<span class="flip-hint-badge"><i class="fa-solid fa-rotate animate-pulse"></i></span>' : ''}
+                <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
+            </div>
+            <div class="review-rating-stars">
+                <div class="stars-gold">${starsHTML}</div>
+                <span class="review-time">${frontReview.time || 'Hace poco'}</span>
+            </div>
+            <p class="review-comment">"${frontReview.comment}"</p>
+        `;
+        card.appendChild(frontFace);
+
+        // Dorso
+        if (backReview) {
+            let backStarsHTML = '';
+            const backStarCount = parseInt(backReview.stars) || 5;
+            for (let s = 0; s < 5; s++) {
+                backStarsHTML += s < backStarCount ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+            }
+
+            const backFace = document.createElement('div');
+            backFace.className = 'review-card-back';
+            backFace.innerHTML = `
+                <div class="review-header-prem">
+                    <img src="${backReview.avatar_url || 'img/default-avatar.png'}" alt="${backReview.name}" class="reviewer-avatar" onerror="this.src='img/default-avatar.png'">
+                    <div class="reviewer-meta">
+                        <h4>${backReview.name}</h4>
+                        <span class="reviewer-title"><i class="fa-solid fa-circle-check"></i> ${backReview.title || 'Pasajero verificado'}</span>
+                    </div>
+                    <span class="google-icon-corner"><i class="fa-brands fa-google"></i></span>
+                </div>
+                <div class="review-rating-stars">
+                    <div class="stars-gold">${backStarsHTML}</div>
+                    <span class="review-time">${backReview.time || 'Hace poco'}</span>
+                </div>
+                <p class="review-comment">"${backReview.comment}"</p>
+            `;
+            card.appendChild(backFace);
+        } else {
+            // Si es impar, dorso con CTA para opinar
+            const backFace = document.createElement('div');
+            backFace.className = 'review-card-back review-card-cta-back';
+            backFace.style.display = 'flex';
+            backFace.style.flexDirection = 'column';
+            backFace.style.justifyContent = 'center';
+            backFace.style.alignItems = 'center';
+            backFace.style.textAlign = 'center';
+            backFace.style.padding = '20px';
+            backFace.innerHTML = `
+                <i class="fa-brands fa-google" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 12px;"></i>
+                <h4 style="margin-bottom: 5px;">¿Viajaste con nosotros?</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">¡Dejanos tu reseña oficial de 5 estrellas en Google Maps!</p>
+                <a href="https://www.google.com/maps/place/Rutas+del+Esteko+-+Agencia+de+Viajes+y+Turismo/@-27.8192068,-64.2676658,17z/data=!4m8!3m7!1s0x943b4d0000d981d3:0x7b8cfd201eae5f9f!8m2!3d-27.8192068!4d-64.2650909!9m1!1b1!16s%2Fg%2F11wvn7yj62" target="_blank" class="btn-google-review-premium" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 0.8rem; border-radius: 20px; background: var(--primary); color: #fff; text-decoration: none; font-weight: 600; box-shadow: var(--shadow-sm);"><i class="fa-solid fa-map-location-dot"></i> Opinar ahora</a>
+            `;
+            card.appendChild(backFace);
+        }
+
+        wrapper.appendChild(card);
+        reviewsGrid.appendChild(wrapper);
+    }
+}
+

@@ -90,6 +90,7 @@
                     <li><a href="#" class="sidebar-link" data-tab="configuracion"><i class="fa-solid fa-sliders"></i> Simulador y Datos</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="leads"><i class="fa-solid fa-users-viewfinder"></i> Leads Capturados <span class="badge-leads-count" id="nav-leads-badge">0</span></a></li>
                     <li><a href="#" class="sidebar-link" data-tab="postulaciones"><i class="fa-solid fa-file-pdf"></i> Postulaciones CV <span class="badge-leads-count" id="nav-postulaciones-badge" style="background: var(--accent);">0</span></a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="opiniones"><i class="fa-solid fa-star"></i> Opiniones de Google</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="usuarios"><i class="fa-solid fa-users-gear"></i> Administrar Usuarios</a></li>
                 </ul>
             </nav>
@@ -873,6 +874,42 @@
                     </div>
                 </section>
 
+                <!-- 7. TAB: OPINIONES (Google Reviews) -->
+                <section class="tab-pane" id="tab-opiniones">
+                    <div class="pane-header header-flex">
+                        <div>
+                            <h2><i class="fa-solid fa-star text-primary"></i> Opiniones de Google Maps</h2>
+                            <p>Administrá las opiniones reales y avatares que se muestran en el carrusel de la landing page.</p>
+                        </div>
+                        <button class="btn-admin btn-admin-primary" id="btn-open-create-opinion-modal"><i class="fa-solid fa-circle-plus"></i> Agregar Opinión</button>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="card-body-admin table-responsive-admin">
+                            <table class="leads-table-admin">
+                                <thead>
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Usuario</th>
+                                        <th>Título / Rango</th>
+                                        <th>Calificación</th>
+                                        <th>Fecha Relativa</th>
+                                        <th>Comentario</th>
+                                        <th>Orden</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="opiniones-table-body">
+                                    <!-- Inyectado por JS -->
+                                    <tr>
+                                        <td colspan="8" class="table-empty-placeholder">Cargando opiniones...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </main>
     </div>
@@ -1237,6 +1274,74 @@ CREATE POLICY "Allow auth read/write leads" ON public.landing_leads FOR ALL TO a
             </div>
         </form>
     </div>
+
+    <!-- MODAL: REGISTRAR / EDITAR OPINION -->
+    <div id="opinion-modal" class="modal-overlay-admin" style="display: none;">
+        <form id="form-opinion-crud" class="modal-admin-card">
+            <div class="modal-admin-header">
+                <h3 id="opinion-modal-title"><i class="fa-solid fa-star"></i> Registrar Opinión de Google</h3>
+                <button type="button" class="modal-close-trigger" id="btn-close-opinion-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <input type="hidden" id="opinion-id">
+            
+            <div class="modal-admin-body">
+                <div class="grid-2-col">
+                    <div class="form-group-admin">
+                        <label for="opinion-name">Nombre del Usuario</label>
+                        <input type="text" id="opinion-name" class="form-control-admin" placeholder="Ej. Maria Lujan Rojas" required>
+                    </div>
+                    <div class="form-group-admin">
+                        <label for="opinion-title">Rango / Rótulo</label>
+                        <input type="text" id="opinion-title" class="form-control-admin" placeholder="Ej. Local Guide · 20 reseñas">
+                    </div>
+                </div>
+
+                <div class="form-group-admin">
+                    <label for="opinion-avatar">Imagen de Perfil / Avatar (URL o subir archivo)</label>
+                    <div class="input-with-upload-container" style="display: flex; gap: 8px;">
+                        <input type="text" id="opinion-avatar" class="form-control-admin" style="flex: 1;" placeholder="https://images.unsplash.com/photo-..." required>
+                        <div class="admin-file-upload-btn-wrapper">
+                            <input type="file" id="opinion-avatar-file" accept="image/*" style="display: none;">
+                            <label for="opinion-avatar-file" class="btn-admin btn-admin-xs btn-admin-accent" style="margin: 0; padding: 10px 15px; white-space: nowrap; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 6px;"><i class="fa-solid fa-cloud-arrow-up"></i> Subir</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-3-col">
+                    <div class="form-group-admin">
+                        <label for="opinion-stars">Calificación (Estrellas)</label>
+                        <select id="opinion-stars" class="form-control-admin" required>
+                            <option value="5" selected>5 Estrellas</option>
+                            <option value="4">4 Estrellas</option>
+                            <option value="3">3 Estrellas</option>
+                            <option value="2">2 Estrellas</option>
+                            <option value="1">1 Estrella</option>
+                        </select>
+                    </div>
+                    <div class="form-group-admin">
+                        <label for="opinion-time">Fecha Relativa</label>
+                        <input type="text" id="opinion-time" class="form-control-admin" placeholder="Ej. Hace 2 meses" required>
+                    </div>
+                    <div class="form-group-admin">
+                        <label for="opinion-order">Orden de Visualización</label>
+                        <input type="number" id="opinion-order" class="form-control-admin" value="10" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group-admin">
+                    <label for="opinion-comment">Comentario / Opinión</label>
+                    <textarea id="opinion-comment" class="form-control-admin" rows="4" placeholder="Escribí la opinión tal cual aparece en Google Maps..." required></textarea>
+                </div>
+            </div>
+
+            <div class="modal-admin-footer">
+                <button type="button" class="btn-admin btn-admin-secondary" id="btn-cancel-opinion-modal">Cancelar</button>
+                <button type="submit" class="btn-admin btn-admin-primary" id="btn-save-opinion-submit"><i class="fa-solid fa-floppy-disk"></i> Guardar Opinión</button>
+            </div>
+        </form>
+    </div>
+
 
     <!-- Toast Notification Injected by JS -->
     <div id="admin-toast-notification" class="admin-toast" style="display: none;">
