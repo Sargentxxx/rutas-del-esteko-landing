@@ -784,7 +784,7 @@
 }
 
 /* ==========================================================================
-   DEST-OVERLAY: Estilos del Overlay modal (Opción B)
+   DEST-OVERLAY: Estilos del Overlay modal (Opción B) - PANTALLA COMPLETA
    ========================================================================== */
 .dest-overlay {
     position: fixed;
@@ -792,16 +792,16 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(5, 5, 5, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: rgba(10, 5, 5, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 10000;
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dest-overlay.active {
@@ -810,49 +810,50 @@
 }
 
 .dest-overlay-container {
-    width: 90vw;
-    height: 90vh;
-    max-width: 1200px;
-    max-height: 850px;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
     background-color: var(--sand-bg, #fdfbfa);
-    border: 1px solid rgba(220, 30, 30, 0.1);
-    border-radius: 24px;
+    border: none;
+    border-radius: 0;
     position: relative;
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+    box-shadow: none;
     overflow: hidden;
-    transform: translateY(30px) scale(0.95);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dest-overlay.active .dest-overlay-container {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
 }
 
 /* Botón cerrar overlay */
 .dest-overlay-close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 44px;
-    height: 44px;
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: rgba(10, 5, 5, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(10, 5, 5, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     color: #fff;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 11;
-    transition: all 0.25s ease;
+    z-index: 10100;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .dest-overlay-close-btn:hover {
     background: var(--primary);
     border-color: var(--primary);
-    transform: rotate(90deg) scale(1.05);
+    transform: rotate(90deg) scale(1.08);
 }
 
 /* Scrollable container */
@@ -866,7 +867,8 @@
 /* Header del overlay */
 .dest-overlay-header {
     position: relative;
-    height: 320px;
+    height: 50vh;
+    min-height: 360px;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -877,11 +879,12 @@
     inset: 0;
     background-size: cover;
     background-position: center;
-    transition: transform 0.5s ease;
+    transform: scale(1.08);
+    transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dest-overlay-container:hover .dest-overlay-hero-bg {
-    transform: scale(1.02);
+.dest-overlay.active .dest-overlay-hero-bg {
+    transform: scale(1);
 }
 
 .dest-overlay-hero-grad {
@@ -898,8 +901,10 @@
 .dest-overlay-header-content {
     position: relative;
     z-index: 2;
-    padding: 30px 40px;
+    padding: 40px;
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .dest-overlay-header-content .dest-hero-title {
@@ -908,9 +913,11 @@
 
 .dest-overlay-body {
     display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 40px;
-    padding: 40px;
+    grid-template-columns: 1fr 380px;
+    gap: 50px;
+    padding: 50px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
     align-items: start;
 }
 
@@ -920,12 +927,6 @@
         grid-template-columns: 1fr;
         gap: 30px;
         padding: 30px;
-    }
-    
-    .dest-overlay-container {
-        width: 95vw;
-        height: 95vh;
-        max-height: none;
     }
 }
 
