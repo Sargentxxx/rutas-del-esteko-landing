@@ -172,6 +172,63 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isTransitioning = false;
     const sectionOrder = ['inicio', 'nosotros', 'temporadas', 'educativo', 'fiesta', 'sorteos', 'pagos', 'unete', 'contacto'];
 
+    function animateViewEntrance(viewId) {
+        const view = document.getElementById('view-' + viewId);
+        if (!view) return;
+
+        // Target elements inside the active view
+        const sectionTag = view.querySelector('.section-tag');
+        const h2 = view.querySelector('h2');
+        const subtitle = view.querySelector('.section-subtitle');
+        const headerLine = view.querySelector('.header-line');
+        
+        // Clear any running tweens on these elements
+        gsap.killTweensOf([sectionTag, h2, subtitle, headerLine]);
+
+        const tl = gsap.timeline();
+
+        if (sectionTag) {
+            tl.fromTo(sectionTag, 
+                { opacity: 0, y: 15 },
+                { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+            );
+        }
+        
+        if (h2) {
+            tl.fromTo(h2, 
+                { opacity: 0, y: 30, scale: 0.98 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" },
+                sectionTag ? "-=0.25" : "0"
+            );
+        }
+
+        if (headerLine) {
+            tl.fromTo(headerLine,
+                { width: 0 },
+                { width: "80px", duration: 0.5, ease: "power2.inOut" },
+                "-=0.45"
+            );
+        }
+
+        if (subtitle) {
+            tl.fromTo(subtitle,
+                { opacity: 0, y: 15 },
+                { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" },
+                "-=0.4"
+            );
+        }
+
+        // Animación de los elementos del contenido (tarjetas, etc.)
+        const gridItems = view.querySelectorAll('.destinations-grid > .destination-card, .review-card-premium-wrapper, .payment-methods-grid > .method-card, .gallery-grid-dynamic > .gallery-item-dynamic, .nosotros-grid, .fiesta-grid, .educativo-grid, .sorteos-grid, .contacto-grid, .steps-raffle > .step-card');
+        if (gridItems.length > 0) {
+            tl.fromTo(gridItems,
+                { opacity: 0, y: 25 },
+                { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: "power2.out" },
+                "-=0.3"
+            );
+        }
+    }
+
     function switchView(hash) {
         const viewId = hash.replace('#', '') || 'inicio';
         const targetViewElement = document.getElementById('view-' + viewId);
@@ -225,16 +282,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (currentActiveView) {
+                // Hacer absoluta la sección saliente para que no empuje hacia abajo a la entrante
+                gsap.set(currentActiveView, {
+                    position: 'absolute',
+                    width: '100%',
+                    top: 0,
+                    left: 0,
+                    zIndex: 1
+                });
+
                 // Desvanecer y deslizar la sección saliente
                 tl.to(currentActiveView, {
                     opacity: 0,
-                    x: -80 * direction,
-                    duration: 0.45,
+                    x: -60 * direction,
+                    duration: 0.4,
                     ease: "power2.inOut",
                     onComplete: () => {
                         currentActiveView.classList.remove('active-view');
-                        // Ocultar físicamente de la pantalla
-                        gsap.set(currentActiveView, { display: 'none', x: 0 });
+                        // Ocultar físicamente de la pantalla y limpiar estilos
+                        gsap.set(currentActiveView, { 
+                            display: 'none', 
+                            x: 0,
+                            position: '',
+                            width: '',
+                            top: '',
+                            left: '',
+                            zIndex: ''
+                        });
                     }
                 });
             }
@@ -243,19 +317,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (currentActiveView) {
                 tl.set(targetViewElement, {
                     display: 'block',
+                    position: 'relative', // Mantener en el flujo normal
                     opacity: 0,
-                    x: 80 * direction
+                    x: 60 * direction,
+                    zIndex: 2
                 });
 
                 tl.to(targetViewElement, {
                     opacity: 1,
                     x: 0,
-                    duration: 0.65,
-                    ease: "back.out(1.1)", // Curva elástica tipo resorte
+                    duration: 0.55,
+                    ease: "power2.out",
                     onStart: () => {
                         targetViewElement.classList.add('active-view');
+                        animateViewEntrance(viewId);
+                    },
+                    onComplete: () => {
+                        // Limpiar estilos temporales
+                        gsap.set(targetViewElement, {
+                            position: '',
+                            zIndex: '',
+                            x: ''
+                        });
                     }
-                }, "-=0.15"); // Pequeño solapamiento para suavidad
+                }, "-=0.2"); // Pequeño solapamiento para suavidad
             } else {
                 // Primera carga: simple fade-in sin deslizamiento
                 tl.set(targetViewElement, { display: 'block', opacity: 0 });
@@ -265,6 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ease: "power2.out",
                     onStart: () => {
                         targetViewElement.classList.add('active-view');
+                        animateViewEntrance(viewId);
                     }
                 });
             }
