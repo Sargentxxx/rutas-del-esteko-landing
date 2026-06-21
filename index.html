@@ -18,13 +18,14 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playball&family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playball&family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="destino.css">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -1195,12 +1196,120 @@
                 </div>
             </div>
         </div>
-    </footer>
+    <!-- ===== DETALLE DE DESTINO OVERLAY (OPCION B) ===== -->
+    <div id="dest-overlay" class="dest-overlay" style="display:none;">
+        <div class="dest-overlay-container">
+            <button class="dest-overlay-close-btn" id="dest-overlay-close" aria-label="Cerrar detalle">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="dest-overlay-scrollable">
+                <div class="dest-overlay-header">
+                    <div class="dest-overlay-hero-bg" id="overlay-hero-bg">
+                        <div class="dest-overlay-hero-grad"></div>
+                    </div>
+                    <div class="dest-overlay-header-content">
+                        <span class="dest-hero-badge" id="overlay-badge">Verano</span>
+                        <h2 class="dest-hero-title" id="overlay-title">Destino</h2>
+                        <div class="dest-hero-meta">
+                            <span class="dest-hero-duration" id="overlay-duration">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>7 Noches / 10 Días</span>
+                            </span>
+                            <span class="dest-hero-season" id="overlay-season">
+                                <i class="fa-solid fa-calendar"></i>
+                                <span>Salidas programadas</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dest-overlay-body container">
+                    <div class="dest-info-col">
+                        <!-- Descripción -->
+                        <div class="dest-section-block">
+                            <h3 class="dest-section-title">
+                                <span class="dest-section-icon"><i class="fa-solid fa-map-location-dot"></i></span>
+                                Sobre este Destino
+                            </h3>
+                            <div class="dest-long-desc" id="overlay-long-desc">
+                                <p>Cargando...</p>
+                            </div>
+                        </div>
 
-    <!-- Supabase JS Client CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                        <!-- Servicios Incluidos -->
+                        <div class="dest-section-block">
+                            <h3 class="dest-section-title">
+                                <span class="dest-section-icon"><i class="fa-solid fa-circle-check"></i></span>
+                                Servicios Incluidos
+                            </h3>
+                            <ul class="dest-services-list" id="overlay-services-list">
+                                <!-- populated dynamically -->
+                            </ul>
+                        </div>
+
+                        <!-- Galería de Fotos -->
+                        <div class="dest-section-block" id="overlay-gallery-block">
+                            <h3 class="dest-section-title">
+                                <span class="dest-section-icon"><i class="fa-solid fa-images"></i></span>
+                                Galería de Fotos
+                            </h3>
+                            <div class="dest-gallery-grid" id="overlay-gallery-grid">
+                                <!-- populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dest-cta-col">
+                        <div class="dest-cta-card">
+                            <div class="dest-cta-badge" id="overlay-cta-badge">
+                                <i class="fa-solid fa-sun"></i>
+                                <span id="overlay-cta-season-text">Temporada de Verano</span>
+                            </div>
+                            <h3 id="overlay-cta-name">Destino</h3>
+                            <div class="dest-cta-duration" id="overlay-cta-duration">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>7 Noches / 10 Días</span>
+                            </div>
+                            <div class="dest-cta-divider"></div>
+                            <ul class="dest-cta-services" id="overlay-cta-services">
+                                <!-- populated dynamically -->
+                            </ul>
+                            <div class="dest-cta-divider"></div>
+                            <div class="dest-cta-price-area">
+                                <span class="dest-cta-label">Precio Estimado</span>
+                                <span class="dest-cta-price-info" id="overlay-price-info">ARS $90.000</span>
+                            </div>
+                            <a href="#" id="overlay-cta-wa" target="_blank" class="dest-btn-wa">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                Consultar por WhatsApp
+                            </a>
+                            <!-- Trust Badge -->
+                            <div class="dest-trust-badge">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>Agencia oficial registrada · Legajo N° 19.515</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ===== LIGHTBOX INTERNO AL OVERLAY ===== -->
+        <div class="dest-lightbox" id="overlay-lightbox" style="display:none; z-index:11000;">
+            <button class="lightbox-close" id="overlay-lightbox-close"><i class="fa-solid fa-xmark"></i></button>
+            <button class="lightbox-prev" id="overlay-lightbox-prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="lightbox-next" id="overlay-lightbox-next"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="lightbox-content">
+                <img src="" alt="Foto del destino" id="overlay-lightbox-img">
+                <div class="lightbox-counter" id="overlay-lightbox-counter">1 / 4</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <!-- GSAP & Plugins (ScrollTrigger, SplitText) -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>

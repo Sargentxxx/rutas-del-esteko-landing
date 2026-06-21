@@ -7,10 +7,7 @@
 // ==========================================================================
 // 1. CONFIGURACIÓN Y CLIENTE DE SUPABASE (PÚBLICO)
 // ==========================================================================
-const SUPABASE_URL = "https://wzclhwfdvdrrcfzmmxit.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6Y2xod2ZkdmRycmNmem1teGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwODYwODUsImV4cCI6MjA5MDY2MjA4NX0.N5g-kwoU44_49RU6yaQkch-klk191yhKTzr0ABo02Hk";
-
-let supabasePublic = null;
+let firestoreDb = null;
 let isDbOnlinePublic = false;
 
 // Datos por defecto (Semilla inicial) por si no existe conexión a la base de datos
@@ -21,7 +18,14 @@ const DEFAULT_DESTINATIONS = [
         category: "verano",
         duration: "7 Noches / 10 Días",
         description: "Salidas durante la temporada de verano desde la Terminal de Ómnibus en unidades premium de la empresa San Felipe (habilitación CNRT). Estadía de 7 noches en departamentos céntricos equipados, cercanos a los principales atractivos y playas.",
+        long_description: "Mar del Plata, la Perla del Atlántico, te espera con sus playas doradas, su vida nocturna inigualable y sus rincones turísticos para todos los gustos. Con Rutas del Esteko viajás con la tranquilidad de saber que cada detalle está planificado: salida desde la Terminal de Ómnibus de Santiago del Estero en unidades premium San Felipe con habilitación CNRT, coordinadores permanentes y departamentos céntricos y equipados a pasos de los mejores atractivos.\n\nIncluye coordinación permanente durante toda la estadía, asistencia ante cualquier eventualidad y la posibilidad de contratar excursiones opcionales como el Aquarium, la Catedral del Mar, el Casino, paseos en barco y mucho más. Una experiencia familiar y segura que ya disfrutaron miles de estekenses.",
         image_url: "https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Temporada de Verano",
         whatsapp_text: "Hola! Me interesa el viaje a Mar del Plata",
         services: [
@@ -37,7 +41,14 @@ const DEFAULT_DESTINATIONS = [
         category: "verano",
         duration: "7 Noches / 11 Días",
         description: "Salidas en enero y febrero desde la Terminal de Ómnibus a bordo de unidades de última generación de la empresa San Felipe con habilitación CNRT internacional. Estadía de 7 noches en departamentos equipados céntricos (2 a 7 personas) a metros del mar y la peatonal.",
+        long_description: "Balneario Camboriú, Brasil, es uno de los destinos turísticos más impresionantes de América del Sur. Con su costanera, el teleférico panorámico, el parque acuático, las excursiones a Bombinhas y el imperdible paseo pirata, garantiza una experiencia única para toda la familia.\n\nViajamos en unidades de última generación de San Felipe con habilitación CNRT internacional, un lujo de confort para 11 días de aventura. Nos alojamos en departamentos céntricos equipados a metros del mar y la peatonal, disponibles para 2 a 7 personas. Coordinadores permanentes te acompañan durante todo el viaje.",
         image_url: "https://images.unsplash.com/photo-1516815231560-8f41ec531527?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1516815231560-8f41ec531527?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Salidas Enero y Febrero",
         whatsapp_text: "Hola! Me interesa el viaje a Camboriu",
         services: [
@@ -53,7 +64,14 @@ const DEFAULT_DESTINATIONS = [
         category: "invierno",
         duration: "3 Noches / 5 Días",
         description: "Salidas en vacaciones de julio desde la Terminal de Ómnibus a bordo de unidades de la empresa San Felipe con habilitación CNRT. Estadía en cabañas equipadas (2 a 6 pers.) en complejo con juegos y parque. Incluye media pensión con menús espectaculares y cenas de 3 pasos.",
+        long_description: "San Rafael en invierno es una experiencia única: montañas nevadas, bodegas con degustación, circuitos de aventura y la calidez de la gente mendocina. Viajamos en vacaciones de julio con micros San Felipe (CNRT), alojándonos en cabañas equipadas (para 2 a 6 personas) en complejo con parque y juegos.\n\nEl paquete incluye media pensión completa con menús espectaculares y cenas de 3 pasos. Además, visitamos las mundialmente reconocidas bodegas de San Rafael, la fábrica de chocolates, Las Leñas y el Dique Valle Grande Reyunos. Un viaje que combina gastronomía, naturaleza y aventura.",
         image_url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Salidas en Julio (Invierno)",
         whatsapp_text: "Hola! Me interesa el viaje a San Rafael",
         services: [
@@ -69,7 +87,14 @@ const DEFAULT_DESTINATIONS = [
         category: "invierno",
         duration: "3 Noches / 6 Días",
         description: "Salidas en invierno a bordo de unidades premium de la empresa San Felipe (CNRT habilitación internacional). Estadía en hotel en Foz do Iguaçu, Brasil con piscina y áreas verdes. Incluye desayuno y cena buffet durante la estadía para mayor confort.",
+        long_description: "Las Cataratas del Iguazú son una de las Siete Maravillas Naturales del Mundo y una experiencia que te cambia la vida. Con Rutas del Esteko descubrís ambos lados: el lado argentino con la imponente Garganta del Diablo, y el lado brasilero con su panorámica incomparable.\n\nViajamos en micros premium San Felipe con habilitación CNRT internacional, alojándonos en un hotel en Foz do Iguaçu con piscina y áreas verdes. El paquete incluye desayuno y cena buffet durante toda la estadía. Excursiones incluidas: compras en Ciudad del Este, Hito de las Tres Fronteras, Cataratas lado argentino y brasilero.",
         image_url: "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1543158181-e6f9f6712055?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1564767655658-4e4f5e9c0a70?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Salidas Temporada de Invierno",
         whatsapp_text: "Hola! Me interesa el viaje a Cataratas",
         services: [
@@ -81,15 +106,7 @@ const DEFAULT_DESTINATIONS = [
     }
 ];
 
-try {
-    if (typeof supabase !== 'undefined') {
-        supabasePublic = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-} catch (e) {
-    console.warn("Librería de Supabase no disponible. Operando en modo Local Fallback.");
-}
-
-// Inicialización de Firebase Storage para CVs públicos
+// Inicialización de Firebase (Compat Mode)
 const firebaseConfig = {
     apiKey: "AIzaSyAxSpYY8iZXcLylJStFx2GD3Ejyzq_wy_U",
     authDomain: "rutas-del-esteko-landing.firebaseapp.com",
@@ -102,6 +119,7 @@ const firebaseConfig = {
 try {
     if (typeof firebase !== 'undefined') {
         firebase.initializeApp(firebaseConfig);
+        firestoreDb = firebase.firestore();
     }
 } catch (e) {
     console.warn("No se pudo iniciar Firebase en la landing page pública.", e);
@@ -118,6 +136,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Registrar e inicializar efectos de GSAP & ScrollTrigger (Fase 2 Visual Upgrade)
     initHeroParallax();
     initScrollReveal();
+    initNosotrosCarousel();
+    initDestinationOverlayListeners();
 
     // 1. MOBILE MENU TOGGLE DRAWER
     const mobileToggle = document.getElementById('mobile-toggle');
@@ -331,14 +351,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 // 3. RECUPERACIÓN DE DATOS (NUBE O CACHÉ DE EMERGENCIA)
 // ==========================================================================
 async function testConnectionAndLoadContent() {
-    if (supabasePublic) {
+    if (firestoreDb) {
         try {
-            const { data, error } = await supabasePublic
-                .from('landing_sections')
-                .select('id')
-                .limit(1);
-
-            if (!error) {
+            const doc = await firestoreDb.collection('landing_sections').doc('hero').get();
+            if (doc.exists) {
                 isDbOnlinePublic = true;
             }
         } catch (e) {
@@ -366,27 +382,25 @@ async function testConnectionAndLoadContent() {
 async function loadAndApplySections() {
     let sections = null;
 
-    if (isDbOnlinePublic && supabasePublic) {
+    if (isDbOnlinePublic && firestoreDb) {
         try {
-            const { data, error } = await supabasePublic
-                .from('landing_sections')
-                .select('*');
-
-            if (!error && data && data.length > 0) {
+            const snapshot = await firestoreDb.collection('landing_sections').get();
+            if (!snapshot.empty) {
                 sections = {};
-                data.forEach(item => {
-                    sections[item.id] = {
-                        title: item.title,
-                        subtitle: item.subtitle,
-                        content: item.content,
-                        image_url: item.image_url,
-                        extra_data: item.extra_data
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    sections[doc.id] = {
+                        title: data.title || '',
+                        subtitle: data.subtitle || '',
+                        content: data.content || '',
+                        image_url: data.image_url || '',
+                        extra_data: data.extra_data || {}
                     };
                 });
                 localStorage.setItem('esteko_landing_sections', JSON.stringify(sections));
             }
         } catch (e) {
-            console.warn("Fallo cargando secciones de la nube, usando caché.");
+            console.warn("Fallo cargando secciones de la nube, usando caché.", e);
         }
     }
 
@@ -718,26 +732,38 @@ function initializeHeroCarousel(images) {
 }
 
 // Aplicar catálogo y simulador
+function parseDestDescription(dest) {
+    let parsed = { short: dest.description || '', long: dest.long_description || '', gallery: dest.gallery_images || [] };
+    if (dest.description && dest.description.trim().startsWith('{')) {
+        try {
+            const parsedJson = JSON.parse(dest.description);
+            parsed.short = parsedJson.short || '';
+            parsed.long = parsedJson.long || '';
+            parsed.gallery = parsedJson.gallery || [];
+        } catch (e) {
+            console.warn("Error parsing description JSON:", e);
+        }
+    }
+    return parsed;
+}
+
 async function loadAndApplyDestinationsAndConfig() {
     let destinations = null;
     let config = null;
 
     // 1. Cargar Configuración General
-    if (isDbOnlinePublic && supabasePublic) {
+    if (isDbOnlinePublic && firestoreDb) {
         try {
-            const { data, error } = await supabasePublic
-                .from('landing_config')
-                .select('*');
-
-            if (!error && data && data.length > 0) {
+            const snapshot = await firestoreDb.collection('landing_config').get();
+            if (!snapshot.empty) {
                 config = {};
-                data.forEach(item => {
-                    config[item.key] = item.value;
+                snapshot.forEach(doc => {
+                    config[doc.id] = doc.data().value;
                 });
                 localStorage.setItem('esteko_landing_config', JSON.stringify(config));
             }
         } catch (e) {
-            console.warn("Fallo de red al leer configuraciones.");
+            console.warn("Fallo de red al leer configuraciones.", e);
         }
     }
 
@@ -748,22 +774,27 @@ async function loadAndApplyDestinationsAndConfig() {
     // Aplicar config de legajos, email, whatsapp y redes
     if (config) {
         applyGlobalConfigVars(config);
+        window.globalWhatsappPhone = config.whatsapp || '3855962089';
+    } else {
+        window.globalWhatsappPhone = '3855962089';
     }
 
     // 2. Cargar catálogo de destinos
-    if (isDbOnlinePublic && supabasePublic) {
+    if (isDbOnlinePublic && firestoreDb) {
         try {
-            const { data, error } = await supabasePublic
-                .from('landing_destinations')
-                .select('*')
-                .order('created_at', { ascending: true });
-
-            if (!error && data && data.length > 0) {
-                destinations = data;
+            const snapshot = await firestoreDb.collection('landing_destinations').orderBy('created_at', 'asc').get();
+            if (!snapshot.empty) {
+                destinations = [];
+                snapshot.forEach(doc => {
+                    destinations.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
                 localStorage.setItem('esteko_landing_destinations', JSON.stringify(destinations));
             }
         } catch (e) {
-            console.warn("Fallo leyendo destinos, usando local.");
+            console.warn("Fallo leyendo destinos de Firestore, usando local.", e);
         }
     }
 
@@ -772,6 +803,19 @@ async function loadAndApplyDestinationsAndConfig() {
     }
 
     if (!destinations) return; // Nada que renderizar
+
+    // Unpack descriptions and gallery images from JSON if needed
+    destinations = destinations.map(d => {
+        const parsedDesc = parseDestDescription(d);
+        return {
+            ...d,
+            description: parsedDesc.short,
+            long_description: parsedDesc.long,
+            gallery_images: parsedDesc.gallery
+        };
+    });
+
+    window.publicDestinationsList = destinations;
 
     // Renderizar catálogo en el frontend público
     renderPublicCatalogGrid(destinations, config);
@@ -873,8 +917,9 @@ function renderPublicCatalogGrid(destinations, config) {
         const phone = config?.whatsapp || '3855962089';
 
         card.innerHTML = `
-            <div class="card-image">
+            <div class="card-image" style="cursor: pointer;" onclick="openDestinationOverlay('${dest.id}')">
                 <img src="${dest.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=500&q=80'}" alt="${dest.name}">
+                <div class="card-image-overlay"></div>
                 ${dest.is_oferta ? `<span class="card-badge badge-offer" style="background-color: var(--accent); top: 15px; left: 15px; z-index: 10;">🔥 ${config.descuento_oferta || 15}% OFF</span>` : ''}
                 ${isInactive ? `<span class="card-badge badge-inactive" style="background-color: #7f8c8d; top: 15px; right: 15px; z-index: 10; font-weight: bold;"><i class="fa-solid fa-ban"></i> No Disponible</span>` : ''}
                 <span class="card-badge badge-${dest.category === 'verano' ? 'summer' : dest.category === 'invierno' ? 'winter' : 'escape'}">${dest.category}</span>
@@ -888,10 +933,12 @@ function renderPublicCatalogGrid(destinations, config) {
                 </ul>
                 <div class="card-footer">
                     <span class="price-info">${dest.price_info}</span>
-                    ${isInactive ? 
-                      `<span class="btn-card" style="color: #95a5a6; cursor: not-allowed; pointer-events: none;">No Disponible <i class="fa-solid fa-ban"></i></span>` : 
-                      `<a href="https://wa.me/54${phone}?text=${waText}" target="_blank" class="btn-card">Consultar <i class="fa-solid fa-arrow-right"></i></a>`
-                    }
+                    <div class="card-footer-actions">
+                        ${isInactive ? 
+                          `<span class="btn-card btn-card-disabled">No Disponible <i class="fa-solid fa-ban"></i></span>` : 
+                          `<a href="https://wa.me/54${phone}?text=${waText}" target="_blank" class="btn-card-wa" title="Consultar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`
+                        }
+                    </div>
                 </div>
             </div>
         `;
@@ -1001,19 +1048,21 @@ function initSavingsSimulator(destinations, config) {
 async function loadAndApplyGalleries() {
     let gallery = null;
 
-    if (isDbOnlinePublic && supabasePublic) {
+    if (isDbOnlinePublic && firestoreDb) {
         try {
-            const { data, error } = await supabasePublic
-                .from('landing_gallery')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (!error && data) {
-                gallery = data;
+            const snapshot = await firestoreDb.collection('landing_gallery').orderBy('created_at', 'desc').get();
+            if (!snapshot.empty) {
+                gallery = [];
+                snapshot.forEach(doc => {
+                    gallery.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
                 localStorage.setItem('esteko_landing_gallery', JSON.stringify(gallery));
             }
         } catch (e) {
-            console.warn("Fallo de red al leer galerías escolares.");
+            console.warn("Fallo de red al leer galerías escolares.", e);
         }
     }
 
@@ -1124,20 +1173,13 @@ function initLeadFormSubmission() {
         leads.push(leadData);
         localStorage.setItem('esteko_leads', JSON.stringify(leads));
 
-        // 2. Guardar en Supabase (si está online)
+        // 2. Guardar en Firestore (si está online)
         let dbSaved = true;
-        if (isDbOnlinePublic && supabasePublic) {
+        if (isDbOnlinePublic && firestoreDb) {
             try {
-                const { error } = await supabasePublic
-                    .from('landing_leads')
-                    .insert(leadData);
-
-                if (error) {
-                    console.error("Error al registrar lead en Supabase:", error);
-                    dbSaved = false;
-                }
+                await firestoreDb.collection('landing_leads').add(leadData);
             } catch (err) {
-                console.error("Fallo de red enviando lead:", err);
+                console.error("Error al registrar lead en Firestore:", err);
                 dbSaved = false;
             }
         }
@@ -1314,18 +1356,11 @@ function initCVFormSubmission() {
             };
 
             let dbSaved = true;
-            if (isDbOnlinePublic && supabasePublic) {
+            if (isDbOnlinePublic && firestoreDb) {
                 try {
-                    const { error } = await supabasePublic
-                        .from('landing_applications')
-                        .insert(applicationData);
-
-                    if (error) {
-                        console.error("Error al registrar postulación en Supabase:", error);
-                        dbSaved = false;
-                    }
+                    await firestoreDb.collection('landing_applications').add(applicationData);
                 } catch (err) {
-                    console.error("Fallo de red enviando postulación:", err);
+                    console.error("Error al registrar postulación en Firestore:", err);
                     dbSaved = false;
                 }
             } else {
@@ -1399,9 +1434,9 @@ function initHeroParallax() {
 }
 
 function initScrollReveal() {
-    if (typeof gsap === "undefined" || typeof SplitText === "undefined" || typeof ScrollTrigger === "undefined") return;
+    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    gsap.registerPlugin(ScrollTrigger, SplitText);
+    gsap.registerPlugin(ScrollTrigger);
 
     // Encabezados h2 de las secciones principales
     const headers = document.querySelectorAll(
@@ -1416,23 +1451,12 @@ function initScrollReveal() {
     );
 
     headers.forEach(header => {
-        // Dividir el título en palabras
-        const split = new SplitText(header, { type: "words" });
-
-        // Asegurar que haya un espacio en blanco después de cada palabra div (corrige bug de SplitText)
-        if (split.words && split.words.length > 0) {
-            for (let i = 0; i < split.words.length - 1; i++) {
-                split.words[i].after(document.createTextNode(' '));
-            }
-        }
-
-        // Animación de aparición (slide up + fade in)
-        gsap.from(split.words, {
+        // Animación de aparición (slide up + fade in) directa para soportar degradados de fondo (background-clip: text)
+        gsap.from(header, {
             opacity: 0,
             y: 35,
             duration: 0.85,
             ease: "power3.out",
-            stagger: 0.05,
             scrollTrigger: {
                 trigger: header,
                 start: "top 88%", // Comienza cuando el encabezado está cerca de entrar
@@ -1441,4 +1465,253 @@ function initScrollReveal() {
             }
         });
     });
+}
+
+// ============================================================
+// CAROUSEL AUTOMATICO: NOSOTROS
+// ============================================================
+function initNosotrosCarousel() {
+    const photos = document.querySelectorAll('.nosotros-visual .gallery-photo');
+    if (photos.length < 3) return;
+
+    let classes = ['main-photo', 'sub-photo-1', 'sub-photo-2'];
+
+    setInterval(() => {
+        // Rotar las clases
+        classes.push(classes.shift());
+        
+        photos.forEach((photo, idx) => {
+            // Remover clases de posicionamiento anteriores
+            photo.classList.remove('main-photo', 'sub-photo-1', 'sub-photo-2');
+            // Añadir la nueva clase
+            photo.classList.add(classes[idx]);
+        });
+    }, 4000); // Cada 4 segundos
+}
+
+// ============================================================
+// DETALLE DE DESTINOS OVERLAY (OPCION B)
+// ============================================================
+let overlayGalleryImages = [];
+let overlayLightboxIndex = 0;
+
+window.openDestinationOverlay = function(destId) {
+    const dest = window.publicDestinationsList ? window.publicDestinationsList.find(d => d.id === destId) : null;
+    if (!dest) return;
+
+    // Poblar los elementos del overlay
+    const overlay = document.getElementById('dest-overlay');
+    if (!overlay) return;
+
+    // Titulo y badge
+    const titleEl = document.getElementById('overlay-title');
+    const badgeEl = document.getElementById('overlay-badge');
+    if (titleEl) titleEl.textContent = dest.name;
+    if (badgeEl) {
+        const badgeLabel = { verano: '☀️ Verano', invierno: '❄️ Invierno', mas: '🌿 Escapada' };
+        badgeEl.textContent = badgeLabel[dest.category] || dest.category;
+        const badgeColors = { verano: 'var(--primary)', invierno: 'var(--accent)', mas: 'var(--secondary)' };
+        badgeEl.style.background = badgeColors[dest.category] || 'var(--primary)';
+    }
+
+    // Duracion e info
+    const durationSpan = document.querySelector('#overlay-duration span');
+    const seasonSpan = document.querySelector('#overlay-season span');
+    if (durationSpan) durationSpan.textContent = dest.duration;
+    if (seasonSpan) seasonSpan.textContent = dest.price_info;
+
+    // Fondo del hero del overlay
+    const heroBg = document.getElementById('overlay-hero-bg');
+    if (heroBg) {
+        heroBg.style.backgroundImage = `url('${dest.image_url || ''}')`;
+    }
+
+    // Sidebar CTA
+    const ctaName = document.getElementById('overlay-cta-name');
+    const ctaDuration = document.querySelector('#overlay-cta-duration span');
+    const ctaPriceInfo = document.getElementById('overlay-price-info');
+    const ctaBadge = document.getElementById('overlay-cta-badge');
+
+    if (ctaName) ctaName.textContent = dest.name;
+    if (ctaDuration) ctaDuration.textContent = dest.duration;
+    if (ctaPriceInfo) ctaPriceInfo.textContent = `$${parseInt(dest.cost || 0, 10).toLocaleString('es-AR')} ARS`;
+    if (ctaBadge) {
+        const seasonText = { verano: '☀️ Temporada de Verano', invierno: '❄️ Temporada de Invierno', mas: '🌿 Escapada' };
+        ctaBadge.querySelector('span').textContent = seasonText[dest.category] || dest.price_info;
+        const icon = ctaBadge.querySelector('i');
+        if (icon) {
+            icon.className = dest.category === 'invierno' ? 'fa-solid fa-snowflake' : 
+                             dest.category === 'mas'      ? 'fa-solid fa-leaf'      :
+                                                            'fa-solid fa-sun';
+        }
+    }
+
+    // Servicios en el sidebar
+    const ctaServices = document.getElementById('overlay-cta-services');
+    if (ctaServices && dest.services) {
+        ctaServices.innerHTML = dest.services.slice(0, 3).map(s =>
+            `<li><i class="fa-solid fa-check"></i> ${s}</li>`
+        ).join('');
+    }
+
+    // WhatsApp link
+    const phone = window.globalWhatsappPhone || '3855962089';
+    const waText = encodeURIComponent(dest.whatsapp_text || `Hola! Me interesa el viaje a ${dest.name}`);
+    const waUrl = `https://wa.me/54${phone}?text=${waText}`;
+    const waBtn = document.getElementById('overlay-cta-wa');
+    if (waBtn) waBtn.href = waUrl;
+
+    // Descripcion larga
+    const longDescEl = document.getElementById('overlay-long-desc');
+    if (longDescEl) {
+        const rawText = dest.long_description || dest.description || '';
+        const paras = rawText.split('\n\n').filter(p => p.trim());
+        longDescEl.innerHTML = paras.map(p => `<p>${p.trim()}</p>`).join('');
+    }
+
+    // Servicios incluidos en columna izquierda
+    const servicesList = document.getElementById('overlay-services-list');
+    if (servicesList && dest.services) {
+        servicesList.innerHTML = dest.services.map(s =>
+            `<li><i class="fa-solid fa-circle-check"></i> <span>${s}</span></li>`
+        ).join('');
+    }
+
+    // Galería de fotos
+    const galleryGrid = document.getElementById('overlay-gallery-grid');
+    const galleryBlock = document.getElementById('overlay-gallery-block');
+    const galleryImages_raw = (dest.gallery_images && dest.gallery_images.length > 0) ? dest.gallery_images : (dest.image_url ? [dest.image_url] : []);
+    overlayGalleryImages = galleryImages_raw.filter(Boolean);
+
+    if (galleryGrid && overlayGalleryImages.length > 0) {
+        if (galleryBlock) galleryBlock.style.display = 'block';
+        galleryGrid.innerHTML = '';
+        const MAX_VISIBLE = 6;
+        const visibleImages = overlayGalleryImages.slice(0, MAX_VISIBLE);
+
+        visibleImages.forEach((imgUrl, idx) => {
+            const item = document.createElement('div');
+            item.className = 'dest-gallery-item';
+            item.setAttribute('data-index', idx);
+            item.setAttribute('role', 'button');
+            item.setAttribute('tabindex', '0');
+            item.setAttribute('aria-label', `Ver foto ${idx + 1}`);
+
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            img.alt = `Foto ${idx + 1}`;
+            img.loading = 'lazy';
+
+            if (idx === MAX_VISIBLE - 1 && overlayGalleryImages.length > MAX_VISIBLE) {
+                const moreOverlay = document.createElement('div');
+                moreOverlay.className = 'dest-gallery-more';
+                moreOverlay.innerHTML = `<span>+${overlayGalleryImages.length - MAX_VISIBLE}</span><small>más fotos</small>`;
+                item.appendChild(img);
+                item.appendChild(moreOverlay);
+            } else {
+                item.appendChild(img);
+            }
+
+            item.addEventListener('click', () => openOverlayLightbox(idx));
+            item.addEventListener('keydown', e => { if (e.key === 'Enter') openOverlayLightbox(idx); });
+
+            galleryGrid.appendChild(item);
+        });
+    } else {
+        if (galleryBlock) galleryBlock.style.display = 'none';
+    }
+
+    // Mostrar overlay con transiciones
+    overlay.style.display = 'flex';
+    // Forzar reflow para animación
+    overlay.offsetHeight;
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+};
+
+window.closeDestinationOverlay = function() {
+    const overlay = document.getElementById('dest-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('active');
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+    }, 400); // Coincide con la duración de la transición CSS
+};
+
+function initDestinationOverlayListeners() {
+    const overlay = document.getElementById('dest-overlay');
+    const closeBtn = document.getElementById('dest-overlay-close');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', window.closeDestinationOverlay);
+    }
+    if (overlay) {
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay || e.target.classList.contains('dest-overlay-container')) {
+                window.closeDestinationOverlay();
+            }
+        });
+    }
+
+    // Escuchar Escape para cerrar
+    document.addEventListener('keydown', e => {
+        if (overlay && overlay.classList.contains('active')) {
+            if (e.key === 'Escape') {
+                const lightbox = document.getElementById('overlay-lightbox');
+                if (lightbox && lightbox.style.display === 'flex') {
+                    closeOverlayLightbox();
+                } else {
+                    window.closeDestinationOverlay();
+                }
+            }
+        }
+    });
+
+    // Lightbox del overlay
+    const lbClose = document.getElementById('overlay-lightbox-close');
+    const lbPrev = document.getElementById('overlay-lightbox-prev');
+    const lbNext = document.getElementById('overlay-lightbox-next');
+    const lb = document.getElementById('overlay-lightbox');
+
+    lbClose?.addEventListener('click', closeOverlayLightbox);
+    lbPrev?.addEventListener('click', () => navigateOverlayLightbox(-1));
+    lbNext?.addEventListener('click', () => navigateOverlayLightbox(1));
+
+    if (lb) {
+        lb.addEventListener('click', e => {
+            if (e.target === lb) closeOverlayLightbox();
+        });
+        document.addEventListener('keydown', e => {
+            if (lb.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') navigateOverlayLightbox(-1);
+                if (e.key === 'ArrowRight') navigateOverlayLightbox(1);
+            }
+        });
+    }
+}
+
+function openOverlayLightbox(index) {
+    const lb = document.getElementById('overlay-lightbox');
+    if (!lb || !overlayGalleryImages.length) return;
+    overlayLightboxIndex = index;
+    updateOverlayLightboxImage();
+    lb.style.display = 'flex';
+}
+
+function closeOverlayLightbox() {
+    const lb = document.getElementById('overlay-lightbox');
+    if (lb) lb.style.display = 'none';
+}
+
+function navigateOverlayLightbox(dir) {
+    overlayLightboxIndex = (overlayLightboxIndex + dir + overlayGalleryImages.length) % overlayGalleryImages.length;
+    updateOverlayLightboxImage();
+}
+
+function updateOverlayLightboxImage() {
+    const img = document.getElementById('overlay-lightbox-img');
+    const counter = document.getElementById('overlay-lightbox-counter');
+    if (img) img.src = overlayGalleryImages[overlayLightboxIndex];
+    if (counter) counter.textContent = `${overlayLightboxIndex + 1} / ${overlayGalleryImages.length}`;
 }

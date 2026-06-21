@@ -555,13 +555,13 @@ a {
 
 .section-header {
     text-align: center;
-    max-width: 650px;
+    max-width: 800px;
     margin: 0 auto 60px auto;
-    background: linear-gradient(135deg, var(--text-light), var(--primary-light));
-    border: 2px solid var(--primary);
-    border-radius: 16px;
-    padding: 30px 40px;
-    box-shadow: 0 10px 30px rgba(186, 12, 47, 0.05);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
 }
 
 .section-tag {
@@ -569,31 +569,71 @@ a {
     font-weight: 700;
     color: var(--primary);
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     display: inline-block;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    padding: 6px 16px;
+    background: rgba(220, 30, 30, 0.08);
+    border-radius: 30px;
+    border: 1px solid rgba(220, 30, 30, 0.15);
 }
 
 .section-header h2 {
-    font-size: 2.5rem;
+    font-family: 'Syne', var(--font-main);
+    font-size: 3rem;
     font-weight: 800;
-    color: var(--dark-charcoal);
-    line-height: 1.2;
-    letter-spacing: -1px;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
     margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+/* For dark sections, let's use a white-to-secondary text gradient */
+.contacto .section-header h2,
+.fiesta .section-header h2 {
+    background: linear-gradient(135deg, #ffffff 40%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .section-subtitle {
     font-size: 1.05rem;
     color: var(--text-muted);
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.6;
 }
 
 .header-line {
-    width: 60px;
+    width: 80px;
     height: 4px;
-    background-color: var(--primary);
-    margin: 16px auto 0 auto;
-    border-radius: 20px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    margin: 20px auto 0 auto;
+    border-radius: 2px;
+    position: relative;
+}
+
+.header-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border: 2px solid var(--sand-bg);
+    border-radius: 50%;
+}
+
+.contacto .header-line::after,
+.fiesta .header-line::after {
+    border-color: var(--dark-charcoal);
 }
 
 .nosotros-grid {
@@ -895,26 +935,47 @@ a {
 }
 
 .destination-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-diffusion);
-    border-color: rgba(220, 30, 30, 0.15);
+    transform: translateY(-10px);
+    box-shadow: 0 32px 64px -16px rgba(220, 30, 30, 0.18), 0 16px 32px -8px rgba(0,0,0,0.1);
+    border-color: rgba(220, 30, 30, 0.25);
 }
 
 .card-image {
     position: relative;
-    height: 230px;
+    height: 265px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: var(--transition-smooth);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .destination-card:hover .card-image img {
-    transform: scale(1.08);
+    transform: scale(1.1);
+}
+
+/* Overlay rojo sutil en hover de la imagen */
+.card-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(200, 20, 20, 0.45) 0%,
+        rgba(200, 20, 20, 0.08) 50%,
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.destination-card:hover .card-image-overlay {
+    opacity: 1;
 }
 
 .card-badge {
@@ -1033,6 +1094,70 @@ a {
 .btn-card:hover {
     color: var(--primary-hover);
     gap: 10px;
+}
+
+/* Acciones del pie de card */
+.card-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Botón principal: Ver Destino */
+.btn-card-detail {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 10px 18px;
+    border-radius: 30px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: 0.2px;
+    box-shadow: 0 4px 14px rgba(220, 30, 30, 0.3);
+    white-space: nowrap;
+}
+
+.btn-card-detail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(220, 30, 30, 0.4);
+    gap: 10px;
+}
+
+/* Botón secundario: WhatsApp */
+.btn-card-wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #25D366;
+    color: #fff !important;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+    flex-shrink: 0;
+}
+
+.btn-card-wa:hover {
+    background-color: #128C7E;
+    transform: scale(1.1);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.45);
+}
+
+/* Estado deshabilitado */
+.btn-card-disabled {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #95a5a6;
+    cursor: not-allowed;
+    pointer-events: none;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 /* ==========================================================================

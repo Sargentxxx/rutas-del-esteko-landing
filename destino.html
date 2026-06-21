@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags (populated dynamically by JS) -->
+    <title id="page-title">Destino - Rutas del Esteko</title>
+    <meta name="description" id="page-meta-desc" content="Conocé todos los detalles de este destino con Rutas del Esteko.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" id="page-og-title" content="Destino - Rutas del Esteko">
+    <meta property="og:type" content="website">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playball&family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Shared Style -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Destino-specific styles -->
+    <link rel="stylesheet" href="destino.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body class="destino-page">
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- ===== HEADER ===== -->
+    <header class="main-header solid-header" id="main-header">
+        <div class="container header-container">
+            <!-- Back Button (Mobile) -->
+            <a href="index.html#temporadas" class="dest-back-btn" id="back-btn" title="Volver a Destinos">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Volver</span>
+            </a>
+            
+            <!-- Centered Logo -->
+            <a href="index.html#inicio" class="logo logo-container-centered" id="header-logo">
+                <img src="img/logo.png" alt="Rutas del Esteko" class="navbar-logo-img" id="dest-header-logo">
+            </a>
+            
+            <!-- WhatsApp CTA -->
+            <a href="#" id="dest-header-wa" target="_blank" class="dest-header-wa-btn">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>Consultar</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== HERO DEL DESTINO ===== -->
+    <section class="dest-hero" id="dest-hero">
+        <div class="dest-hero-bg" id="dest-hero-bg">
+            <div class="dest-hero-overlay"></div>
+        </div>
+        <div class="dest-hero-content container">
+            <div class="dest-hero-breadcrumb" id="dest-hero-breadcrumb">
+                <a href="index.html#temporadas"><i class="fa-solid fa-compass"></i> Destinos</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span id="dest-breadcrumb-name">Cargando...</span>
+            </div>
+            <span class="dest-hero-badge" id="dest-hero-badge">Verano</span>
+            <h1 class="dest-hero-title" id="dest-hero-title">Cargando destino...</h1>
+            <div class="dest-hero-meta">
+                <span class="dest-hero-duration" id="dest-hero-duration">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>--</span>
+                </span>
+                <span class="dest-hero-season" id="dest-hero-season">
+                    <i class="fa-solid fa-calendar"></i>
+                    <span>--</span>
+                </span>
+            </div>
+        </div>
+        <!-- Scroll indicator -->
+        <div class="dest-hero-scroll">
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
+    <div class="dest-main container" id="dest-main">
+        
+        <!-- Columna Izquierda: Información -->
+        <div class="dest-info-col">
+            
+            <!-- Descripción -->
+            <div class="dest-section-block" id="dest-desc-block">
+                <h2 class="dest-section-title">
+                    <span class="dest-section-icon"><i class="fa-solid fa-map-location-dot"></i></span>
+                    Sobre este Destino
+                </h2>
+                <div class="dest-long-desc" id="dest-long-desc">
+                    <p>Cargando información...</p>
+                </div>
+            </div>
+
+            <!-- Servicios Incluidos -->
+            <div class="dest-section-block" id="dest-services-block">
+                <h2 class="dest-section-title">
+                    <span class="dest-section-icon"><i class="fa-solid fa-circle-check"></i></span>
+                    Servicios Incluidos
+                </h2>
+                <ul class="dest-services-list" id="dest-services-list">
+                    <!-- populated by JS -->
+                </ul>
+            </div>
+
+            <!-- Galería de Fotos -->
+            <div class="dest-section-block" id="dest-gallery-block">
+                <h2 class="dest-section-title">
+                    <span class="dest-section-icon"><i class="fa-solid fa-images"></i></span>
+                    Galería de Fotos
+                </h2>
+                <div class="dest-gallery-grid" id="dest-gallery-grid">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Columna Derecha: CTA Sticky -->
+        <div class="dest-cta-col">
+            <div class="dest-cta-card" id="dest-cta-card">
+                <!-- Badge de temporada -->
+                <div class="dest-cta-badge" id="dest-cta-badge">
+                    <i class="fa-solid fa-sun"></i>
+                    <span id="dest-cta-season-text">Temporada de Verano</span>
+                </div>
+                
+                <!-- Nombre del destino -->
+                <h3 id="dest-cta-name">Destino</h3>
+                
+                <!-- Duración -->
+                <div class="dest-cta-duration" id="dest-cta-duration">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>7 Noches / 10 Días</span>
+                </div>
+
+                <!-- Divider -->
+                <div class="dest-cta-divider"></div>
+
+                <!-- Highlights -->
+                <ul class="dest-cta-services" id="dest-cta-services">
+                    <!-- populated by JS -->
+                </ul>
+
+                <!-- Divider -->
+                <div class="dest-cta-divider"></div>
+                
+                <!-- Precio/Info -->
+                <div class="dest-cta-price-area">
+                    <span class="dest-cta-label">Temporada</span>
+                    <span class="dest-cta-price-info" id="dest-cta-price-info">--</span>
+                </div>
+
+                <!-- Botones CTA -->
+                <a href="#" id="dest-cta-wa" target="_blank" class="dest-btn-wa">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    Consultar por WhatsApp
+                </a>
+                
+                <a href="index.html#temporadas" class="dest-btn-back">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Ver todos los destinos
+                </a>
+
+                <!-- Trust Badge -->
+                <div class="dest-trust-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Agencia oficial registrada · Legajo N° 19.515</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== LIGHTBOX ===== -->
+    <div class="dest-lightbox" id="dest-lightbox" style="display:none;">
+        <button class="lightbox-close" id="lightbox-close"><i class="fa-solid fa-xmark"></i></button>
+        <button class="lightbox-prev" id="lightbox-prev"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="lightbox-next" id="lightbox-next"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="lightbox-content">
+            <img src="" alt="Foto del destino" id="lightbox-img">
+            <div class="lightbox-counter" id="lightbox-counter">1 / 4</div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER SIMPLE ===== -->
+    <footer class="dest-footer">
+        <div class="container dest-footer-inner">
+            <a href="index.html#inicio">
+                <img src="img/logo.png" alt="Rutas del Esteko" class="dest-footer-logo" id="dest-footer-logo">
+            </a>
+            <p>© 2025 Rutas del Esteko · Santiago del Estero · Legajo Oficial 19.515</p>
+            <div class="dest-footer-socials">
+                <a href="https://www.instagram.com/rutasdelesteko.sde/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=100087455823485" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="https://www.tiktok.com/@rutasdelesteko" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase CDN (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Destino Page Logic -->
+    <script src="destino.js"></script>
+</body>
+</html>
