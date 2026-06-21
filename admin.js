@@ -3,32 +3,14 @@
  * Author: Antigravity Regiment (Agent 00 - General Commander)
  * Powered by: DeepSeek Strategy Design
  * 
- * Double system: Sincronización en tiempo real con Supabase y
+ * Double system: Sincronización en tiempo real con Firebase y
  * fallback a LocalStorage de alta resiliencia.
  */
 
 // ==========================================================================
-// 1. CONFIGURACIÓN Y CLIENTE DE SUPABASE
+// 1. CONFIGURACIÓN Y CLIENTE DE FIREBASE & FIRESTORE
 // ==========================================================================
-const SUPABASE_URL = "https://wzclhwfdvdrrcfzmmxit.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6Y2xod2ZkdmRycmNmem1teGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwODYwODUsImV4cCI6MjA5MDY2MjA4NX0.N5g-kwoU44_49RU6yaQkch-klk191yhKTzr0ABo02Hk";
 const LOCAL_MASTER_PASS = "adminesteko2026"; // Contraseña maestra de contingencia local
-
-let supabaseClient = null;
-let isDatabaseOnline = false;
-
-// Inicializar cliente Supabase de forma segura
-try {
-    if (typeof supabase !== 'undefined') {
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-} catch (e) {
-    console.warn("No se pudo cargar el cliente CDN de Supabase. Operando en modo offline.");
-}
-
-// ==========================================================================
-// 1.1 CONFIGURACIÓN Y CLIENTE DE FIREBASE STORAGE
-// ==========================================================================
 const firebaseConfig = {
     apiKey: "AIzaSyAxSpYY8iZXcLylJStFx2GD3Ejyzq_wy_U",
     authDomain: "rutas-del-esteko-landing.firebaseapp.com",
@@ -38,9 +20,13 @@ const firebaseConfig = {
     appId: "1:583115096942:web:62193426a24fdd0e19377f"
 };
 
+let isDatabaseOnline = false;
+let firestoreDb = null;
+
 try {
     if (typeof firebase !== 'undefined') {
         firebase.initializeApp(firebaseConfig);
+        firestoreDb = firebase.firestore();
     }
 } catch (e) {
     console.warn("No se pudo cargar el cliente CDN de Firebase.", e);
@@ -107,7 +93,14 @@ const DEFAULT_DESTINATIONS = [
         category: "verano",
         duration: "7 Noches / 10 Días",
         description: "Salidas durante la temporada de verano desde la Terminal de Ómnibus en unidades premium de la empresa San Felipe (habilitación CNRT). Estadía de 7 noches en departamentos céntricos equipados, cercanos a los principales atractivos y playas.",
+        long_description: "Mar del Plata, la Perla del Atlántico, te espera con sus playas doradas, su vida nocturna inigualable y sus rincones turísticos para todos los gustos. Con Rutas del Esteko viajás con la tranquilidad de saber que cada detalle está planificado.\n\nIncluye coordinación permanente durante toda la estadía, asistencia ante cualquier eventualidad y la posibilidad de contratar excursiones opcionales como el Aquarium, la Catedral del Mar, el Casino y paseos en barco.",
         image_url: "https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Temporada de Verano",
         whatsapp_text: "Hola! Me interesa el viaje a Mar del Plata",
         services: [
@@ -123,7 +116,14 @@ const DEFAULT_DESTINATIONS = [
         category: "verano",
         duration: "7 Noches / 11 Días",
         description: "Salidas en enero y febrero desde la Terminal de Ómnibus a bordo de unidades de última generación de la empresa San Felipe con habilitación CNRT internacional. Estadía de 7 noches en departamentos equipados céntricos (2 a 7 personas) a metros del mar y la peatonal.",
+        long_description: "Balneario Camboriú, Brasil, es uno de los destinos más impresionantes de América del Sur. Teleférico panorámico, parque acuático, excursiones a Bombinhas y el paseo pirata.\n\nViajamos en unidades de última generación de San Felipe CNRT internacional. Departamentos céntricos equipados a metros del mar (2 a 7 personas). Coordinadores permanentes en todo el viaje.",
         image_url: "https://images.unsplash.com/photo-1516815231560-8f41ec531527?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1516815231560-8f41ec531527?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Salidas Enero y Febrero",
         whatsapp_text: "Hola! Me interesa el viaje a Camboriu",
         services: [
@@ -139,7 +139,14 @@ const DEFAULT_DESTINATIONS = [
         category: "invierno",
         duration: "3 Noches / 5 Días",
         description: "Salidas en vacaciones de julio desde la Terminal de Ómnibus a bordo de unidades de la empresa San Felipe con habilitación CNRT. Estadía en cabañas equipadas (2 a 6 pers.) en complejo con juegos y parque. Incluye media pensión con menús espectaculares y cenas de 3 pasos.",
+        long_description: "San Rafael en invierno: montañas nevadas, bodegas con degustación y circuitos de aventura. Micros San Felipe (CNRT). Cabañas equipadas (2 a 6 personas) con parque y juegos.\n\nMedia pensión completa con menús espectaculares y cenas de 3 pasos. Bodegas de San Rafael, fábrica de chocolates, Las Leñas y el Dique Valle Grande Reyunos.",
         image_url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Salidas en Julio (Invierno)",
         whatsapp_text: "Hola! Me interesa el viaje a San Rafael",
         services: [
@@ -155,7 +162,14 @@ const DEFAULT_DESTINATIONS = [
         category: "invierno",
         duration: "3 Noches / 6 Días",
         description: "Salidas en invierno a bordo de unidades premium de la empresa San Felipe (CNRT habilitación internacional). Estadía en hotel en Foz do Iguaçu, Brasil con piscina y áreas verdes. Incluye desayuno y cena buffet durante la estadía para mayor confort.",
+        long_description: "Las Cataratas del Iguazú son una de las Siete Maravillas Naturales del Mundo. Con Rutas del Esteko descubrís ambos lados: lado argentino (Garganta del Diablo) y lado brasilero.\n\nMicros premium San Felipe CNRT internacional. Hotel en Foz do Iguaçu con piscina. Desayuno y cena buffet incluidos. Excursiones: Ciudad del Este, Hito Tres Fronteras, Cataratas Arg. y Bra.",
         image_url: "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=600&q=80",
+        gallery_images: [
+            "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1543158181-e6f9f6712055?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1564767655658-4e4f5e9c0a70?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=1200&q=80"
+        ],
         price_info: "Salidas Temporada de Invierno",
         whatsapp_text: "Hola! Me interesa el viaje a Cataratas",
         services: [
@@ -205,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Actualizar fecha militar en cabecera
     updateSystemDate();
     
-    // Chequear conexión y validez de tablas con Supabase
+    // Chequear conexión y validez de colecciones con Firebase
     await testDatabaseConnection();
 
     // Comprobar si ya existe sesión iniciada
@@ -232,32 +246,24 @@ async function testDatabaseConnection() {
     const dbStatusText = document.getElementById('db-status-text');
     const fallbackBanner = document.getElementById('fallback-banner');
 
-    if (!supabaseClient) {
+    if (typeof firebase === 'undefined') {
         setOfflineState("Servicio Desconectado");
         return;
     }
 
     try {
-        // Consultar una tabla clave para testear
-        const { data, error } = await supabaseClient
-            .from('landing_sections')
-            .select('id')
-            .limit(1);
-
-        if (error) {
-            console.error("Error al testear Supabase, cayendo a LocalStorage:", error);
-            setOfflineState("Tablas Faltantes");
-        } else {
-            // Conexión exitosa y tablas listas
-            isDatabaseOnline = true;
-            if (dbStatusBadge) {
-                dbStatusBadge.className = "status-shield database-online";
-                dbStatusText.innerHTML = '<i class="fa-solid fa-cloud-bolt"></i> Nube Supabase Sincronizada';
-            }
-            if (fallbackBanner) fallbackBanner.style.display = "none";
+        // Consultar una colección clave para testear
+        await firebase.firestore().collection('landing_sections').limit(1).get();
+        
+        // Conexión exitosa y tablas listas
+        isDatabaseOnline = true;
+        if (dbStatusBadge) {
+            dbStatusBadge.className = "status-shield database-online";
+            dbStatusText.innerHTML = '<i class="fa-solid fa-cloud-bolt"></i> Nube Firebase Sincronizada';
         }
+        if (fallbackBanner) fallbackBanner.style.display = "none";
     } catch (e) {
-        console.error("Fallo crítico de red contra Supabase:", e);
+        console.error("Fallo crítico de red contra Firebase:", e);
         setOfflineState("Red Inalcanzable");
     }
 
@@ -277,21 +283,53 @@ async function testDatabaseConnection() {
 function checkActiveSession() {
     const sessionToken = localStorage.getItem('esteko_admin_session');
     
-    if (supabaseClient) {
-        supabaseClient.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                const email = session.user.email;
-                localStorage.setItem('esteko_admin_session', email);
-                showDashboardView(email);
+    if (typeof firebase !== 'undefined') {
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                const email = user.email;
+                try {
+                    // Validar si el usuario está activo y tiene rol en landing_profiles
+                    const profileDoc = await firebase.firestore().collection('landing_profiles').doc(email).get();
+                    if (profileDoc.exists) {
+                        const profileData = profileDoc.data();
+                        if (profileData.activo === true) {
+                            localStorage.setItem('esteko_admin_session', email);
+                            showDashboardView(email);
+                            
+                            // Mostrar/ocultar tab de usuarios dependiendo del rol
+                            const usuariosTabLink = document.querySelector('[data-tab="usuarios"]');
+                            if (usuariosTabLink) {
+                                if (profileData.rol === 'admin') {
+                                    usuariosTabLink.style.display = 'block';
+                                } else {
+                                    usuariosTabLink.style.display = 'none';
+                                }
+                            }
+                            return;
+                        }
+                    }
+                    console.warn("Perfil inactivo o no autorizado:", email);
+                    await firebase.auth().signOut();
+                    localStorage.removeItem('esteko_admin_session');
+                    showLoginView("Su cuenta ha sido suspendida o no tiene permisos de acceso.");
+                } catch (e) {
+                    console.error("Error al validar perfil de usuario:", e);
+                    const currentSession = localStorage.getItem('esteko_admin_session');
+                    if (currentSession && currentSession === email) {
+                        showDashboardView(email);
+                    } else {
+                        await firebase.auth().signOut();
+                        localStorage.removeItem('esteko_admin_session');
+                        showLoginView("Error al conectar con la base de datos.");
+                    }
+                }
             } else {
-                // Si no hay sesión local de contingencia
                 const currentSession = localStorage.getItem('esteko_admin_session');
                 if (currentSession && currentSession.includes("Local Admin")) {
                     showDashboardView(currentSession);
                 } else {
                     localStorage.removeItem('esteko_admin_session');
-                    document.getElementById('login-container').style.display = 'flex';
-                    document.getElementById('dashboard-container').style.display = 'none';
+                    showLoginView();
                 }
             }
         });
@@ -299,8 +337,20 @@ function checkActiveSession() {
         if (sessionToken) {
             showDashboardView(sessionToken);
         } else {
-            document.getElementById('login-container').style.display = 'flex';
-            document.getElementById('dashboard-container').style.display = 'none';
+            showLoginView();
+        }
+    }
+}
+
+function showLoginView(errorMessageText = "") {
+    document.getElementById('login-container').style.display = 'flex';
+    document.getElementById('dashboard-container').style.display = 'none';
+    if (errorMessageText) {
+        const errorAlert = document.getElementById('login-error');
+        const errorMessage = document.getElementById('error-message');
+        if (errorAlert && errorMessage) {
+            errorAlert.style.display = 'flex';
+            errorMessage.textContent = errorMessageText;
         }
     }
 }
@@ -331,23 +381,37 @@ function initLoginListeners() {
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando Acceso...';
             errorAlert.style.display = 'none';
 
-            // 1. Intento de inicio de sesión con Supabase Auth (si está en línea)
-            if (isDatabaseOnline && supabaseClient) {
+            // 1. Intento de inicio de sesión con Firebase Auth (si está en línea)
+            if (isDatabaseOnline && typeof firebase !== 'undefined') {
                 try {
-                    const { data, error } = await supabaseClient.auth.signInWithPassword({
-                        email: email,
-                        password: password
-                    });
-
-                    if (!error && data?.session) {
-                        localStorage.setItem('esteko_admin_session', email);
-                        showDashboardView(email);
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
-                        return;
+                    const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                    
+                    // Validar si el usuario está activo y registrado
+                    const profileDoc = await firebase.firestore().collection('landing_profiles').doc(email).get();
+                    if (profileDoc.exists) {
+                        const profileData = profileDoc.data();
+                        if (profileData.activo === true) {
+                            localStorage.setItem('esteko_admin_session', email);
+                            showDashboardView(email);
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
+                            return;
+                        } else {
+                            throw new Error("Su cuenta ha sido suspendida. Contacte al administrador.");
+                        }
+                    } else {
+                        throw new Error("Su cuenta no está registrada en el panel.");
                     }
                 } catch (err) {
                     console.warn("Fallo de auth en red, intentando validación local:", err);
+                    if (err.message && (err.message.includes("suspendida") || err.message.includes("no está registrada"))) {
+                        errorAlert.style.display = 'flex';
+                        errorMessage.textContent = err.message;
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
+                        await firebase.auth().signOut().catch(()=>{});
+                        return;
+                    }
                 }
             }
 
@@ -371,25 +435,34 @@ function initLoginListeners() {
     const googleLoginBtn = document.getElementById('btn-google-login');
     if (googleLoginBtn) {
         googleLoginBtn.addEventListener('click', async () => {
-            if (isDatabaseOnline && supabaseClient) {
+            if (isDatabaseOnline && typeof firebase !== 'undefined') {
                 try {
                     googleLoginBtn.disabled = true;
                     googleLoginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Conectando...';
-                    const { error } = await supabaseClient.auth.signInWithOAuth({
-                        provider: 'google',
-                        options: {
-                            redirectTo: window.location.origin + window.location.pathname
+                    
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    const result = await firebase.auth().signInWithPopup(provider);
+                    const email = result.user.email;
+
+                    // Validar si está registrado y activo
+                    const profileDoc = await firebase.firestore().collection('landing_profiles').doc(email).get();
+                    if (profileDoc.exists) {
+                        const profileData = profileDoc.data();
+                        if (profileData.activo === true) {
+                            localStorage.setItem('esteko_admin_session', email);
+                            showDashboardView(email);
+                            showToast("Sesión iniciada con Google");
+                            return;
                         }
-                    });
-                    if (error) {
-                        console.error("Error al iniciar sesión con Google:", error);
-                        alert("Error al conectar con Google: " + error.message);
-                        googleLoginBtn.disabled = false;
-                        googleLoginBtn.innerHTML = '<i class="fa-brands fa-google" style="color: #ea4335;"></i> Continuar con Google';
                     }
+                    
+                    await firebase.auth().signOut();
+                    alert("Su cuenta de Google (" + email + ") no tiene permisos de acceso al panel.");
+                    googleLoginBtn.disabled = false;
+                    googleLoginBtn.innerHTML = '<i class="fa-brands fa-google" style="color: #ea4335;"></i> Continuar con Google';
                 } catch (err) {
                     console.error("Fallo de red en Google Auth:", err);
-                    alert("Error de red al intentar conectar con Google.");
+                    alert("Error de red al intentar conectar con Google: " + err.message);
                     googleLoginBtn.disabled = false;
                     googleLoginBtn.innerHTML = '<i class="fa-brands fa-google" style="color: #ea4335;"></i> Continuar con Google';
                 }
@@ -402,9 +475,9 @@ function initLoginListeners() {
     const logoutBtn = document.getElementById('btn-logout');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-            if (supabaseClient) {
+            if (typeof firebase !== 'undefined') {
                 try {
-                    await supabaseClient.auth.signOut();
+                    await firebase.auth().signOut();
                 } catch (e) {}
             }
             localStorage.removeItem('esteko_admin_session');
@@ -492,32 +565,29 @@ function loadTabContent(tabId) {
 async function loadSectionsData() {
     let sections = DEFAULT_SECTIONS;
 
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { data, error } = await supabaseClient
-                .from('landing_sections')
-                .select('*');
-
-            if (!error && data && data.length > 0) {
+            const snapshot = await firebase.firestore().collection('landing_sections').get();
+            if (!snapshot.empty) {
                 sections = {};
-                data.forEach(item => {
-                    sections[item.id] = {
-                        title: item.title,
-                        subtitle: item.subtitle,
-                        content: item.content,
-                        image_url: item.image_url,
-                        extra_data: item.extra_data
+                snapshot.forEach(doc => {
+                    const item = doc.data();
+                    sections[doc.id] = {
+                        title: item.title || "",
+                        subtitle: item.subtitle || "",
+                        content: item.content || "",
+                        image_url: item.image_url || "",
+                        extra_data: item.extra_data || {}
                     };
                 });
                 // Actualizar caché local
                 localStorage.setItem('esteko_landing_sections', JSON.stringify(sections));
             }
         } catch (e) {
-            console.warn("Fallo de red al leer secciones, usando LocalStorage.");
+            console.warn("Fallo de red al leer secciones, usando LocalStorage.", e);
         }
     }
 
-    // Si falló Supabase o no está online, usar LocalStorage
     if (!isDatabaseOnline) {
         sections = JSON.parse(localStorage.getItem('esteko_landing_sections')) || DEFAULT_SECTIONS;
     }
@@ -751,30 +821,23 @@ if (formEditSections) {
         // Guardar en LocalStorage
         localStorage.setItem('esteko_landing_sections', JSON.stringify(updatedSections));
 
-        // Guardar en Supabase (si está online)
+        // Guardar en Firestore (si está online)
         let success = true;
-        if (isDatabaseOnline && supabaseClient) {
+        if (isDatabaseOnline && typeof firebase !== 'undefined') {
             try {
                 for (const sectionId of Object.keys(updatedSections)) {
                     const sec = updatedSections[sectionId];
                     const payload = {
-                        id: sectionId,
-                        title: sec.title,
+                        title: sec.title || "",
                         subtitle: sec.subtitle || "",
-                        content: sec.content,
-                        image_url: sec.image_url,
-                        updated_at: new Date()
+                        content: sec.content || "",
+                        image_url: sec.image_url || "",
+                        updated_at: firebase.firestore.FieldValue.serverTimestamp()
                     };
                     if (sec.extra_data) {
                         payload.extra_data = sec.extra_data;
                     }
-                    const { error } = await supabaseClient
-                        .from('landing_sections')
-                        .upsert(payload);
-                    if (error) {
-                        console.error(`Error guardando sección ${sectionId} en Supabase:`, error);
-                        success = false;
-                    }
+                    await firebase.firestore().collection('landing_sections').doc(sectionId).set(payload, { merge: true });
                 }
             } catch (err) {
                 console.error("Fallo de red guardando secciones:", err);
@@ -798,30 +861,72 @@ if (formEditSections) {
 // ==========================================================================
 let allDestinations = [];
 
+function parseDestDescription(dest) {
+    let parsed = { short: dest.description || '', long: dest.long_description || '', gallery: dest.gallery_images || [] };
+    if (dest.description && dest.description.trim().startsWith('{')) {
+        try {
+            const parsedJson = JSON.parse(dest.description);
+            parsed.short = parsedJson.short || '';
+            parsed.long = parsedJson.long || '';
+            parsed.gallery = parsedJson.gallery || [];
+        } catch (e) {
+            console.warn("Error parsing description JSON:", e);
+        }
+    }
+    return parsed;
+}
+
 async function loadDestinationsData() {
     const listContainer = document.getElementById('destinations-admin-container');
     listContainer.innerHTML = '<div class="loading-placeholder-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Sincronizando Catálogo...</div>';
 
     allDestinations = DEFAULT_DESTINATIONS;
 
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { data, error } = await supabaseClient
-                .from('landing_destinations')
-                .select('*')
-                .order('created_at', { ascending: true });
+            const snapshot = await firebase.firestore().collection('landing_destinations').get();
+            if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => {
+                    list.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                // Ordenar por created_at
+                list.sort((a, b) => {
+                    const t1 = a.created_at ? (a.created_at.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at).getTime()) : 0;
+                    const t2 = b.created_at ? (b.created_at.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at).getTime()) : 0;
+                    return t1 - t2;
+                });
 
-            if (!error && data) {
-                allDestinations = data;
+                allDestinations = list.map(d => {
+                    const parsedDesc = parseDestDescription(d);
+                    return {
+                        ...d,
+                        description: parsedDesc.short,
+                        long_description: parsedDesc.long,
+                        gallery_images: parsedDesc.gallery
+                    };
+                });
                 localStorage.setItem('esteko_landing_destinations', JSON.stringify(allDestinations));
             }
         } catch (e) {
-            console.warn("Fallo al leer destinos, usando caché local.");
+            console.warn("Fallo al leer destinos, usando caché local.", e);
         }
     }
 
     if (!isDatabaseOnline) {
         allDestinations = JSON.parse(localStorage.getItem('esteko_landing_destinations')) || DEFAULT_DESTINATIONS;
+        allDestinations = allDestinations.map(d => {
+            const parsedDesc = parseDestDescription(d);
+            return {
+                ...d,
+                description: parsedDesc.short,
+                long_description: parsedDesc.long,
+                gallery_images: parsedDesc.gallery
+            };
+        });
     }
 
     renderAdminDestinations();
@@ -864,15 +969,53 @@ function renderAdminDestinations() {
     });
 }
 
+// Helpers para la galería de imágenes del destino
+window.updateGalleryPreview = function(index) {
+    const urlInput = document.getElementById(`dest-gallery-img-${index}`);
+    const previewDiv = document.getElementById(`dest-gallery-preview-${index}`);
+    if (urlInput && previewDiv) {
+        const val = urlInput.value.trim();
+        const img = previewDiv.querySelector('img');
+        if (val) {
+            img.src = val;
+            previewDiv.style.display = 'flex';
+        } else {
+            previewDiv.style.display = 'none';
+        }
+    }
+};
+
+function initDestGalleryListeners() {
+    for (let i = 1; i <= 6; i++) {
+        initFileUploaderListeners(`dest-gallery-file-${i}`, `dest-gallery-img-${i}`);
+        
+        const input = document.getElementById(`dest-gallery-img-${i}`);
+        if (input) {
+            input.addEventListener('change', () => window.updateGalleryPreview(i));
+            input.addEventListener('input', () => window.updateGalleryPreview(i));
+        }
+    }
+}
+
 // Evento para abrir modal de creación
 const btnOpenCreateModal = document.getElementById('btn-open-create-destination-modal');
 if (btnOpenCreateModal) {
     btnOpenCreateModal.addEventListener('click', () => {
         document.getElementById('form-destination-crud').reset();
         document.getElementById('dest-id').value = '';
+        document.getElementById('dest-long-description').value = '';
+        
+        // Limpiar inputs y previews de galería
+        for (let i = 1; i <= 6; i++) {
+            const input = document.getElementById(`dest-gallery-img-${i}`);
+            if (input) input.value = '';
+            window.updateGalleryPreview(i);
+        }
+
         document.getElementById('dest-modal-title').innerHTML = '<i class="fa-solid fa-circle-plus"></i> Registrar Nuevo Viaje';
         document.getElementById('destination-modal').style.display = 'flex';
         initFileUploaderListeners('dest-file', 'dest-image');
+        initDestGalleryListeners();
     });
 }
 
@@ -904,6 +1047,17 @@ window.openEditDestModal = function(destId) {
     document.getElementById('dest-cost').value = dest.cost;
     document.getElementById('dest-image').value = dest.image_url;
     document.getElementById('dest-description').value = dest.description;
+    document.getElementById('dest-long-description').value = dest.long_description || '';
+    
+    // Rellenar galería de imágenes
+    const gallery = dest.gallery_images || [];
+    for (let i = 1; i <= 6; i++) {
+        const input = document.getElementById(`dest-gallery-img-${i}`);
+        if (input) {
+            input.value = gallery[i - 1] || '';
+        }
+        window.updateGalleryPreview(i);
+    }
     
     // Convertir array de servicios a string por saltos de línea
     const servicesStr = dest.services ? dest.services.join('\n') : '';
@@ -913,6 +1067,7 @@ window.openEditDestModal = function(destId) {
     document.getElementById('destination-modal').style.display = 'flex';
 
     initFileUploaderListeners('dest-file', 'dest-image');
+    initDestGalleryListeners();
 };
 
 // Formulario de Submit de CRUD
@@ -935,7 +1090,15 @@ if (formDestCrud) {
         const cost = parseInt(document.getElementById('dest-cost').value, 10);
         const image_url = document.getElementById('dest-image').value.trim();
         const description = document.getElementById('dest-description').value.trim();
+        const long_description = document.getElementById('dest-long-description').value.trim();
         
+        // Obtener galería de imágenes
+        const gallery_images = [];
+        for (let i = 1; i <= 6; i++) {
+            const val = document.getElementById(`dest-gallery-img-${i}`).value.trim();
+            if (val) gallery_images.push(val);
+        }
+
         // Servicios a array
         const servicesText = document.getElementById('dest-services').value;
         const services = servicesText.split('\n')
@@ -959,7 +1122,9 @@ if (formDestCrud) {
             is_active,
             duration,
             description,
+            long_description,
             image_url,
+            gallery_images,
             price_info,
             whatsapp_text,
             services,
@@ -984,24 +1149,38 @@ if (formDestCrud) {
         }
         localStorage.setItem('esteko_landing_destinations', JSON.stringify(allDestinations));
 
-        // Guardar en Supabase si está en línea
+        // Guardar en Firestore si está en línea
         let dbSaved = true;
-        if (isDatabaseOnline && supabaseClient) {
+        if (isDatabaseOnline && typeof firebase !== 'undefined') {
             try {
-                // Eliminar prefijo temporal "uuid-" si es nuevo y usar el UUID nativo de Supabase
-                const dbObj = { ...destObj };
-                if (isNew && dbObj.id.startsWith('uuid-')) {
-                    delete dbObj.id; // Deja que Postgres autogenere
+                const dbObj = {
+                    name: destObj.name,
+                    category: destObj.category,
+                    is_oferta: destObj.is_oferta,
+                    is_active: destObj.is_active,
+                    duration: destObj.duration,
+                    price_info: destObj.price_info,
+                    whatsapp_text: destObj.whatsapp_text,
+                    cost: destObj.cost,
+                    image_url: destObj.image_url,
+                    services: destObj.services,
+                    description: JSON.stringify({
+                        short: destObj.description,
+                        long: destObj.long_description,
+                        gallery: destObj.gallery_images
+                    }),
+                    updated_at: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                let docRef;
+                if (isNew) {
+                    dbObj.created_at = firebase.firestore.FieldValue.serverTimestamp();
+                    docRef = firebase.firestore().collection('landing_destinations').doc();
+                } else {
+                    docRef = firebase.firestore().collection('landing_destinations').doc(destObj.id);
                 }
 
-                const { data, error } = await supabaseClient
-                    .from('landing_destinations')
-                    .upsert(dbObj);
-
-                if (error) {
-                    console.error("Error al escribir destino en Supabase:", error);
-                    dbSaved = false;
-                }
+                await docRef.set(dbObj, { merge: true });
             } catch (err) {
                 console.error("Fallo de red en CRUD destinos:", err);
                 dbSaved = false;
@@ -1034,17 +1213,9 @@ window.deleteDestinationTrigger = async function(destId) {
     localStorage.setItem('esteko_landing_destinations', JSON.stringify(allDestinations));
 
     let dbDeleted = true;
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { error } = await supabaseClient
-                .from('landing_destinations')
-                .delete()
-                .eq('id', destId);
-
-            if (error) {
-                console.error("Error al borrar destino de Supabase:", error);
-                dbDeleted = false;
-            }
+            await firebase.firestore().collection('landing_destinations').doc(destId).delete();
         } catch (err) {
             console.error("Fallo de red al borrar destino:", err);
             dbDeleted = false;
@@ -1070,19 +1241,28 @@ async function loadGalleryData() {
     const displayContainer = document.getElementById('admin-gallery-display');
     displayContainer.innerHTML = '<div class="gallery-empty-msg"><i class="fa-solid fa-spinner fa-spin"></i> Cargando fotos de galería...</div>';
 
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { data, error } = await supabaseClient
-                .from('landing_gallery')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (!error && data) {
-                galleryItems = data;
+            const snapshot = await firebase.firestore().collection('landing_gallery').get();
+            if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => {
+                    list.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                // Ordenar por created_at descendente
+                list.sort((a, b) => {
+                    const t1 = a.created_at ? (a.created_at.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at).getTime()) : 0;
+                    const t2 = b.created_at ? (b.created_at.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at).getTime()) : 0;
+                    return t2 - t1;
+                });
+                galleryItems = list;
                 localStorage.setItem('esteko_landing_gallery', JSON.stringify(galleryItems));
             }
         } catch (e) {
-            console.warn("Fallo al leer galería de la nube, usando caché.");
+            console.warn("Fallo al leer galería de la nube, usando caché.", e);
         }
     }
 
@@ -1230,21 +1410,16 @@ if (formUploadGallery) {
         galleryItems.unshift(newItem);
         localStorage.setItem('esteko_landing_gallery', JSON.stringify(galleryItems));
 
-        // Guardar en Supabase (si está online)
+        // Guardar en Firestore (si está online)
         let dbSaved = true;
-        if (isDatabaseOnline && supabaseClient) {
+        if (isDatabaseOnline && typeof firebase !== 'undefined') {
             try {
-                const dbObj = { ...newItem };
-                if (dbObj.id.startsWith('uuid-g-')) delete dbObj.id; // Auto UUID en DB
-
-                const { error } = await supabaseClient
-                    .from('landing_gallery')
-                    .insert(dbObj);
-
-                if (error) {
-                    console.error("Error registrando galería en Supabase:", error);
-                    dbSaved = false;
-                }
+                const dbObj = {
+                    section: newItem.section,
+                    image_url: newItem.image_url,
+                    created_at: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                await firebase.firestore().collection('landing_gallery').add(dbObj);
             } catch (err) {
                 console.error("Fallo de red registrando galería:", err);
                 dbSaved = false;
@@ -1323,17 +1498,9 @@ window.deleteGalleryItemTrigger = async function(itemId) {
     localStorage.setItem('esteko_landing_gallery', JSON.stringify(galleryItems));
 
     let dbDeleted = true;
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { error } = await supabaseClient
-                .from('landing_gallery')
-                .delete()
-                .eq('id', itemId);
-
-            if (error) {
-                console.error("Error al borrar galería en Supabase:", error);
-                dbDeleted = false;
-            }
+            await firebase.firestore().collection('landing_gallery').doc(itemId).delete();
         } catch (err) {
             console.error("Fallo de red al borrar galería:", err);
             dbDeleted = false;
@@ -1355,21 +1522,19 @@ window.deleteGalleryItemTrigger = async function(itemId) {
 async function loadConfigData() {
     let config = DEFAULT_CONFIG;
 
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { data, error } = await supabaseClient
-                .from('landing_config')
-                .select('*');
-
-            if (!error && data && data.length > 0) {
+            const snapshot = await firebase.firestore().collection('landing_config').get();
+            if (!snapshot.empty) {
                 config = {};
-                data.forEach(item => {
-                    config[item.key] = item.value;
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    config[doc.id] = data.value;
                 });
                 localStorage.setItem('esteko_landing_config', JSON.stringify(config));
             }
         } catch (e) {
-            console.warn("Fallo al leer configuraciones de la nube, usando LocalStorage.");
+            console.warn("Fallo al leer configuraciones de la nube, usando LocalStorage.", e);
         }
     }
 
@@ -1446,22 +1611,15 @@ if (formSystemConfig) {
         // Guardar local
         localStorage.setItem('esteko_landing_config', JSON.stringify(updatedConfig));
 
-        // Guardar en Supabase (si está online)
+        // Guardar en Firestore (si está online)
         let success = true;
-        if (isDatabaseOnline && supabaseClient) {
+        if (isDatabaseOnline && typeof firebase !== 'undefined') {
             try {
                 for (const key of Object.keys(updatedConfig)) {
-                    const { error } = await supabaseClient
-                        .from('landing_config')
-                        .upsert({
-                            key: key,
-                            value: updatedConfig[key],
-                            updated_at: new Date()
-                        });
-                    if (error) {
-                        console.error(`Error guardando config ${key} en Supabase:`, error);
-                        success = false;
-                    }
+                    await firebase.firestore().collection('landing_config').doc(key).set({
+                        value: updatedConfig[key],
+                        updated_at: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                 }
             } catch (err) {
                 console.error("Fallo de red en guardado de config:", err);
@@ -1493,18 +1651,27 @@ async function loadLeadsData() {
     allLeads = [];
 
     // 1. Cargar desde la nube (si está en línea)
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { data, error } = await supabaseClient
-                .from('landing_leads')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (!error && data) {
-                allLeads = data;
+            const snapshot = await firebase.firestore().collection('landing_leads').get();
+            if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => {
+                    list.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                // Ordenar por created_at descendente
+                list.sort((a, b) => {
+                    const t1 = a.created_at ? (a.created_at.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at).getTime()) : 0;
+                    const t2 = b.created_at ? (b.created_at.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at).getTime()) : 0;
+                    return t2 - t1;
+                });
+                allLeads = list;
             }
         } catch (e) {
-            console.warn("Fallo al leer leads de la nube, cargando locales.");
+            console.warn("Fallo al leer leads de la nube, cargando locales.", e);
         }
     }
 
@@ -1571,19 +1738,16 @@ if (btnClearLeads) {
         localStorage.setItem('esteko_leads', JSON.stringify([]));
 
         let dbDeleted = true;
-        if (isDatabaseOnline && supabaseClient) {
+        if (isDatabaseOnline && typeof firebase !== 'undefined') {
             try {
-                // Borrar todos los registros de la tabla
-                const { error } = await supabaseClient
-                    .from('landing_leads')
-                    .delete()
-                    .neq('id', '00000000-0000-0000-0000-000000000000'); // Elimina todos los registros de forma RLS-friendly
-
-                if (error) {
-                    console.error("Error vaciando leads de Supabase:", error);
-                    dbDeleted = false;
-                }
+                const snapshot = await firebase.firestore().collection('landing_leads').get();
+                const batch = firebase.firestore().batch();
+                snapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
             } catch (err) {
+                console.error("Error vaciando leads de Firestore:", err);
                 dbDeleted = false;
             }
         }
@@ -1623,17 +1787,20 @@ function initFileUploaderListeners(fileInputId, targetInputId) {
                     const uploadSnapshot = await storageRef.put(file);
                     const url = await uploadSnapshot.ref.getDownloadURL();
                     targetInput.value = url;
+                    targetInput.dispatchEvent(new Event('change'));
                     showToast("Archivo subido a Firebase Storage!");
                 } catch (err) {
                     console.error("Error al subir a Firebase Storage:", err);
                     const b64 = await convertFileToBase64(file);
                     targetInput.value = b64;
+                    targetInput.dispatchEvent(new Event('change'));
                     showToast("Error de subida. Guardado en formato local.");
                 }
             } else {
                 // Sencillo convertidor offline
                 const b64 = await convertFileToBase64(file);
                 targetInput.value = b64;
+                targetInput.dispatchEvent(new Event('change'));
                 showToast("Modo offline: Imagen codificada con éxito.");
             }
 
@@ -1643,7 +1810,6 @@ function initFileUploaderListeners(fileInputId, targetInputId) {
         }
     };
 }
-
 // Init hero carousel multiple file uploader
 function initHeroCarouselUploader() {
     const fileInput = document.getElementById('hero-carousel-file');
@@ -1769,21 +1935,28 @@ async function loadUsersData() {
     }
 
     // 1. Cargar desde la nube (si está en línea)
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { data, error } = await supabaseClient
-                .from('landing_profiles')
-                .select('*')
-                .order('created_at', { ascending: true });
-
-            if (!error && data) {
-                allUsers = data;
+            const snapshot = await firebase.firestore().collection('landing_profiles').get();
+            if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => {
+                    list.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                // Ordenar por created_at
+                list.sort((a, b) => {
+                    const t1 = a.created_at ? (a.created_at.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at).getTime()) : 0;
+                    const t2 = b.created_at ? (b.created_at.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at).getTime()) : 0;
+                    return t1 - t2;
+                });
+                allUsers = list;
                 localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
-            } else {
-                console.error("Error al leer perfiles de Supabase:", error);
             }
         } catch (e) {
-            console.warn("Fallo al leer usuarios de la nube, cargando caché local.");
+            console.warn("Fallo al leer usuarios de la nube, cargando caché local.", e);
         }
     }
 
@@ -1885,23 +2058,27 @@ function initUserModalListeners() {
             let saved = true;
             let errorMsg = "";
 
-            if (isDatabaseOnline && supabaseClient) {
+            if (isDatabaseOnline && typeof firebase !== 'undefined') {
                 try {
-                    // Llamamos a la función RPC de base de datos segura
-                    const { data, error } = await supabaseClient.rpc('create_new_user', {
-                        u_email,
-                        u_password,
-                        u_full_name,
-                        u_rol
-                    });
-
-                    if (error) {
-                        saved = false;
-                        errorMsg = error.message;
+                    // Crear una instancia secundaria de Firebase para no desloguear al administrador actual
+                    const secondaryApp = firebase.initializeApp(firebaseConfig, "SecondaryApp");
+                    try {
+                        await secondaryApp.auth().createUserWithEmailAndPassword(u_email, u_password);
+                        
+                        // Insertar perfil del usuario en Firestore `landing_profiles`
+                        await firebase.firestore().collection('landing_profiles').doc(u_email).set({
+                            email: u_email,
+                            full_name: u_full_name,
+                            rol: u_rol,
+                            activo: true,
+                            created_at: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    } finally {
+                        await secondaryApp.delete();
                     }
                 } catch (err) {
                     saved = false;
-                    errorMsg = err.message || "Error de red al conectar con Supabase.";
+                    errorMsg = err.message || "Error al registrar en Firebase Auth/Firestore.";
                 }
             } else {
                 // Modo offline: Simular en local cache
@@ -1956,23 +2133,14 @@ function initUserModalListeners() {
             let saved = true;
             let errorMsg = "";
 
-            if (isDatabaseOnline && supabaseClient) {
+            if (isDatabaseOnline && typeof firebase !== 'undefined') {
                 try {
-                    // Actualización directa en la tabla de perfiles usando política RLS de administrador
-                    const { error } = await supabaseClient
-                        .from('landing_profiles')
-                        .update({
-                            full_name: edit_name,
-                            rol: edit_rol,
-                            activo: edit_activo,
-                            updated_at: new Date()
-                        })
-                        .eq('id', edit_id);
-
-                    if (error) {
-                        saved = false;
-                        errorMsg = error.message;
-                    }
+                    await firebase.firestore().collection('landing_profiles').doc(edit_id).update({
+                        full_name: edit_name,
+                        rol: edit_rol,
+                        activo: edit_activo,
+                        updated_at: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                 } catch (err) {
                     saved = false;
                     errorMsg = err.message || "Fallo de conexión.";
@@ -2028,17 +2196,10 @@ window.deleteUserTrigger = async function(userId) {
     let deleted = true;
     let errorMsg = "";
 
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            // Llamar a la función RPC segura para borrar de auth y public.profiles
-            const { error } = await supabaseClient.rpc('delete_existing_user', {
-                target_user_id: userId
-            });
-
-            if (error) {
-                deleted = false;
-                errorMsg = error.message;
-            }
+            // Eliminar el documento de perfil del usuario de Firestore
+            await firebase.firestore().collection('landing_profiles').doc(userId).delete();
         } catch (err) {
             deleted = false;
             errorMsg = err.message || "Error de conexión.";
@@ -2061,27 +2222,19 @@ window.deleteUserTrigger = async function(userId) {
 // 11. SISTEMA DE POSTULACIONES Y ACTUALIZACIÓN DE BADGES
 // ==========================================================================
 async function updateBadgesCount() {
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
             // Count Leads
-            const { count: leadsCount, error: leadsErr } = await supabaseClient
-                .from('landing_leads')
-                .select('*', { count: 'exact', head: true });
-            if (!leadsErr && leadsCount !== null) {
-                const navLeadsBadge = document.getElementById('nav-leads-badge');
-                if (navLeadsBadge) navLeadsBadge.textContent = leadsCount;
-            }
+            const leadsSnapshot = await firebase.firestore().collection('landing_leads').get();
+            const navLeadsBadge = document.getElementById('nav-leads-badge');
+            if (navLeadsBadge) navLeadsBadge.textContent = leadsSnapshot.size;
 
             // Count Postulaciones
-            const { count: postCount, error: postErr } = await supabaseClient
-                .from('landing_applications')
-                .select('*', { count: 'exact', head: true });
-            if (!postErr && postCount !== null) {
-                const navPostBadge = document.getElementById('nav-postulaciones-badge');
-                if (navPostBadge) navPostBadge.textContent = postCount;
-            }
+            const postSnapshot = await firebase.firestore().collection('landing_applications').get();
+            const navPostBadge = document.getElementById('nav-postulaciones-badge');
+            if (navPostBadge) navPostBadge.textContent = postSnapshot.size;
         } catch (e) {
-            console.warn("Fallo cargando conteo de badges.");
+            console.warn("Fallo cargando conteo de badges.", e);
         }
     } else {
         // Fallback local counts
@@ -2107,20 +2260,27 @@ async function loadPostulacionesData() {
 
     allPostulaciones = [];
 
-    if (isDatabaseOnline && supabaseClient) {
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
         try {
-            const { data, error } = await supabaseClient
-                .from('landing_applications')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (!error && data) {
-                allPostulaciones = data;
-            } else {
-                console.warn("Fallo al leer postulaciones de la nube, cargando locales.", error);
+            const snapshot = await firebase.firestore().collection('landing_applications').get();
+            if (!snapshot.empty) {
+                const list = [];
+                snapshot.forEach(doc => {
+                    list.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                // Ordenar por created_at descendente
+                list.sort((a, b) => {
+                    const t1 = a.created_at ? (a.created_at.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at).getTime()) : 0;
+                    const t2 = b.created_at ? (b.created_at.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at).getTime()) : 0;
+                    return t2 - t1;
+                });
+                allPostulaciones = list;
             }
         } catch (e) {
-            console.warn("Fallo al leer postulaciones de la nube, cargando locales.");
+            console.warn("Fallo al leer postulaciones de la nube, cargando locales.", e);
         }
     }
 
@@ -2191,18 +2351,11 @@ window.deletePostulacion = async function(appId) {
     }
 
     let deleted = true;
-    if (isDatabaseOnline && supabaseClient && appId && appId !== 'undefined') {
+    if (isDatabaseOnline && typeof firebase !== 'undefined' && appId && appId !== 'undefined') {
         try {
-            const { error } = await supabaseClient
-                .from('landing_applications')
-                .delete()
-                .eq('id', appId);
-
-            if (error) {
-                console.error("Error al eliminar de Supabase:", error);
-                deleted = false;
-            }
+            await firebase.firestore().collection('landing_applications').doc(appId).delete();
         } catch (e) {
+            console.error("Error al eliminar de Firestore:", e);
             deleted = false;
         }
     } else {
@@ -2232,18 +2385,16 @@ if (btnClearPostulaciones) {
         localStorage.setItem('esteko_cv_applications', JSON.stringify([]));
 
         let success = true;
-        if (isDatabaseOnline && supabaseClient) {
+        if (isDatabaseOnline && typeof firebase !== 'undefined') {
             try {
-                const { error } = await supabaseClient
-                    .from('landing_applications')
-                    .delete()
-                    .not('id', 'is', null); // Delete all rows
-
-                if (error) {
-                    console.error("Error vaciando postulaciones de Supabase:", error);
-                    success = false;
-                }
+                const snapshot = await firebase.firestore().collection('landing_applications').get();
+                const batch = firebase.firestore().batch();
+                snapshot.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
             } catch (e) {
+                console.error("Error vaciando postulaciones de Firestore:", e);
                 success = false;
             }
         }

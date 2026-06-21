@@ -948,9 +948,98 @@
                 </div>
 
                 <div class="form-group-admin">
+                    <label for="dest-long-description">Descripción Extendida (Para página de detalle - Soporta HTML)</label>
+                    <textarea id="dest-long-description" class="form-control-admin" rows="5" placeholder="Descripción detallada de los atractivos, excursiones incluidas, itinerario sugerido..." required></textarea>
+                </div>
+
+                <div class="form-group-admin">
                     <label for="dest-services">Servicios Incluidos (Escribe uno por línea, ej. - Micros de San Felipe con CNRT)</label>
                     <textarea id="dest-services" class="form-control-admin" rows="4" placeholder="- Unidad de larga distancia de San Felipe&#10;- Departamentos equipados a metros del mar&#10;- Coordinación permanente y asistencia médica" required></textarea>
                 </div>
+
+                <!-- SECCIÓN ACORDEÓN EXPANDIBLE PARA GALERÍA DE IMÁGENES -->
+                <details class="admin-details-accordion" style="margin-top: 15px; margin-bottom: 15px; border: 1px solid var(--admin-border); border-radius: var(--border-radius-sm); background: rgba(255,255,255,0.02);">
+                    <summary style="padding: 12px 16px; font-weight: bold; cursor: pointer; color: var(--admin-text-main); display: flex; align-items: center; justify-content: space-between; user-select: none;">
+                        <span><i class="fa-solid fa-images text-primary" style="margin-right: 8px;"></i> 📷 Galería de Imágenes (Hasta 6 Fotos)</span>
+                        <i class="fa-solid fa-chevron-down accordion-arrow" style="transition: transform 0.2s ease;"></i>
+                    </summary>
+                    <div class="accordion-content" style="padding: 16px; border-top: 1px solid var(--admin-border); background: rgba(0,0,0,0.15);">
+                        <div class="grid-2-col" style="margin-bottom: 10px;">
+                            <div class="form-group-admin">
+                                <label>Foto 1 de Galería</label>
+                                <div class="file-uploader-wrapper">
+                                    <input type="text" id="dest-gallery-img-1" class="form-control-admin url-input-fallback" placeholder="URL Foto 1">
+                                    <input type="file" id="dest-gallery-file-1" class="file-input-hidden" accept="image/*">
+                                    <label for="dest-gallery-file-1" class="btn-file-trigger"><i class="fa-solid fa-upload"></i></label>
+                                </div>
+                                <div class="gallery-preview-thumb" id="dest-gallery-preview-1" style="margin-top: 5px; height: 60px; border-radius: 4px; border: 1px solid var(--admin-border); overflow: hidden; background: #000; display: none; align-items: center; justify-content: center;">
+                                    <img src="" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                </div>
+                            </div>
+                            <div class="form-group-admin">
+                                <label>Foto 2 de Galería</label>
+                                <div class="file-uploader-wrapper">
+                                    <input type="text" id="dest-gallery-img-2" class="form-control-admin url-input-fallback" placeholder="URL Foto 2">
+                                    <input type="file" id="dest-gallery-file-2" class="file-input-hidden" accept="image/*">
+                                    <label for="dest-gallery-file-2" class="btn-file-trigger"><i class="fa-solid fa-upload"></i></label>
+                                </div>
+                                <div class="gallery-preview-thumb" id="dest-gallery-preview-2" style="margin-top: 5px; height: 60px; border-radius: 4px; border: 1px solid var(--admin-border); overflow: hidden; background: #000; display: none; align-items: center; justify-content: center;">
+                                    <img src="" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2-col" style="margin-bottom: 10px;">
+                            <div class="form-group-admin">
+                                <label>Foto 3 de Galería</label>
+                                <div class="file-uploader-wrapper">
+                                    <input type="text" id="dest-gallery-img-3" class="form-control-admin url-input-fallback" placeholder="URL Foto 3">
+                                    <input type="file" id="dest-gallery-file-3" class="file-input-hidden" accept="image/*">
+                                    <label for="dest-gallery-file-3" class="btn-file-trigger"><i class="fa-solid fa-upload"></i></label>
+                                </div>
+                                <div class="gallery-preview-thumb" id="dest-gallery-preview-3" style="margin-top: 5px; height: 60px; border-radius: 4px; border: 1px solid var(--admin-border); overflow: hidden; background: #000; display: none; align-items: center; justify-content: center;">
+                                    <img src="" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                </div>
+                            </div>
+                            <div class="form-group-admin">
+                                <label>Foto 4 de Galería</label>
+                                <div class="file-uploader-wrapper">
+                                    <input type="text" id="dest-gallery-img-4" class="form-control-admin url-input-fallback" placeholder="URL Foto 4">
+                                    <input type="file" id="dest-gallery-file-4" class="file-input-hidden" accept="image/*">
+                                    <label for="dest-gallery-file-4" class="btn-file-trigger"><i class="fa-solid fa-upload"></i></label>
+                                </div>
+                                <div class="gallery-preview-thumb" id="dest-gallery-preview-4" style="margin-top: 5px; height: 60px; border-radius: 4px; border: 1px solid var(--admin-border); overflow: hidden; background: #000; display: none; align-items: center; justify-content: center;">
+                                    <img src="" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2-col" style="margin-bottom: 10px;">
+                            <div class="form-group-admin">
+                                <label>Foto 5 de Galería</label>
+                                <div class="file-uploader-wrapper">
+                                    <input type="text" id="dest-gallery-img-5" class="form-control-admin url-input-fallback" placeholder="URL Foto 5">
+                                    <input type="file" id="dest-gallery-file-5" class="file-input-hidden" accept="image/*">
+                                    <label for="dest-gallery-file-5" class="btn-file-trigger"><i class="fa-solid fa-upload"></i></label>
+                                </div>
+                                <div class="gallery-preview-thumb" id="dest-gallery-preview-5" style="margin-top: 5px; height: 60px; border-radius: 4px; border: 1px solid var(--admin-border); overflow: hidden; background: #000; display: none; align-items: center; justify-content: center;">
+                                    <img src="" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                </div>
+                            </div>
+                            <div class="form-group-admin">
+                                <label>Foto 6 de Galería</label>
+                                <div class="file-uploader-wrapper">
+                                    <input type="text" id="dest-gallery-img-6" class="form-control-admin url-input-fallback" placeholder="URL Foto 6">
+                                    <input type="file" id="dest-gallery-file-6" class="file-input-hidden" accept="image/*">
+                                    <label for="dest-gallery-file-6" class="btn-file-trigger"><i class="fa-solid fa-upload"></i></label>
+                                </div>
+                                <div class="gallery-preview-thumb" id="dest-gallery-preview-6" style="margin-top: 5px; height: 60px; border-radius: 4px; border: 1px solid var(--admin-border); overflow: hidden; background: #000; display: none; align-items: center; justify-content: center;">
+                                    <img src="" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
             </div>
 
             <div class="modal-admin-footer">
@@ -1154,10 +1243,10 @@ CREATE POLICY "Allow auth read/write leads" ON public.landing_leads FOR ALL TO a
         <i class="fa-solid fa-circle-check status-toast-icon"></i> <span id="toast-message">Datos guardados</span>
     </div>
 
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <!-- Admin JS Lógica -->
     <script src="admin.js"></script>
