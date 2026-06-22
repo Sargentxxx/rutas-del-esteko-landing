@@ -1699,17 +1699,20 @@ function setupViewScrollTriggers(viewId) {
     if (viewId === 'sorteos') {
         const cards = view.querySelectorAll('.steps-raffle .step-card');
         if (cards.length > 0) {
+            // Disable transitions during GSAP animation to avoid browser layout conflicts
+            cards.forEach(c => c.style.setProperty('transition', 'none', 'important'));
+
+            // Direct entry animation (no ScrollTrigger dependency for short, full-screen content)
             gsap.from(cards, {
                 x: -50,
                 opacity: 0,
                 duration: 0.8,
                 stagger: 0.15,
                 ease: "power3.out",
-                scrollTrigger: {
-                    trigger: '.steps-raffle',
-                    start: "top 88%",
-                    toggleActions: "play none none none",
-                    once: true
+                delay: 0.2,
+                onComplete: () => {
+                    // Restore transitions for hover effects
+                    cards.forEach(c => c.style.removeProperty('transition'));
                 }
             });
         }
