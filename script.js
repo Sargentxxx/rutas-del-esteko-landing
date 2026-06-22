@@ -707,17 +707,20 @@ async function loadAndApplySections() {
 
     // Educativo
     if (sections.educativo) {
-        const eTitle = document.querySelector('.educativo-text h2');
+        const eTitle = document.querySelector('.educativo .section-header h2');
+        const eTag = document.getElementById('educativo-tag');
         const eImage = document.querySelector('.edu-img');
-        const eContentWrapper = document.querySelector('.educativo-text');
+        const eContentWrapper = document.querySelector('.educativo-content');
 
         if (eTitle && sections.educativo.title) eTitle.textContent = sections.educativo.title;
+        if (eTag && sections.educativo.subtitle) {
+            eTag.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> ${sections.educativo.subtitle}`;
+        }
         if (eImage && sections.educativo.image_url) eImage.src = sections.educativo.image_url;
         
         if (eContentWrapper && sections.educativo.content) {
             const paras = sections.educativo.content.split('\n\n');
-            let parasHtml = `<span class="badge-edu"><i class="fa-solid fa-graduation-cap"></i> ${sections.educativo.subtitle || 'División Educativa'}</span>
-                             <h2>${sections.educativo.title || 'Paseos con Escuelas y Colegios'}</h2>`;
+            let parasHtml = '';
             paras.forEach(p => {
                 if (p.trim()) parasHtml += `<p class="edu-intro">${p.trim()}</p>`;
             });
@@ -1611,7 +1614,7 @@ function initScrollReveal() {
         '.opiniones-google .section-header h2, ' +
         '.nosotros .section-header h2, ' +
         '.temporadas .section-header h2, ' +
-        '.educativo-text h2, ' +
+        '.educativo .section-header h2, ' +
         '.fiesta .section-header h2, ' +
         '.sorteos-left h2, ' +
         '.pagos .section-header h2, ' +
@@ -1633,6 +1636,192 @@ function initScrollReveal() {
             }
         });
     });
+
+    // ANIMACIONES DE DESPLAZAMIENTO LATERAL (Fase 2 Visual Upgrade)
+    
+    // 1. Nosotros Section
+    if (document.querySelector('.nosotros-content')) {
+        gsap.from('.nosotros-content', {
+            x: -80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.nosotros-content',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+    }
+    if (document.querySelector('.nosotros-visual')) {
+        gsap.from('.nosotros-visual', {
+            x: 80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.nosotros-visual',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+    }
+
+    // 2. Turismo Educativo Section
+    if (document.querySelector('.educativo-grid')) {
+        gsap.from('.educativo-grid .educativo-content', {
+            x: -80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.educativo-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+        
+        gsap.from('.educativo-grid .educativo-gallery', {
+            x: 80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.educativo-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+    }
+
+    // 3. Fiesta de Rutas Section
+    if (document.querySelector('.fiesta-grid')) {
+        // Desplazamiento lateral de las imágenes (fiesta-visual)
+        gsap.from('.fiesta-visual img', {
+            x: -80,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.fiesta-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+        
+        // Desplazamiento lateral del contenido (fiesta-content)
+        gsap.from('.fiesta-content', {
+            x: 80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.fiesta-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+    }
+
+    // 4. Sorteos Section (Staggered step cards)
+    if (document.querySelector('.steps-raffle')) {
+        gsap.from('.steps-raffle .step-card', {
+            x: -50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.steps-raffle',
+                start: "top 85%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+    }
+
+    // 5. Pagos Section
+    if (document.querySelector('.pagos-grid')) {
+        // Cuadros de métodos de pago (left)
+        gsap.from('.pagos-info', {
+            x: -80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.pagos-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+        
+        gsap.from('.method-card', {
+            y: 40,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.payment-methods-grid',
+                start: "top 88%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+        
+        // Simulador (right)
+        gsap.from('.pagos-simulator', {
+            x: 80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.pagos-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+    }
+
+    // 6. Contacto Section
+    if (document.querySelector('.contacto-grid')) {
+        // Info Box (left)
+        gsap.from('.contacto-info-box', {
+            x: -80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.contacto-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+        
+        // Form Box (right)
+        gsap.from('.contacto-form-box', {
+            x: 80,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: '.contacto-grid',
+                start: "top 82%",
+                toggleActions: "play none none none",
+                once: true
+            }
+        });
+    }
 }
 
 // ============================================================
