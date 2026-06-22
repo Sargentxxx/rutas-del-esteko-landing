@@ -1169,6 +1169,38 @@ a {
     background-color: var(--sand-card);
 }
 
+/* Typography and Font Families */
+.educativo h2,
+.educativo h3,
+.educativo h4,
+.educativo h5,
+.educativo h6,
+.educativo .section-tag,
+.educativo .edu-tag-float {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.educativo p,
+.educativo span,
+.educativo a,
+.educativo li,
+.educativo .btn-edu {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Font Sizes Scale */
+.educativo .section-header h2 {
+    font-size: 36px !important; /* Large preset */
+    font-weight: 800 !important;
+}
+
+.edu-intro {
+    font-size: 15px !important;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
 .educativo-grid {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
@@ -1190,20 +1222,6 @@ a {
     margin-bottom: 20px;
 }
 
-.educativo-text h2 {
-    font-size: 2.3rem;
-    font-weight: 800;
-    color: var(--dark-charcoal);
-    margin-bottom: 16px;
-    letter-spacing: -1px;
-}
-
-.edu-intro {
-    font-size: 1.05rem;
-    color: var(--text-muted);
-    margin-bottom: 30px;
-}
-
 .edu-features {
     display: flex;
     flex-direction: column;
@@ -1211,39 +1229,66 @@ a {
     margin-bottom: 36px;
 }
 
+/* Feature Items styled as Premium Cards */
 .edu-feat-item {
     display: flex;
-    gap: 16px;
+    gap: 20px;
+    background-color: #ffffff;
+    border-radius: var(--border-radius-md);
+    padding: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 6px 6px 9px rgba(0, 0, 0, 0.03) !important; /* Soft Natural shadow */
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
 }
 
+.edu-feat-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.09) !important; /* Deep shadow on hover */
+    border-color: rgba(6, 147, 227, 0.15) !important;
+}
+
+/* Cool to Warm Gradient for Icons */
 .edu-feat-icon {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background-color: var(--primary-light);
-    color: var(--primary);
+    background: linear-gradient(135deg, #0693e3 0%, #9b51e0 100%) !important; /* Cool to warm */
+    color: #ffffff !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(6, 147, 227, 0.2);
 }
 
 .edu-feat-item h5 {
-    font-size: 1.05rem;
+    font-size: 20px !important; /* Medium preset */
     font-weight: 700;
     color: var(--dark-charcoal);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .edu-feat-item p {
-    font-size: 0.92rem;
+    font-size: 13px !important; /* Small preset */
     color: var(--text-muted);
-    line-height: 1.4;
+    line-height: 1.5;
+    margin: 0;
 }
 
+/* Luminous Sunset Gradient for Button */
 .btn-edu {
-    box-shadow: 0 10px 20px rgba(184, 75, 40, 0.15);
+    background: linear-gradient(135deg, #ff6900 0%, #cf2e2e 100%) !important; /* Luminous sunset */
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 20px rgba(255, 105, 0, 0.2) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease !important;
+}
+
+.btn-edu:hover {
+    transform: translateY(-2px);
+    filter: brightness(110%);
+    box-shadow: 0 15px 30px rgba(255, 105, 0, 0.35) !important;
 }
 
 .educativo-gallery {
@@ -1251,17 +1296,31 @@ a {
     height: 100%;
 }
 
+/* Gallery Wrapper with Shadows */
 .gallery-wrapper-edu {
     border-radius: var(--border-radius-md);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 6px 6px 9px rgba(0, 0, 0, 0.12) !important; /* Natural shadow */
     position: relative;
     height: 380px;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
 }
 
+.gallery-wrapper-edu:hover {
+    transform: translateY(-4px);
+    box-shadow: 12px 12px 50px rgba(0, 0, 0, 0.28) !important; /* Deep shadow */
+}
+
+/* YouTube brightness transition on hover */
 .edu-img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    transition: filter 0.4s ease !important;
+}
+
+.gallery-wrapper-edu:hover .edu-img {
+    filter: brightness(75%) !important;
 }
 
 .edu-tag-float {
