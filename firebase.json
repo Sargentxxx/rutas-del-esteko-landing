@@ -1,5 +1,14 @@
 {
   "firestore": {
     "rules": "firestore.rules"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Rutas del Esteko",
+        "supportEmail": "alberto.ezequiel.garcia@gmail.com"
+      }
+    }
   }
 }

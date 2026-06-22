@@ -2043,7 +2043,7 @@ const SEED_PROFILES = [
         id: "fc9acb2a-61cd-441a-983d-dd269cab5a74",
         full_name: "Alberto Ezequiel Garcia",
         email: "alberto.ezequiel.garcia@gmail.com",
-        rol: "vendedor",
+        rol: "admin",
         activo: true,
         created_at: "2026-05-09T22:45:49.896Z"
     }
