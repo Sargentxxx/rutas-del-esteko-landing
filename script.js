@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Target elements inside the active view
         const sectionTag = view.querySelector('.section-tag');
-        const h2 = view.querySelector('.section-header h2, .educativo-text h2, .sorteos-content h2');
+        const h2 = view.querySelector('.section-header h2, .sorteos-content h2');
         const heroTitle = view.querySelector('.hero-title');
         const subtitle = view.querySelector('.section-subtitle, .sorteos-content > p');
         const headerLine = view.querySelector('.header-line');
@@ -264,47 +264,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 { opacity: 0, y: 15 },
                 { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" },
                 "-=0.3"
-            );
-        }
-
-        // Side slide-in columns (se desplazan desde los costados)
-        const leftCols = view.querySelectorAll('.nosotros-content, .educativo-text, .fiesta-visual, .pagos-info, .unete-info-box, .contacto-info-box');
-        const rightCols = view.querySelectorAll('.nosotros-visual, .educativo-gallery, .fiesta-content, .pagos-simulator, .unete-form-box, .contacto-form-box');
-        
-        gsap.killTweensOf([...leftCols, ...rightCols]);
-
-        if (leftCols.length > 0) {
-            tl.fromTo(leftCols,
-                { opacity: 0, x: -80 },
-                { opacity: 1, x: 0, duration: 0.85, ease: "power3.out" },
-                "-=0.35"
-            );
-        }
-
-        if (rightCols.length > 0) {
-            tl.fromTo(rightCols,
-                { opacity: 0, x: 80 },
-                { opacity: 1, x: 0, duration: 0.85, ease: "power3.out" },
-                leftCols.length > 0 ? "-=0.85" : "-=0.35"
-            );
-        }
-
-        // Stagger inner list/grid cards
-        const gridItems = view.querySelectorAll(
-            '.destinations-grid > .destination-card, ' +
-            '.review-card-premium-wrapper, ' +
-            '.payment-methods-grid > .method-card, ' +
-            '.gallery-grid-dynamic > .gallery-item-dynamic, ' +
-            '.steps-raffle > .step-card'
-        );
-        
-        gsap.killTweensOf(gridItems);
-        
-        if (gridItems.length > 0) {
-            tl.fromTo(gridItems,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 0.65, stagger: 0.08, ease: "power2.out" },
-                "-=0.45"
             );
         }
     }
