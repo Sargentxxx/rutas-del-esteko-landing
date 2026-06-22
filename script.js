@@ -369,6 +369,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     onStart: () => {
                         targetViewElement.classList.add('active-view');
                         animateViewEntrance(viewId);
+                        setupViewScrollTriggers(viewId);
                     },
                     onComplete: () => {
                         // Limpiar estilos temporales
@@ -389,6 +390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     onStart: () => {
                         targetViewElement.classList.add('active-view');
                         animateViewEntrance(viewId);
+                        setupViewScrollTriggers(viewId);
                     }
                 });
             }
@@ -1565,222 +1567,271 @@ function initHeroParallax() {
 
 function initScrollReveal() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
-
     gsap.registerPlugin(ScrollTrigger);
+}
 
-    // Encabezados h2 de las secciones principales
-    const headers = document.querySelectorAll(
-        '.opiniones-google .section-header h2, ' +
-        '.nosotros .section-header h2, ' +
-        '.temporadas .section-header h2, ' +
-        '.educativo .section-header h2, ' +
-        '.fiesta .section-header h2, ' +
-        '.sorteos-left h2, ' +
-        '.pagos .section-header h2, ' +
-        '.contacto .section-header h2'
-    );
+function setupViewScrollTriggers(viewId) {
+    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-    headers.forEach(header => {
-        // Animación de aparición (slide up + fade in) directa para soportar degradados de fondo (background-clip: text)
-        gsap.from(header, {
-            opacity: 0,
-            y: 35,
-            duration: 0.85,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: header,
-                start: "top 88%", // Comienza cuando el encabezado está cerca de entrar
-                toggleActions: "play none none none",
-                once: true // Ejecutar solo una vez
-            }
-        });
+    const view = document.getElementById('view-' + viewId);
+    if (!view) return;
+
+    // 1. Matar cualquier ScrollTrigger existente dentro de esta vista
+    ScrollTrigger.getAll().forEach(trigger => {
+        if (view.contains(trigger.trigger)) {
+            trigger.kill();
+        }
     });
 
-    // ANIMACIONES DE DESPLAZAMIENTO LATERAL (Fase 2 Visual Upgrade)
-    
-    // 1. Nosotros Section
-    if (document.querySelector('.nosotros-content')) {
-        gsap.from('.nosotros-content', {
-            x: -80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.nosotros-content',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
-    }
-    if (document.querySelector('.nosotros-visual')) {
-        gsap.from('.nosotros-visual', {
-            x: 80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.nosotros-visual',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
+    // Resetear opacidad e inline styles de los elementos que vamos a animar
+    const elementsToReset = view.querySelectorAll(
+        '.nosotros-content, .nosotros-visual, ' +
+        '.educativo-content, .educativo-gallery, ' +
+        '.fiesta-visual img, .fiesta-content, ' +
+        '.steps-raffle .step-card, ' +
+        '.pagos-info, .method-card, .pagos-simulator, ' +
+        '.unete-info-box, .unete-form-box, ' +
+        '.contacto-info-box, .contacto-form-box'
+    );
+    gsap.set(elementsToReset, { clearProps: "opacity,x,y,transform" });
+
+    // 2. Definir las animaciones de ScrollTrigger para esta vista específica
+    if (viewId === 'nosotros') {
+        const content = view.querySelector('.nosotros-content');
+        const visual = view.querySelector('.nosotros-visual');
+        if (content) {
+            gsap.from(content, {
+                x: -80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: content,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+        if (visual) {
+            gsap.from(visual, {
+                x: 80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: visual,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
     }
 
-    // 2. Turismo Educativo Section
-    if (document.querySelector('.educativo-grid')) {
-        gsap.from('.educativo-grid .educativo-content', {
-            x: -80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.educativo-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
-        
-        gsap.from('.educativo-grid .educativo-gallery', {
-            x: 80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.educativo-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
+    if (viewId === 'educativo') {
+        const content = view.querySelector('.educativo-content');
+        const gallery = view.querySelector('.educativo-gallery');
+        if (content) {
+            gsap.from(content, {
+                x: -80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: content,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+        if (gallery) {
+            gsap.from(gallery, {
+                x: 80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: gallery,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
     }
 
-    // 3. Fiesta de Rutas Section
-    if (document.querySelector('.fiesta-grid')) {
-        // Desplazamiento lateral de las imágenes (fiesta-visual)
-        gsap.from('.fiesta-visual img', {
-            x: -80,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.2,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.fiesta-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
-        
-        // Desplazamiento lateral del contenido (fiesta-content)
-        gsap.from('.fiesta-content', {
-            x: 80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.fiesta-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
+    if (viewId === 'fiesta') {
+        const imgs = view.querySelectorAll('.fiesta-visual img');
+        const content = view.querySelector('.fiesta-content');
+        if (imgs.length > 0) {
+            gsap.from(imgs, {
+                x: -80,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: '.fiesta-visual',
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+        if (content) {
+            gsap.from(content, {
+                x: 80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: content,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
     }
 
-    // 4. Sorteos Section (Staggered step cards)
-    if (document.querySelector('.steps-raffle')) {
-        gsap.from('.steps-raffle .step-card', {
-            x: -50,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.steps-raffle',
-                start: "top 85%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
+    if (viewId === 'sorteos') {
+        const cards = view.querySelectorAll('.steps-raffle .step-card');
+        if (cards.length > 0) {
+            gsap.from(cards, {
+                x: -50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: '.steps-raffle',
+                    start: "top 88%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
     }
 
-    // 5. Pagos Section
-    if (document.querySelector('.pagos-grid')) {
-        // Cuadros de métodos de pago (left)
-        gsap.from('.pagos-info', {
-            x: -80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.pagos-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
-        
-        gsap.from('.method-card', {
-            y: 40,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.payment-methods-grid',
-                start: "top 88%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
-        
-        // Simulador (right)
-        gsap.from('.pagos-simulator', {
-            x: 80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.pagos-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
+    if (viewId === 'pagos') {
+        const info = view.querySelector('.pagos-info');
+        const cards = view.querySelectorAll('.method-card');
+        const sim = view.querySelector('.pagos-simulator');
+        if (info) {
+            gsap.from(info, {
+                x: -80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: info,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+        if (cards.length > 0) {
+            gsap.from(cards, {
+                y: 40,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: '.payment-methods-grid',
+                    start: "top 90%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+        if (sim) {
+            gsap.from(sim, {
+                x: 80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: sim,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
     }
 
-    // 6. Contacto Section
-    if (document.querySelector('.contacto-grid')) {
-        // Info Box (left)
-        gsap.from('.contacto-info-box', {
-            x: -80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.contacto-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
-        
-        // Form Box (right)
-        gsap.from('.contacto-form-box', {
-            x: 80,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: '.contacto-grid',
-                start: "top 82%",
-                toggleActions: "play none none none",
-                once: true
-            }
-        });
+    if (viewId === 'unete') {
+        const info = view.querySelector('.unete-info-box');
+        const form = view.querySelector('.unete-form-box');
+        if (info) {
+            gsap.from(info, {
+                x: -80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: info,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+        if (form) {
+            gsap.from(form, {
+                x: 80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: form,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
     }
+
+    if (viewId === 'contacto') {
+        const info = view.querySelector('.contacto-info-box');
+        const form = view.querySelector('.contacto-form-box');
+        if (info) {
+            gsap.from(info, {
+                x: -80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: info,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+        if (form) {
+            gsap.from(form, {
+                x: 80,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: form,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+    }
+
+    // Refrescar ScrollTrigger inmediatamente después de crear las animaciones para esta vista
+    ScrollTrigger.refresh(true);
 }
 
 // ============================================================
