@@ -1637,13 +1637,8 @@ function setupViewScrollTriggers(viewId) {
                 x: -80,
                 opacity: 0,
                 duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: content,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                delay: 0.2,
+                ease: "power3.out"
             });
         }
         if (gallery) {
@@ -1651,13 +1646,8 @@ function setupViewScrollTriggers(viewId) {
                 x: 80,
                 opacity: 0,
                 duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: gallery,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                delay: 0.35,
+                ease: "power3.out"
             });
         }
     }
@@ -1671,13 +1661,8 @@ function setupViewScrollTriggers(viewId) {
                 opacity: 0,
                 duration: 1,
                 stagger: 0.2,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: '.fiesta-visual',
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                delay: 0.2,
+                ease: "power3.out"
             });
         }
         if (content) {
@@ -1685,13 +1670,8 @@ function setupViewScrollTriggers(viewId) {
                 x: 80,
                 opacity: 0,
                 duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: content,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                delay: 0.35,
+                ease: "power3.out"
             });
         }
     }
@@ -1727,13 +1707,8 @@ function setupViewScrollTriggers(viewId) {
                 x: -80,
                 opacity: 0,
                 duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: info,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                delay: 0.2,
+                ease: "power3.out"
             });
         }
         if (cards.length > 0) {
@@ -1741,14 +1716,9 @@ function setupViewScrollTriggers(viewId) {
                 y: 40,
                 opacity: 0,
                 duration: 0.8,
-                stagger: 0.1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: '.payment-methods-grid',
-                    start: "top 90%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                stagger: 0.12,
+                delay: 0.35,
+                ease: "power3.out"
             });
         }
         if (sim) {
@@ -1756,13 +1726,8 @@ function setupViewScrollTriggers(viewId) {
                 x: 80,
                 opacity: 0,
                 duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: sim,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                delay: 0.25,
+                ease: "power3.out"
             });
         }
     }
