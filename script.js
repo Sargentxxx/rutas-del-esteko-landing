@@ -369,7 +369,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     onStart: () => {
                         targetViewElement.classList.add('active-view');
                         animateViewEntrance(viewId);
-                        setupViewScrollTriggers(viewId);
                     },
                     onComplete: () => {
                         // Limpiar estilos temporales
@@ -378,6 +377,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             zIndex: '',
                             x: ''
                         });
+                        // Iniciar animaciones de elementos DESPUÉS de que la vista sea visible
+                        setupViewScrollTriggers(viewId);
                     }
                 }, 0.1); // Pequeño delay de 0.1s para un cruce ultra suave
             } else {
@@ -390,6 +391,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     onStart: () => {
                         targetViewElement.classList.add('active-view');
                         animateViewEntrance(viewId);
+                    },
+                    onComplete: () => {
                         setupViewScrollTriggers(viewId);
                     }
                 });
@@ -637,7 +640,7 @@ async function loadAndApplySections() {
             fImage2.src = sections.fiesta.extra_data.sub_photo_2;
             fImage2.style.display = 'block';
         } else if (fImage2) {
-            fImage2.src = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80";
+            fImage2.src = "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=800&q=80";
         }
         
         if (fContentWrapper && sections.fiesta.content) {
@@ -1636,8 +1639,8 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(content, {
                 x: -80,
                 opacity: 0,
-                duration: 1,
-                delay: 0.2,
+                duration: 0.9,
+                delay: 0.05,
                 ease: "power3.out"
             });
         }
@@ -1645,8 +1648,8 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(gallery, {
                 x: 80,
                 opacity: 0,
-                duration: 1,
-                delay: 0.35,
+                duration: 0.9,
+                delay: 0.15,
                 ease: "power3.out"
             });
         }
@@ -1659,9 +1662,9 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(imgs, {
                 x: -80,
                 opacity: 0,
-                duration: 1,
-                stagger: 0.2,
-                delay: 0.2,
+                duration: 0.9,
+                stagger: 0.18,
+                delay: 0.05,
                 ease: "power3.out"
             });
         }
@@ -1669,8 +1672,8 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(content, {
                 x: 80,
                 opacity: 0,
-                duration: 1,
-                delay: 0.35,
+                duration: 0.9,
+                delay: 0.15,
                 ease: "power3.out"
             });
         }
@@ -1706,8 +1709,8 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(info, {
                 x: -80,
                 opacity: 0,
-                duration: 1,
-                delay: 0.2,
+                duration: 0.9,
+                delay: 0.05,
                 ease: "power3.out"
             });
         }
@@ -1715,9 +1718,9 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(cards, {
                 y: 40,
                 opacity: 0,
-                duration: 0.8,
-                stagger: 0.12,
-                delay: 0.35,
+                duration: 0.7,
+                stagger: 0.1,
+                delay: 0.1,
                 ease: "power3.out"
             });
         }
@@ -1725,8 +1728,8 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(sim, {
                 x: 80,
                 opacity: 0,
-                duration: 1,
-                delay: 0.25,
+                duration: 0.9,
+                delay: 0.08,
                 ease: "power3.out"
             });
         }
@@ -1739,28 +1742,18 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(info, {
                 x: -80,
                 opacity: 0,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: info,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                duration: 0.9,
+                delay: 0.05,
+                ease: "power3.out"
             });
         }
         if (form) {
             gsap.from(form, {
                 x: 80,
                 opacity: 0,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: form,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                duration: 0.9,
+                delay: 0.15,
+                ease: "power3.out"
             });
         }
     }
@@ -1772,28 +1765,18 @@ function setupViewScrollTriggers(viewId) {
             gsap.from(info, {
                 x: -80,
                 opacity: 0,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: info,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                duration: 0.9,
+                delay: 0.05,
+                ease: "power3.out"
             });
         }
         if (form) {
             gsap.from(form, {
                 x: 80,
                 opacity: 0,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: form,
-                    start: "top 85%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
+                duration: 0.9,
+                delay: 0.15,
+                ease: "power3.out"
             });
         }
     }
