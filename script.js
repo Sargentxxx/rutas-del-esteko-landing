@@ -1586,7 +1586,7 @@ function setupViewScrollTriggers(viewId) {
         }
     });
 
-    // Resetear opacidad e inline styles de los elementos que vamos a animar
+    // 1. Matar tweens activos y resetear inline styles
     const elementsToReset = view.querySelectorAll(
         '.nosotros-content, .nosotros-visual, ' +
         '.educativo-content, .educativo-gallery, ' +
@@ -1596,7 +1596,10 @@ function setupViewScrollTriggers(viewId) {
         '.unete-info-box, .unete-form-box, ' +
         '.contacto-info-box, .contacto-form-box'
     );
-    gsap.set(elementsToReset, { clearProps: "opacity,x,y,transform" });
+    // Matar tweens activos para evitar estados intermedios congelados
+    gsap.killTweensOf(Array.from(elementsToReset));
+    // clearProps:'all' limpia translate/rotate/scale (shorthands de GSAP) además de transform/opacity
+    gsap.set(elementsToReset, { clearProps: 'all' });
 
     // 2. Definir las animaciones de ScrollTrigger para esta vista específica
     if (viewId === 'nosotros') {
@@ -1636,22 +1639,16 @@ function setupViewScrollTriggers(viewId) {
         const content = view.querySelector('.educativo-content');
         const gallery = view.querySelector('.educativo-gallery');
         if (content) {
-            gsap.from(content, {
-                x: -80,
-                opacity: 0,
-                duration: 0.9,
-                delay: 0.05,
-                ease: "power3.out"
-            });
+            gsap.fromTo(content,
+                { x: -80, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.9, delay: 0.05, ease: "power3.out" }
+            );
         }
         if (gallery) {
-            gsap.from(gallery, {
-                x: 80,
-                opacity: 0,
-                duration: 0.9,
-                delay: 0.15,
-                ease: "power3.out"
-            });
+            gsap.fromTo(gallery,
+                { x: 80, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.9, delay: 0.15, ease: "power3.out" }
+            );
         }
     }
 
@@ -1659,23 +1656,16 @@ function setupViewScrollTriggers(viewId) {
         const imgs = view.querySelectorAll('.fiesta-visual img');
         const content = view.querySelector('.fiesta-content');
         if (imgs.length > 0) {
-            gsap.from(imgs, {
-                x: -80,
-                opacity: 0,
-                duration: 0.9,
-                stagger: 0.18,
-                delay: 0.05,
-                ease: "power3.out"
-            });
+            gsap.fromTo(imgs,
+                { x: -80, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.9, stagger: 0.18, delay: 0.05, ease: "power3.out" }
+            );
         }
         if (content) {
-            gsap.from(content, {
-                x: 80,
-                opacity: 0,
-                duration: 0.9,
-                delay: 0.15,
-                ease: "power3.out"
-            });
+            gsap.fromTo(content,
+                { x: 80, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.9, delay: 0.15, ease: "power3.out" }
+            );
         }
     }
 
@@ -1706,32 +1696,22 @@ function setupViewScrollTriggers(viewId) {
         const cards = view.querySelectorAll('.method-card');
         const sim = view.querySelector('.pagos-simulator');
         if (info) {
-            gsap.from(info, {
-                x: -80,
-                opacity: 0,
-                duration: 0.9,
-                delay: 0.05,
-                ease: "power3.out"
-            });
+            gsap.fromTo(info,
+                { x: -80, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.9, delay: 0.05, ease: "power3.out" }
+            );
         }
         if (cards.length > 0) {
-            gsap.from(cards, {
-                y: 40,
-                opacity: 0,
-                duration: 0.7,
-                stagger: 0.1,
-                delay: 0.1,
-                ease: "power3.out"
-            });
+            gsap.fromTo(cards,
+                { y: 40, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, delay: 0.1, ease: "power3.out" }
+            );
         }
         if (sim) {
-            gsap.from(sim, {
-                x: 80,
-                opacity: 0,
-                duration: 0.9,
-                delay: 0.08,
-                ease: "power3.out"
-            });
+            gsap.fromTo(sim,
+                { x: 80, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.9, delay: 0.08, ease: "power3.out" }
+            );
         }
     }
 
