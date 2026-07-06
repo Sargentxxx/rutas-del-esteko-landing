@@ -180,26 +180,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (element.typewriterInterval) {
             clearInterval(element.typewriterInterval);
         }
-        element.innerHTML = '<span class="typing-text"></span><span class="typing-cursor">|</span>';
-        const textSpan = element.querySelector('.typing-text');
-        const cursorSpan = element.querySelector('.typing-cursor');
+        element.innerHTML = '';
+        const textNode = document.createTextNode('');
+        element.appendChild(textNode);
+        
         let index = 0;
         element.typewriterInterval = setInterval(() => {
             if (index < text.length) {
-                textSpan.textContent += text.charAt(index);
+                textNode.textContent += text.charAt(index);
                 index++;
             } else {
                 clearInterval(element.typewriterInterval);
                 element.typewriterInterval = null;
-                gsap.to(cursorSpan, {
-                    opacity: 0,
-                    repeat: 3,
-                    yoyo: true,
-                    duration: 0.4,
-                    onComplete: () => {
-                        cursorSpan.remove();
-                    }
-                });
             }
         }, speed);
     }
@@ -723,7 +715,7 @@ async function loadAndApplySections() {
         }
         if (sContentWrapper && sections.sorteos.content) sContentWrapper.textContent = sections.sorteos.content;
         if (sBanner && sections.sorteos.image_url) {
-            sBanner.style.backgroundImage = `linear-gradient(135deg, rgba(24, 18, 12, 0.95), rgba(24, 18, 12, 0.85)), url('${sections.sorteos.image_url}')`;
+            sBanner.style.backgroundImage = `url('${sections.sorteos.image_url}')`;
         }
 
         // Render step cards dynamically
@@ -1589,6 +1581,7 @@ function setupViewScrollTriggers(viewId) {
     // 1. Matar tweens activos y resetear inline styles
     const elementsToReset = view.querySelectorAll(
         '.nosotros-content, .nosotros-visual, ' +
+        '.destination-card, ' +
         '.educativo-content, .educativo-gallery, ' +
         '.fiesta-visual img, .fiesta-content, ' +
         '.steps-raffle .step-card, ' +
@@ -1635,19 +1628,61 @@ function setupViewScrollTriggers(viewId) {
         }
     }
 
+    if (viewId === 'temporadas') {
+        const cards = view.querySelectorAll('.destination-card');
+        if (cards.length > 0) {
+            gsap.from(cards, {
+                y: 60,
+                opacity: 0,
+                scale: 0.95,
+                duration: 0.8,
+                stagger: 0.12,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: view.querySelector('.destinations-grid'),
+                    start: "top 90%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
+            });
+        }
+    }
+
     if (viewId === 'educativo') {
         const content = view.querySelector('.educativo-content');
         const gallery = view.querySelector('.educativo-gallery');
         if (content) {
             gsap.fromTo(content,
                 { x: -80, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.9, delay: 0.05, ease: "power3.out" }
+                { 
+                    x: 0, 
+                    opacity: 1, 
+                    duration: 0.9, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: content,
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                        once: true
+                    }
+                }
             );
         }
         if (gallery) {
             gsap.fromTo(gallery,
                 { x: 80, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.9, delay: 0.15, ease: "power3.out" }
+                { 
+                    x: 0, 
+                    opacity: 1, 
+                    duration: 0.9, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: gallery,
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                        once: true
+                    }
+                }
             );
         }
     }
@@ -1658,13 +1693,36 @@ function setupViewScrollTriggers(viewId) {
         if (imgs.length > 0) {
             gsap.fromTo(imgs,
                 { x: -80, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.9, stagger: 0.18, delay: 0.05, ease: "power3.out" }
+                { 
+                    x: 0, 
+                    opacity: 1, 
+                    duration: 0.9, 
+                    stagger: 0.18, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: view.querySelector('.fiesta-visual'),
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                        once: true
+                    }
+                }
             );
         }
         if (content) {
             gsap.fromTo(content,
                 { x: 80, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.9, delay: 0.15, ease: "power3.out" }
+                { 
+                    x: 0, 
+                    opacity: 1, 
+                    duration: 0.9, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: content,
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                        once: true
+                    }
+                }
             );
         }
     }
@@ -1675,14 +1733,18 @@ function setupViewScrollTriggers(viewId) {
             // Disable transitions during GSAP animation to avoid browser layout conflicts
             cards.forEach(c => c.style.setProperty('transition', 'none', 'important'));
 
-            // Direct entry animation (no ScrollTrigger dependency for short, full-screen content)
             gsap.from(cards, {
                 x: -50,
                 opacity: 0,
                 duration: 0.8,
                 stagger: 0.15,
                 ease: "power3.out",
-                delay: 0.2,
+                scrollTrigger: {
+                    trigger: view.querySelector('.steps-raffle'),
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                },
                 onComplete: () => {
                     // Restore transitions for hover effects
                     cards.forEach(c => c.style.removeProperty('transition'));
@@ -1698,19 +1760,53 @@ function setupViewScrollTriggers(viewId) {
         if (info) {
             gsap.fromTo(info,
                 { x: -80, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.9, delay: 0.05, ease: "power3.out" }
+                { 
+                    x: 0, 
+                    opacity: 1, 
+                    duration: 0.9, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: info,
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                        once: true
+                    }
+                }
             );
         }
         if (cards.length > 0) {
             gsap.fromTo(cards,
                 { y: 40, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, delay: 0.1, ease: "power3.out" }
+                { 
+                    y: 0, 
+                    opacity: 1, 
+                    duration: 0.7, 
+                    stagger: 0.1, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: view.querySelector('.methods-grid'),
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                        once: true
+                    }
+                }
             );
         }
         if (sim) {
             gsap.fromTo(sim,
                 { x: 80, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.9, delay: 0.08, ease: "power3.out" }
+                { 
+                    x: 0, 
+                    opacity: 1, 
+                    duration: 0.9, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: sim,
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                        once: true
+                    }
+                }
             );
         }
     }
@@ -1723,8 +1819,13 @@ function setupViewScrollTriggers(viewId) {
                 x: -80,
                 opacity: 0,
                 duration: 0.9,
-                delay: 0.05,
-                ease: "power3.out"
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: info,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
             });
         }
         if (form) {
@@ -1732,8 +1833,13 @@ function setupViewScrollTriggers(viewId) {
                 x: 80,
                 opacity: 0,
                 duration: 0.9,
-                delay: 0.15,
-                ease: "power3.out"
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: form,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
             });
         }
     }
@@ -1746,8 +1852,13 @@ function setupViewScrollTriggers(viewId) {
                 x: -80,
                 opacity: 0,
                 duration: 0.9,
-                delay: 0.05,
-                ease: "power3.out"
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: info,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
             });
         }
         if (form) {
@@ -1755,8 +1866,13 @@ function setupViewScrollTriggers(viewId) {
                 x: 80,
                 opacity: 0,
                 duration: 0.9,
-                delay: 0.15,
-                ease: "power3.out"
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: form,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    once: true
+                }
             });
         }
     }

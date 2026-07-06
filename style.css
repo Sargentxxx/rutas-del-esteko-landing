@@ -224,24 +224,30 @@ a {
 
 /* Main Header (Estilo Transparente Premium Overlay) */
 .main-header {
-    position: absolute; /* Se queda fija arriba, no baja con la página */
-    top: 45px; /* Altura de la barra superior */
-    left: 0;
-    width: 100%;
+    position: fixed; /* Fixed floating navigation */
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 1200px;
     z-index: 1000;
-    background-color: transparent;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(24, 18, 12, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 60px;
     transition: var(--transition-smooth);
-    padding: 20px 0;
+    padding: 14px 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* El scroll ya no afecta la cabecera porque es absolute */
 .main-header.scrolled {
+    top: 10px;
     background-color: rgba(24, 18, 12, 0.85); /* Fondo oscuro premium traslúcido */
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    padding: 8px 32px;
 }
 
 .header-container {
@@ -274,17 +280,17 @@ a {
 }
 
 .navbar-logo-img {
-    height: 120px; /* Tamaño destacado (aumentado un 20%) */
+    height: 85px; /* Aumentado de 56px para mayor nitidez y visibilidad */
     width: auto;
     object-fit: contain;
     display: block;
     transition: var(--transition-smooth);
-    margin: -18px 0; /* Evita que la barra de navegación se agrande */
+    margin: 0;
 }
 
 .main-header.scrolled .navbar-logo-img {
-    height: 120px;
-    margin: -18px 0;
+    height: 68px; /* Aumentado de 46px */
+    margin: 0;
 }
 
 /* Navigation */
@@ -1461,7 +1467,7 @@ a {
 }
 
 .sorteos-banner {
-    background-image: linear-gradient(135deg, rgba(24, 18, 12, 0.72), rgba(24, 18, 12, 0.55)), url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80');
+    background-image: url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80');
     background-size: cover;
     background-position: center;
     border-radius: var(--border-radius-lg);
@@ -2814,7 +2820,10 @@ a {
 
 /* Typewriter Cursor */
 .typing-cursor {
-    color: var(--primary);
+    color: var(--primary) !important;
+    -webkit-text-fill-color: var(--primary) !important;
+    background-clip: initial !important;
+    -webkit-background-clip: initial !important;
     font-weight: 300;
     margin-left: 4px;
     display: inline-block;
@@ -2865,6 +2874,31 @@ a {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
     border-color: rgba(220, 30, 30, 0.15) !important;
+}
+
+/* WhatsApp Float Button */
+.whatsapp-float-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25D366;
+    color: #fff !important;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float-btn:hover {
+    transform: translateY(-5px) scale(1.08);
+    background-color: #128C7E;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
 }
 
 
