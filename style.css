@@ -280,17 +280,17 @@ a {
 }
 
 .navbar-logo-img {
-    height: 85px; /* Aumentado de 56px para mayor nitidez y visibilidad */
+    height: 102px; /* Aumentado un 20% de 85px para mayor nitidez */
     width: auto;
     object-fit: contain;
     display: block;
     transition: var(--transition-smooth);
-    margin: 0;
+    margin: -8px 0; /* Evita que la barra de navegación flotante se agrande */
 }
 
 .main-header.scrolled .navbar-logo-img {
-    height: 68px; /* Aumentado de 46px */
-    margin: 0;
+    height: 82px; /* Aumentado un 20% de 68px */
+    margin: -7px 0; /* Evita que la barra de navegación flotante se agrande en scroll */
 }
 
 /* Navigation */
