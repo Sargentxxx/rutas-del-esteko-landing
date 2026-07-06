@@ -280,17 +280,17 @@ a {
 }
 
 .navbar-logo-img {
-    height: 102px; /* Aumentado un 20% de 85px para mayor nitidez */
+    height: 122px; /* Aumentado otro 20% (de 102px) para máxima nitidez */
     width: auto;
     object-fit: contain;
     display: block;
     transition: var(--transition-smooth);
-    margin: -8px 0; /* Evita que la barra de navegación flotante se agrande */
+    margin: -18px 0; /* Evita que la barra de navegación flotante se agrande */
 }
 
 .main-header.scrolled .navbar-logo-img {
-    height: 82px; /* Aumentado un 20% de 68px */
-    margin: -7px 0; /* Evita que la barra de navegación flotante se agrande en scroll */
+    height: 98px; /* Aumentado otro 20% (de 82px) */
+    margin: -15px 0; /* Evita que la barra de navegación flotante se agrande en scroll */
 }
 
 /* Navigation */
@@ -1513,12 +1513,13 @@ a {
 }
 
 .step-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(20, 18, 16, 0.72); /* Fondo oscuro traslúcido para legibilidad sobre fondo claro */
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--border-radius-md);
     padding: 24px;
     position: relative;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .step-num {
@@ -1527,7 +1528,8 @@ a {
     right: 20px;
     font-size: 2rem;
     font-weight: 800;
-    color: rgba(254, 186, 21, 0.2);
+    color: rgba(254, 186, 21, 0.35);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 .step-card h5 {
@@ -1535,18 +1537,21 @@ a {
     font-weight: 700;
     color: var(--secondary);
     margin-bottom: 8px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .step-card p {
     font-size: 0.9rem;
     line-height: 1.4;
     margin-bottom: 0;
-    opacity: 0.85;
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .step-card a {
     color: var(--secondary);
     text-decoration: underline;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 /* ==========================================================================
