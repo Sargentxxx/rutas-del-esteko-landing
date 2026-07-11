@@ -838,7 +838,7 @@ function initializeHeroCarousel(images) {
     finalImages.forEach((imgUrl, index) => {
         const slide = document.createElement('div');
         slide.className = `hero-slide${index === 0 ? ' active' : ''}`;
-        slide.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('${imgUrl}')`;
+        slide.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 10, 0.12), rgba(15, 10, 10, 0.02)), url('${imgUrl}')`;
         sliderContainer.appendChild(slide);
     });
 
@@ -2377,6 +2377,35 @@ function renderPublicDestinosMasElegidos(destinations, config) {
                 dots[scrollIndex].classList.add('active');
             }
         });
+    }
+
+    // Lógica de carrusel auto-run (deslizamiento automático cada 4 segundos)
+    if (favoritos.length > 1) {
+        if (window.destinosCarouselInterval) {
+            clearInterval(window.destinosCarouselInterval);
+        }
+        
+        let activeIdx = 0;
+        const autoScroll = () => {
+            // Pausar temporalmente si el mouse está posado sobre el carrusel
+            if (carousel.matches(':hover')) return;
+            activeIdx = (activeIdx + 1) % favoritos.length;
+            const cardWidth = carousel.firstElementChild ? carousel.firstElementChild.clientWidth + 20 : 300;
+            carousel.scrollTo({
+                left: activeIdx * cardWidth,
+                behavior: 'smooth'
+            });
+        };
+        
+        window.destinosCarouselInterval = setInterval(autoScroll, 4000);
+        
+        // Limpiar intervalo si el usuario interactúa manualmente
+        carousel.addEventListener('pointerdown', () => {
+            clearInterval(window.destinosCarouselInterval);
+        }, { passive: true });
+        carousel.addEventListener('touchstart', () => {
+            clearInterval(window.destinosCarouselInterval);
+        }, { passive: true });
     }
 }
 
