@@ -1085,6 +1085,7 @@ function renderAdminDestinations() {
                 <div class="dest-card-financials">
                     <span>Precio Simulador: <strong>$${parseInt(dest.cost, 10).toLocaleString('es-AR')} ARS</strong></span>
                     ${dest.is_oferta ? `<br><span style="color: var(--accent); font-size: 0.85rem;"><i class="fa-solid fa-tag"></i> Producto en Oferta</span>` : ''}
+                    ${dest.is_favorito ? `<br><span style="color: #ff9f1c; font-size: 0.85rem; font-weight: bold;"><i class="fa-solid fa-star"></i> Destino Favorito (Más Elegido)</span>` : ''}
                     ${dest.is_active === false ? `<br><span style="color: #e74c3c; font-size: 0.85rem; font-weight: bold;"><i class="fa-solid fa-ban"></i> No Disponible (Deshabilitado)</span>` : `<br><span style="color: #2ec4b6; font-size: 0.85rem; font-weight: bold;"><i class="fa-solid fa-circle-check"></i> Disponible (Habilitado)</span>`}
                 </div>
                 <div class="dest-card-actions">
@@ -1168,6 +1169,7 @@ window.openEditDestModal = function(destId) {
     document.getElementById('dest-name').value = dest.name;
     document.getElementById('dest-category').value = dest.category;
     document.getElementById('dest-is-oferta').checked = dest.is_oferta || false;
+    document.getElementById('dest-is-favorito').checked = dest.is_favorito || false;
     document.getElementById('dest-is-active').checked = dest.is_active !== false;
     document.getElementById('dest-duration').value = dest.duration;
     document.getElementById('dest-price-info').value = dest.price_info;
@@ -1211,6 +1213,7 @@ if (formDestCrud) {
         const name = document.getElementById('dest-name').value.trim();
         const category = document.getElementById('dest-category').value;
         const is_oferta = document.getElementById('dest-is-oferta').checked;
+        const is_favorito = document.getElementById('dest-is-favorito').checked;
         const is_active = document.getElementById('dest-is-active').checked;
         const duration = document.getElementById('dest-duration').value.trim();
         const price_info = document.getElementById('dest-price-info').value.trim();
@@ -1247,6 +1250,7 @@ if (formDestCrud) {
             name,
             category,
             is_oferta,
+            is_favorito,
             is_active,
             duration,
             description,
@@ -1285,6 +1289,7 @@ if (formDestCrud) {
                     name: destObj.name,
                     category: destObj.category,
                     is_oferta: destObj.is_oferta,
+                    is_favorito: destObj.is_favorito,
                     is_active: destObj.is_active,
                     duration: destObj.duration,
                     price_info: destObj.price_info,

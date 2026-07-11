@@ -947,6 +947,9 @@ async function loadAndApplyDestinationsAndConfig() {
     // Renderizar catálogo en el frontend público
     renderPublicCatalogGrid(destinations, config);
 
+    // Renderizar destinos favoritos (más elegidos) del panel
+    renderPublicDestinosMasElegidos(destinations, config);
+
     // Inicializar filtros del catálogo
     initTripFilters();
 
@@ -2295,4 +2298,86 @@ function renderGoogleReviews(reviewsList) {
         reviewsGrid.appendChild(wrapper);
     }
 }
+
+function renderPublicDestinosMasElegidos(destinations, config) {
+    const carousel = document.getElementById('destinos-carousel');
+    const dotsContainer = document.getElementById('carousel-dots');
+    if (!carousel) return;
+
+    // 1. Filtrar los destinos marcados como favorito (is_favorito === true) y que estén activos
+    let favoritos = destinations.filter(d => d.is_favorito === true && d.is_active !== false);
+
+    // Fallback: Si no hay favoritos marcados en el panel, mostramos los primeros 3 destinos activos
+    if (favoritos.length === 0) {
+        favoritos = destinations.filter(d => d.is_active !== false).slice(0, 3);
+    }
+
+    carousel.innerHTML = '';
+    if (dotsContainer) dotsContainer.innerHTML = '';
+
+    const phone = config?.whatsapp || '3855962089';
+
+    favoritos.forEach((dest, index) => {
+        const card = document.createElement('div');
+        card.className = 'dest-elegido-card reveal-on-scroll';
+        card.style.animationDelay = `${index * 100}ms`;
+
+        const waText = encodeURIComponent(dest.whatsapp_text || `Hola! Me interesa el viaje a ${dest.name}`);
+        const seasonIcon = dest.category === 'verano' ? '<i class="fa-solid fa-sun"></i>' : (dest.category === 'invierno' ? '<i class="fa-solid fa-snowflake"></i>' : '<i class="fa-solid fa-compass"></i>');
+        const seasonLabel = dest.category === 'verano' ? 'Verano' : (dest.category === 'invierno' ? 'Invierno' : 'Escapada');
+
+        card.innerHTML = `
+            <div class="dest-elegido-img" style="background-image: url('${dest.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80'}')" onclick="openDestinationOverlay('${dest.id}')">
+                <div class="dest-elegido-overlay"></div>
+                <div class="dest-elegido-info">
+                    <span class="dest-elegido-season">${seasonIcon} ${seasonLabel}</span>
+                    <h3>${dest.name}</h3>
+                    <div class="dest-elegido-footer">
+                        <div class="dest-elegido-price">
+                            <span class="dest-desde">Desde</span>
+                            <span class="dest-precio">$${parseInt(dest.cost || 0, 10).toLocaleString('es-AR')}</span>
+                        </div>
+                        <a href="https://wa.me/54${phone}?text=${waText}" target="_blank" onclick="event.stopPropagation();" class="dest-elegido-btn">Ver más <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        `;
+        carousel.appendChild(card);
+
+        // Crear dot de carrusel correspondiente
+        if (dotsContainer) {
+            const dot = document.createElement('span');
+            dot.className = `carousel-dot${index === 0 ? ' active' : ''}`;
+            dot.setAttribute('data-idx', index);
+            
+            // Acción al hacer clic en el dot: mover scroll
+            dot.addEventListener('click', () => {
+                const cardWidth = card.clientWidth + 20; // width + gap
+                carousel.scrollTo({
+                    left: index * cardWidth,
+                    behavior: 'smooth'
+                });
+                
+                // Actualizar clase activa
+                dotsContainer.querySelectorAll('.carousel-dot').forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+            });
+            dotsContainer.appendChild(dot);
+        }
+    });
+
+    // Escuchar el evento de scroll en el carrusel para actualizar la clase activa de los dots en móvil
+    if (dotsContainer && favoritos.length > 0) {
+        carousel.addEventListener('scroll', () => {
+            const cardWidth = carousel.firstElementChild ? carousel.firstElementChild.clientWidth + 20 : 300;
+            const scrollIndex = Math.round(carousel.scrollLeft / cardWidth);
+            const dots = dotsContainer.querySelectorAll('.carousel-dot');
+            if (dots[scrollIndex]) {
+                dots.forEach(d => d.classList.remove('active'));
+                dots[scrollIndex].classList.add('active');
+            }
+        });
+    }
+}
+
 
