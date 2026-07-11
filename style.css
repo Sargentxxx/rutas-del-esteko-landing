@@ -2907,3 +2907,440 @@ a {
 }
 
 
+/* ==========================================================================
+   STITCH DESIGN: HERO RENOVADO
+   ========================================================================== */
+
+/* Override base hero to remove built-in gradient */
+.hero.hero-stitch {
+    min-height: 85vh;
+    padding-bottom: 0;
+}
+
+.hero.hero-stitch .hero-slide {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* New lighter overlay - shows more of the beautiful landscape */
+.hero-overlay-stitch {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(5, 5, 10, 0.55) 0%,
+        rgba(5, 5, 10, 0.40) 50%,
+        rgba(5, 5, 10, 0.70) 100%
+    );
+    z-index: 1;
+}
+
+/* Hero content centering - Stitch style */
+.hero-content-stitch {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Big bold title - Stitch style */
+.hero-title-stitch {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    margin: 0;
+}
+
+/* Subtitle - Stitch style */
+.hero-text-stitch {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+    color: rgba(255,255,255,0.88);
+    line-height: 1.7;
+    max-width: 580px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+    margin: 0;
+}
+
+/* Buttons row - Stitch layout */
+.hero-buttons-stitch {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.btn-stitch-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 30px;
+    background: var(--primary);
+    color: #ffffff;
+    border-radius: 50px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 20px rgba(220,30,30,0.4);
+}
+
+.btn-stitch-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(220,30,30,0.5);
+}
+
+.btn-stitch-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: rgba(255,255,255,0.12);
+    color: #ffffff;
+    border: 2px solid rgba(255,255,255,0.7);
+    border-radius: 50px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: var(--transition-smooth);
+}
+
+.btn-stitch-outline:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: #ffffff;
+    transform: translateY(-3px);
+}
+
+/* Stats Bar - floating below hero, on white background */
+.hero-stats-bar {
+    position: relative;
+    z-index: 3;
+    background: #ffffff;
+    padding: 22px 0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+
+.hero-stats-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.stat-bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 40px;
+    text-align: center;
+}
+
+.stat-bar-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--dark-charcoal);
+    line-height: 1.1;
+}
+
+.stat-bar-lbl {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stat-bar-divider {
+    width: 1px;
+    height: 44px;
+    background: rgba(0,0,0,0.12);
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   STITCH DESIGN: DESTINOS MÁS ELEGIDOS
+   ========================================================================== */
+
+.destinos-elegidos-stitch {
+    padding: 70px 0 60px;
+    background: var(--sand-bg);
+}
+
+.destinos-elegidos-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.destinos-elegidos-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    color: var(--dark-charcoal);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+}
+
+.destinos-elegidos-title .text-primary {
+    color: var(--primary);
+}
+
+.destinos-elegidos-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Carousel container - scrollable horizontally on mobile, 3-col on desktop */
+.destinos-elegidos-carousel {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+/* Individual destination card */
+.dest-elegido-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    cursor: pointer;
+}
+
+.dest-elegido-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.20);
+}
+
+.dest-elegido-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Gradient overlay on each card */
+.dest-elegido-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 30%,
+        rgba(10, 8, 8, 0.75) 100%
+    );
+    transition: opacity 0.3s ease;
+}
+
+.dest-elegido-card:hover .dest-elegido-overlay {
+    opacity: 0.85;
+}
+
+/* Text content inside card */
+.dest-elegido-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 18px 18px;
+    z-index: 2;
+}
+
+.dest-elegido-season {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    background: rgba(0,0,0,0.35);
+    border-radius: 50px;
+    padding: 3px 10px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    backdrop-filter: blur(4px);
+}
+
+.dest-elegido-info h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    margin-bottom: 14px;
+    line-height: 1.2;
+}
+
+.dest-elegido-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.dest-elegido-price {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.dest-desde {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.dest-precio {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+}
+
+.dest-elegido-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    background: var(--primary);
+    color: #ffffff;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(220,30,30,0.35);
+}
+
+.dest-elegido-btn:hover {
+    background: var(--primary-hover);
+    transform: scale(1.05);
+}
+
+/* Carousel dots */
+.destinos-carousel-dots {
+    display: none; /* Hidden on desktop, shown on mobile */
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+    background: var(--primary);
+    width: 22px;
+    border-radius: 50px;
+}
+
+/* CTA button to see all */
+.destinos-elegidos-cta {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.btn-ver-todos {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 30px;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    border-radius: 50px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-ver-todos:hover {
+    background: var(--primary);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220,30,30,0.3);
+}
+
+/* ==========================================================================
+   STITCH DESIGN: RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 900px) {
+    .destinos-elegidos-carousel {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .dest-elegido-card:nth-child(n+4) {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-stats-container {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .stat-bar-item {
+        padding: 10px 20px;
+    }
+    .stat-bar-divider {
+        display: none;
+    }
+    .destinos-elegidos-carousel {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+    .dest-elegido-card:nth-child(n+4) {
+        display: none;
+    }
+    .destinos-carousel-dots {
+        display: flex;
+    }
+    .dest-elegido-info h3 {
+        font-size: 1.1rem;
+    }
+    .dest-precio {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .hero-title-stitch {
+        font-size: 2rem;
+    }
+    .destinos-elegidos-carousel {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+

@@ -88,46 +88,153 @@
 
     <!-- SPA VIEW: INICIO -->
     <div id="view-inicio" class="spa-view active-view">
-        <!-- Hero Section -->
-        <section class="hero" id="inicio">
+        <!-- Hero Section (Diseño Stitch) -->
+        <section class="hero hero-stitch" id="inicio">
             <!-- Dynamic Hero Fading Slider -->
             <div class="hero-slider" id="hero-slider">
-                <div class="hero-slide active" style="background-image: linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80')"></div>
-                <div class="hero-slide" style="background-image: linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80')"></div>
-                <div class="hero-slide" style="background-image: linear-gradient(135deg, rgba(15, 10, 10, 0.75), rgba(15, 10, 10, 0.45)), url('https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80')"></div>
+                <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80')"></div>
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1920&q=80')"></div>
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=1920&q=80')"></div>
             </div>
-            <div class="hero-overlay"></div>
-            <div class="container hero-content">
-                <h1 class="hero-title animate-slide-up">Tu viaje soñado, con la confianza de siempre.</h1>
-                <p class="hero-text animate-fade-in">Salidas grupales con coordinadores permanentes, los mejores alojamientos y la alegría que nos caracteriza. ¡Sumate a los más de 15.000 pasajeros que ya cumplieron su sueño con nosotros!</p>
+            <div class="hero-overlay-stitch"></div>
+            <div class="container hero-content hero-content-stitch">
+                <h1 class="hero-title-stitch animate-slide-up">El sueño de viajar,<br>lo hacemos realidad.</h1>
+                <p class="hero-text-stitch animate-fade-in">¡Vos también podés ser parte, no pierdas la oportunidad de vivir tus vacaciones soñadas junto a los mejores! Al mejor precio, con la mejor financiación y con el acompañamiento que te mereces.</p>
                 
-                <div class="hero-buttons animate-fade-in">
-                    <a href="#temporadas" class="btn btn-primary" id="btn-hero-explore"><i class="fa-solid fa-compass"></i> Explorar Destinos</a>
-                    <a href="https://wa.me/543855962089" target="_blank" class="btn btn-secondary" id="btn-hero-whatsapp"><i class="fa-brands fa-whatsapp"></i> Consultar ahora</a>
+                <div class="hero-buttons hero-buttons-stitch animate-fade-in">
+                    <a href="#temporadas" class="btn-stitch-primary" id="btn-hero-explore"><i class="fa-solid fa-compass"></i> Explorar Destinos</a>
+                    <a href="https://wa.me/543855962089" target="_blank" class="btn-stitch-outline" id="btn-hero-whatsapp"><i class="fa-brands fa-whatsapp"></i> Consultar ahora</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Bar Stitch (justo debajo del hero) -->
+        <div class="hero-stats-bar animate-fade-in">
+            <div class="container hero-stats-container">
+                <div class="stat-bar-item">
+                    <span class="stat-bar-num">+15K</span>
+                    <span class="stat-bar-lbl">Seguidores en redes</span>
+                </div>
+                <div class="stat-bar-divider"></div>
+                <div class="stat-bar-item">
+                    <span class="stat-bar-num">4.9 <i class="fa-solid fa-star" style="color:#f59e0b; font-size:0.85em;"></i></span>
+                    <span class="stat-bar-lbl">En Google Maps</span>
+                </div>
+                <div class="stat-bar-divider"></div>
+                <div class="stat-bar-item">
+                    <span class="stat-bar-num">+1.500</span>
+                    <span class="stat-bar-lbl">Pasajeros con experiencia</span>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Destinos Más Elegidos (Diseño Stitch) -->
+        <section class="destinos-elegidos-stitch" id="destinos-elegidos">
+            <div class="container">
+                <div class="destinos-elegidos-header">
+                    <h2 class="destinos-elegidos-title">Destinos <span class="text-primary">Más</span> Elegidos</h2>
+                    <p class="destinos-elegidos-sub">Explorá los destinos más buscados por nuestros viajeros</p>
                 </div>
 
-                <!-- Floating Reviews Banner -->
-                <div class="hero-stats animate-fade-in">
-                    <div class="stat-item">
-                        <span class="stat-num">+15K</span>
-                        <span class="stat-lbl">Seguidores en redes</span>
+                <div class="destinos-elegidos-carousel" id="destinos-carousel">
+                    <!-- Card 1: Mendoza -->
+                    <div class="dest-elegido-card reveal-on-scroll">
+                        <div class="dest-elegido-img" style="background-image: url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80')">
+                            <div class="dest-elegido-overlay"></div>
+                            <div class="dest-elegido-info">
+                                <span class="dest-elegido-season"><i class="fa-solid fa-snowflake"></i> Invierno</span>
+                                <h3>Mendoza</h3>
+                                <div class="dest-elegido-footer">
+                                    <div class="dest-elegido-price">
+                                        <span class="dest-desde">Desde</span>
+                                        <span class="dest-precio">$150.000</span>
+                                    </div>
+                                    <a href="https://wa.me/543855962089?text=Hola!%20Me%20interesa%20el%20viaje%20a%20Mendoza" target="_blank" class="dest-elegido-btn">Ver más <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-num">4.9<i class="fa-solid fa-star star-icon"></i></span>
-                        <span class="stat-lbl">En Google Maps</span>
+                    <!-- Card 2: Bariloche -->
+                    <div class="dest-elegido-card reveal-on-scroll">
+                        <div class="dest-elegido-img" style="background-image: url('https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=600&q=80')">
+                            <div class="dest-elegido-overlay"></div>
+                            <div class="dest-elegido-info">
+                                <span class="dest-elegido-season"><i class="fa-solid fa-snowflake"></i> Invierno</span>
+                                <h3>Bariloche</h3>
+                                <div class="dest-elegido-footer">
+                                    <div class="dest-elegido-price">
+                                        <span class="dest-desde">Desde</span>
+                                        <span class="dest-precio">$290.000</span>
+                                    </div>
+                                    <a href="https://wa.me/543855962089?text=Hola!%20Me%20interesa%20el%20viaje%20a%20Bariloche" target="_blank" class="dest-elegido-btn">Ver más <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-num">+1.500</span>
-                        <span class="stat-lbl">Pasajeros vivieron su experiencia</span>
+                    <!-- Card 3: Mar del Plata -->
+                    <div class="dest-elegido-card reveal-on-scroll">
+                        <div class="dest-elegido-img" style="background-image: url('https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=600&q=80')">
+                            <div class="dest-elegido-overlay"></div>
+                            <div class="dest-elegido-info">
+                                <span class="dest-elegido-season"><i class="fa-solid fa-sun"></i> Verano</span>
+                                <h3>Mar del Plata</h3>
+                                <div class="dest-elegido-footer">
+                                    <div class="dest-elegido-price">
+                                        <span class="dest-desde">Desde</span>
+                                        <span class="dest-precio">$120.000</span>
+                                    </div>
+                                    <a href="https://wa.me/543855962089?text=Hola!%20Me%20interesa%20el%20viaje%20a%20Mar%20del%20Plata" target="_blank" class="dest-elegido-btn">Ver más <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4: Cataratas del Iguazú -->
+                    <div class="dest-elegido-card reveal-on-scroll">
+                        <div class="dest-elegido-img" style="background-image: url('https://images.unsplash.com/photo-1537957600378-6c4d90e5e23e?auto=format&fit=crop&w=600&q=80')">
+                            <div class="dest-elegido-overlay"></div>
+                            <div class="dest-elegido-info">
+                                <span class="dest-elegido-season"><i class="fa-solid fa-leaf"></i> Todo el año</span>
+                                <h3>Cataratas del Iguazú</h3>
+                                <div class="dest-elegido-footer">
+                                    <div class="dest-elegido-price">
+                                        <span class="dest-desde">Desde</span>
+                                        <span class="dest-precio">$180.000</span>
+                                    </div>
+                                    <a href="https://wa.me/543855962089?text=Hola!%20Me%20interesa%20el%20viaje%20a%20Cataratas%20del%20Iguazu" target="_blank" class="dest-elegido-btn">Ver más <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 5: Salta -->
+                    <div class="dest-elegido-card reveal-on-scroll">
+                        <div class="dest-elegido-img" style="background-image: url('https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=600&q=80')">
+                            <div class="dest-elegido-overlay"></div>
+                            <div class="dest-elegido-info">
+                                <span class="dest-elegido-season"><i class="fa-solid fa-mountain"></i> Todo el año</span>
+                                <h3>Salta</h3>
+                                <div class="dest-elegido-footer">
+                                    <div class="dest-elegido-price">
+                                        <span class="dest-desde">Desde</span>
+                                        <span class="dest-precio">$95.000</span>
+                                    </div>
+                                    <a href="https://wa.me/543855962089?text=Hola!%20Me%20interesa%20el%20viaje%20a%20Salta" target="_blank" class="dest-elegido-btn">Ver más <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Wave Transition -->
-            <div class="wave-container">
-                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,8.75,57.05,18.3,88.43,26.85,147.2,42.86,211.23,61.08,321.39,56.44Z" class="wave-fill"></path>
-                </svg>
+
+                <!-- Carousel Dots -->
+                <div class="destinos-carousel-dots" id="carousel-dots">
+                    <span class="carousel-dot active" data-idx="0"></span>
+                    <span class="carousel-dot" data-idx="1"></span>
+                    <span class="carousel-dot" data-idx="2"></span>
+                </div>
+
+                <div class="destinos-elegidos-cta">
+                    <a href="#temporadas" class="btn-ver-todos"><i class="fa-solid fa-map"></i> Ver todos los destinos</a>
+                </div>
             </div>
         </section>
 
