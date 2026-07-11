@@ -146,6 +146,12 @@
     letter-spacing: -2px;
     margin-bottom: 24px;
     max-width: 800px;
+    text-shadow: 
+        -1.5px -1.5px 0px rgba(0, 0, 0, 0.8),  
+         1.5px -1.5px 0px rgba(0, 0, 0, 0.8),
+        -1.5px  1.5px 0px rgba(0, 0, 0, 0.8),
+         1.5px  1.5px 0px rgba(0, 0, 0, 0.8),
+         0px 4px 20px rgba(0, 0, 0, 0.6);
     animation: destHeroIn 0.9s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 

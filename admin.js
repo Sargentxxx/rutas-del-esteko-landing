@@ -729,16 +729,10 @@ async function loadSectionsData() {
     }
     document.getElementById('hero-text').value = sections.hero?.content || "";
 
-    // Carousel URLs from extra_data or fallbacks
+    // Carousel URLs from extra_data
     let carouselUrls = "";
     if (sections.hero?.extra_data && sections.hero.extra_data.hero_images) {
         carouselUrls = sections.hero.extra_data.hero_images.join("\n");
-    } else {
-        carouselUrls = [
-            "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80",
-            "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80",
-            "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80"
-        ].join("\n");
     }
     document.getElementById('hero-carousel-urls').value = carouselUrls;
 

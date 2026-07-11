@@ -826,10 +826,9 @@ function initializeHeroCarousel(images) {
     const sliderContainer = document.getElementById('hero-slider');
     if (!sliderContainer) return;
 
+    // Solo una imagen neutra de excelente resolución como respaldo (ruta escénica en cañón)
     const defaultImages = [
-        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80",
-        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80",
-        "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1920&q=80"
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80"
     ];
 
     const finalImages = (images && images.length > 0) ? images : defaultImages;
