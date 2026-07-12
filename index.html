@@ -92,7 +92,7 @@
         <section class="hero hero-stitch" id="inicio">
             <!-- Dynamic Hero Fading Slider -->
             <div class="hero-slider" id="hero-slider">
-                <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80')"></div>
+                <div class="hero-slide active" id="initial-hero-slide"></div>
             </div>
             <div class="hero-overlay-stitch"></div>
             <div class="container hero-content hero-content-stitch">
@@ -104,6 +104,43 @@
                     <a href="https://wa.me/543855962089" target="_blank" class="btn-stitch-outline" id="btn-hero-whatsapp"><i class="fa-brands fa-whatsapp"></i> Consultar ahora</a>
                 </div>
             </div>
+            <script>
+                (function() {
+                    let bgSet = false;
+                    try {
+                        const cached = localStorage.getItem('esteko_landing_sections');
+                        if (cached) {
+                            const sections = JSON.parse(cached);
+                            if (sections && sections.hero) {
+                                if (sections.hero.extra_data && sections.hero.extra_data.hero_images && sections.hero.extra_data.hero_images.length > 0) {
+                                    const imgUrl = sections.hero.extra_data.hero_images[0];
+                                    const slide = document.getElementById('initial-hero-slide');
+                                    if (slide) {
+                                        slide.style.backgroundImage = 'linear-gradient(135deg, rgba(15, 10, 10, 0.12), rgba(15, 10, 10, 0.02)), url("' + imgUrl + '")';
+                                        bgSet = true;
+                                    }
+                                }
+                                if (sections.hero.title) {
+                                    const hTitle = document.querySelector('.hero-title');
+                                    if (hTitle) hTitle.textContent = sections.hero.title;
+                                }
+                                if (sections.hero.content) {
+                                    const hText = document.querySelector('.hero-text');
+                                    if (hText) hText.textContent = sections.hero.content;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error loading cached hero data:', e);
+                    }
+                    if (!bgSet) {
+                        const slide = document.getElementById('initial-hero-slide');
+                        if (slide) {
+                            slide.style.backgroundImage = 'linear-gradient(135deg, rgba(15, 10, 10, 0.12), rgba(15, 10, 10, 0.02)), url("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80")';
+                        }
+                    }
+                })();
+            </script>
         </section>
 
         <!-- Stats Bar Stitch (justo debajo del hero) -->
