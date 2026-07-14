@@ -589,22 +589,22 @@
                                     </div>
                                     
                                     <div class="form-group-admin">
-                                        <label>Cargar Imagen de la Galería:</label>
+                                        <label>Cargar Imagen o Video de la Galería:</label>
                                         <div class="gallery-uploader-dropzone" id="gallery-dropzone">
-                                            <i class="fa-solid fa-images dropzone-icon"></i>
-                                            <span class="dropzone-text">Arrastrá una imagen o hacé clic aquí</span>
-                                            <input type="file" id="gallery-file-input" accept="image/*" style="display: none;">
+                                            <i class="fa-solid fa-photo-film dropzone-icon"></i>
+                                            <span class="dropzone-text">Arrastrá una imagen/video o hacé clic aquí</span>
+                                            <input type="file" id="gallery-file-input" accept="image/*,video/*" style="display: none;">
                                             <span class="file-selected-name" id="selected-file-label" style="display:none;"></span>
                                         </div>
                                     </div>
                                     
                                     <div class="form-group-admin">
-                                        <label for="gallery-url-input">O ingresar URL de Imagen Directa (Contingencia):</label>
-                                        <input type="text" id="gallery-url-input" class="form-control-admin" placeholder="Ej. https://images.unsplash.com/photo-...">
+                                        <label for="gallery-url-input">O ingresar URL de Imagen/Video Directo (Contingencia):</label>
+                                        <input type="text" id="gallery-url-input" class="form-control-admin" placeholder="Ej. https://images.unsplash.com/photo-... o .mp4">
                                     </div>
                                     
                                     <button type="submit" class="btn-admin btn-admin-primary btn-admin-block" id="btn-submit-gallery-img">
-                                        <i class="fa-solid fa-cloud-arrow-up"></i> Agregar Imagen a la Galería
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Agregar a la Galería
                                     </button>
                                 </form>
                             </div>
