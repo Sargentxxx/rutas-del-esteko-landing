@@ -3395,3 +3395,177 @@ a {
     }
 }
 
+/* ==========================================================================
+   SECCION VIVI LA EXPERIENCIA (VIDEO INSTAGRAM)
+   ========================================================================== */
+.experiencia-video-section {
+    padding: 80px 0;
+    background: linear-gradient(180deg, var(--bg-dark, #0b0707) 0%, rgba(20, 10, 10, 0.95) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+
+.experiencia-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.experiencia-info .section-tag {
+    color: var(--primary, #e65c00);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.experiencia-info h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.experiencia-info .section-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.experiencia-info .header-line {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary, #e65c00), #ff9900);
+    border-radius: 2px;
+    margin-bottom: 30px;
+}
+
+.experiencia-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 35px 0;
+}
+
+.experiencia-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.05rem;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+.experiencia-features li i {
+    color: #22c55e;
+    font-size: 1.2rem;
+    margin-top: 2px;
+}
+
+.experiencia-cta {
+    display: flex;
+    gap: 15px;
+}
+
+.experiencia-media {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.experiencia-media::before {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(230, 92, 0, 0.15) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.instagram-reel-container {
+    width: 100%;
+    max-width: 340px;
+    height: 610px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    background: #000;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.instagram-reel-container:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 60px rgba(230, 92, 0, 0.25), 0 0 0 1.5px rgba(230, 92, 0, 0.4);
+}
+
+.instagram-reel-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Soporte para videos en galerías dinámicas */
+.gallery-item-dynamic video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.gallery-item-dynamic:hover video {
+    transform: scale(1.05);
+}
+
+.gallery-item-dynamic .video-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 2;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Responsivo */
+@media (max-width: 991px) {
+    .experiencia-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .experiencia-info .header-line {
+        margin: 0 auto 30px auto;
+    }
+    
+    .experiencia-features {
+        display: inline-block;
+        text-align: left;
+        max-width: 500px;
+        margin: 0 auto 35px auto;
+    }
+    
+    .experiencia-cta {
+        justify-content: center;
+    }
+}
+

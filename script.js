@@ -1208,6 +1208,16 @@ async function loadAndApplyGalleries() {
     renderSingleGallerySection(eduFiltered, '#view-educativo .container', 'educativo-gallery-grid');
 }
 
+function isVideoUrl(url) {
+    if (!url) return false;
+    const cleanUrl = url.split('?')[0].toLowerCase();
+    return cleanUrl.endsWith('.mp4') || 
+           cleanUrl.endsWith('.webm') || 
+           cleanUrl.endsWith('.ogg') || 
+           cleanUrl.endsWith('.mov') ||
+           (url.includes('firebasestorage.googleapis.com') && url.toLowerCase().includes('.mp4'));
+}
+
 function renderSingleGallerySection(images, containerSelector, uniqueId) {
     const parentContainer = document.querySelector(containerSelector);
     if (!parentContainer) return;
@@ -1226,7 +1236,27 @@ function renderSingleGallerySection(images, containerSelector, uniqueId) {
     images.forEach(img => {
         const item = document.createElement('div');
         item.className = 'gallery-item-dynamic';
-        item.innerHTML = `<img src="${img.image_url}" alt="Rutas del Esteko Experiencias" loading="lazy">`;
+        if (isVideoUrl(img.image_url)) {
+            item.innerHTML = `
+                <video src="${img.image_url}" loop muted playsinline preload="none" style="width:100%; height:100%; object-fit:cover;"></video>
+                <div class="video-badge"><i class="fa-solid fa-play"></i> Video</div>
+            `;
+            const video = item.querySelector('video');
+            if (video && 'IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            video.play().catch(() => {});
+                        } else {
+                            video.pause();
+                        }
+                    });
+                }, { threshold: 0.1 });
+                observer.observe(video);
+            }
+        } else {
+            item.innerHTML = `<img src="${img.image_url}" alt="Rutas del Esteko Experiencias" loading="lazy">`;
+        }
         grid.appendChild(item);
     });
 
@@ -2013,19 +2043,50 @@ window.openDestinationOverlay = function(destId) {
             item.setAttribute('tabindex', '0');
             item.setAttribute('aria-label', `Ver foto ${idx + 1}`);
 
-            const img = document.createElement('img');
-            img.src = imgUrl;
-            img.alt = `Foto ${idx + 1}`;
-            img.loading = 'lazy';
+            let mediaElem;
+            if (isVideoUrl(imgUrl)) {
+                mediaElem = document.createElement('video');
+                mediaElem.src = imgUrl;
+                mediaElem.muted = true;
+                mediaElem.loop = true;
+                mediaElem.playsInline = true;
+                mediaElem.preload = 'none';
+                mediaElem.style.width = '100%';
+                mediaElem.style.height = '100%';
+                mediaElem.style.objectFit = 'cover';
+                
+                const badge = document.createElement('div');
+                badge.className = 'video-badge';
+                badge.innerHTML = `<i class="fa-solid fa-play"></i>`;
+                item.appendChild(badge);
+                
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                mediaElem.play().catch(() => {});
+                            } else {
+                                mediaElem.pause();
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    observer.observe(mediaElem);
+                }
+            } else {
+                mediaElem = document.createElement('img');
+                mediaElem.src = imgUrl;
+                mediaElem.alt = `Foto ${idx + 1}`;
+                mediaElem.loading = 'lazy';
+            }
 
             if (idx === MAX_VISIBLE - 1 && overlayGalleryImages.length > MAX_VISIBLE) {
                 const moreOverlay = document.createElement('div');
                 moreOverlay.className = 'dest-gallery-more';
                 moreOverlay.innerHTML = `<span>+${overlayGalleryImages.length - MAX_VISIBLE}</span><small>más fotos</small>`;
-                item.appendChild(img);
+                item.appendChild(mediaElem);
                 item.appendChild(moreOverlay);
             } else {
-                item.appendChild(img);
+                item.appendChild(mediaElem);
             }
 
             item.addEventListener('click', () => openOverlayLightbox(idx));
@@ -2149,6 +2210,11 @@ function openOverlayLightbox(index) {
 function closeOverlayLightbox() {
     const lb = document.getElementById('overlay-lightbox');
     if (lb) lb.style.display = 'none';
+    const video = document.getElementById('overlay-lightbox-video');
+    if (video) {
+        video.pause();
+        video.src = '';
+    }
 }
 
 function navigateOverlayLightbox(dir) {
@@ -2158,8 +2224,29 @@ function navigateOverlayLightbox(dir) {
 
 function updateOverlayLightboxImage() {
     const img = document.getElementById('overlay-lightbox-img');
+    const video = document.getElementById('overlay-lightbox-video');
     const counter = document.getElementById('overlay-lightbox-counter');
-    if (img) img.src = overlayGalleryImages[overlayLightboxIndex];
+    const mediaUrl = overlayGalleryImages[overlayLightboxIndex];
+
+    if (isVideoUrl(mediaUrl)) {
+        if (img) img.style.display = 'none';
+        if (video) {
+            video.src = mediaUrl;
+            video.style.display = 'block';
+            video.play().catch(e => console.log("Auto-play blocked or failed", e));
+        }
+    } else {
+        if (video) {
+            video.pause();
+            video.style.display = 'none';
+            video.src = '';
+        }
+        if (img) {
+            img.src = mediaUrl;
+            img.style.display = 'block';
+        }
+    }
+
     if (counter) counter.textContent = `${overlayLightboxIndex + 1} / ${overlayGalleryImages.length}`;
 }
 

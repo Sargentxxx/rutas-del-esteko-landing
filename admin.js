@@ -1403,6 +1403,16 @@ async function loadGalleryData() {
     renderAdminGallery();
 }
 
+function isVideoUrl(url) {
+    if (!url) return false;
+    const cleanUrl = url.split('?')[0].toLowerCase();
+    return cleanUrl.endsWith('.mp4') || 
+           cleanUrl.endsWith('.webm') || 
+           cleanUrl.endsWith('.ogg') || 
+           cleanUrl.endsWith('.mov') ||
+           (url.includes('firebasestorage.googleapis.com') && url.toLowerCase().includes('.mp4'));
+}
+
 function renderAdminGallery() {
     const displayContainer = document.getElementById('admin-gallery-display');
     if (!displayContainer) return;
@@ -1410,7 +1420,7 @@ function renderAdminGallery() {
     const filtered = galleryItems.filter(item => item.section === activeGallerySection);
 
     if (filtered.length === 0) {
-        displayContainer.innerHTML = `<div class="gallery-empty-msg">No hay imágenes en la galería de ${activeGallerySection}. ¡Cargá una nueva foto!</div>`;
+        displayContainer.innerHTML = `<div class="gallery-empty-msg">No hay imágenes o videos en la galería de ${activeGallerySection}. ¡Cargá un nuevo archivo!</div>`;
         return;
     }
 
@@ -1418,10 +1428,18 @@ function renderAdminGallery() {
     filtered.forEach(item => {
         const thumb = document.createElement('div');
         thumb.className = 'gallery-thumb-wrapper';
-        thumb.innerHTML = `
-            <img src="${item.image_url}" alt="Galería ${activeGallerySection}">
-            <button class="btn-delete-thumb" onclick="deleteGalleryItemTrigger('${item.id}')" title="Eliminar Imagen"><i class="fa-solid fa-xmark"></i></button>
-        `;
+        if (isVideoUrl(item.image_url)) {
+            thumb.innerHTML = `
+                <video src="${item.image_url}" muted playsinline></video>
+                <div class="video-badge"><i class="fa-solid fa-play"></i> Video</div>
+                <button class="btn-delete-thumb" onclick="deleteGalleryItemTrigger('${item.id}')" title="Eliminar Video"><i class="fa-solid fa-xmark"></i></button>
+            `;
+        } else {
+            thumb.innerHTML = `
+                <img src="${item.image_url}" alt="Galería ${activeGallerySection}">
+                <button class="btn-delete-thumb" onclick="deleteGalleryItemTrigger('${item.id}')" title="Eliminar Imagen"><i class="fa-solid fa-xmark"></i></button>
+            `;
+        }
         displayContainer.appendChild(thumb);
     });
 }
@@ -1493,12 +1511,12 @@ if (formUploadGallery) {
         const hasFile = fileInput.files.length > 0;
 
         if (!imageUrl && !hasFile) {
-            alert("Por favor, selecciona un archivo de imagen o ingresa una URL de internet.");
+            alert("Por favor, selecciona un archivo de imagen/video o ingresa una URL de internet.");
             return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cargando Imagen...';
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Subiendo archivo...';
 
         // 1. Si hay archivo, subirlo a Firebase Storage
         if (hasFile) {
@@ -1557,12 +1575,12 @@ if (formUploadGallery) {
         formUploadGallery.reset();
         document.getElementById('selected-file-label').style.display = 'none';
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Agregar Imagen a la Galería';
+        submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Agregar a la Galería';
 
         if (dbSaved) {
-            showToast("Imagen subida y agregada con éxito!");
+            showToast("Archivo subido y agregado con éxito!");
         } else {
-            showToast("Imagen agregada localmente.");
+            showToast("Archivo agregado localmente.");
         }
 
         // Recargar
