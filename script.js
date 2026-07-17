@@ -540,8 +540,14 @@ async function loadAndApplySections() {
         const hTitle = document.querySelector('.hero-title');
         const hText = document.querySelector('.hero-text');
 
-        if (hTitle && sections.hero.title) hTitle.textContent = sections.hero.title;
-        if (hText && sections.hero.content) hText.textContent = sections.hero.content;
+        if (hTitle) {
+            hTitle.textContent = sections.hero.title || '';
+            hTitle.style.display = sections.hero.title ? 'block' : 'none';
+        }
+        if (hText) {
+            hText.textContent = sections.hero.content || '';
+            hText.style.display = sections.hero.content ? 'block' : 'none';
+        }
 
         // Inicializar Carrusel Dinámico
         let heroImages = [];
@@ -557,9 +563,15 @@ async function loadAndApplySections() {
         const nContentWrapper = document.querySelector('.nosotros-content');
         const nImage = document.querySelector('.main-photo img');
 
-        if (nTitle && sections.nosotros.title) nTitle.textContent = sections.nosotros.title;
+        if (nTitle) {
+            nTitle.textContent = sections.nosotros.title || '';
+            nTitle.style.display = sections.nosotros.title ? 'block' : 'none';
+        }
         const nTag = document.getElementById('nosotros-tag');
-        if (nTag && sections.nosotros.subtitle) nTag.textContent = sections.nosotros.subtitle;
+        if (nTag) {
+            nTag.textContent = sections.nosotros.subtitle || '';
+            nTag.style.display = sections.nosotros.subtitle ? 'inline-block' : 'none';
+        }
         
         // Re-escribir párrafos
         if (nContentWrapper && sections.nosotros.content) {
@@ -624,9 +636,15 @@ async function loadAndApplySections() {
         const fImage2 = document.getElementById('fiesta-img-2');
         const fContentWrapper = document.querySelector('.fiesta-content');
 
-        if (fTitle && sections.fiesta.title) fTitle.textContent = sections.fiesta.title;
+        if (fTitle) {
+            fTitle.textContent = sections.fiesta.title || '';
+            fTitle.style.display = sections.fiesta.title ? 'block' : 'none';
+        }
         const fTag = document.getElementById('fiesta-tag');
-        if (fTag && sections.fiesta.subtitle) fTag.textContent = sections.fiesta.subtitle;
+        if (fTag) {
+            fTag.textContent = sections.fiesta.subtitle || '';
+            fTag.style.display = sections.fiesta.subtitle ? 'inline-block' : 'none';
+        }
         if (fImage1 && sections.fiesta.image_url) fImage1.src = sections.fiesta.image_url;
         if (fImage2 && sections.fiesta.extra_data?.sub_photo_2) {
             fImage2.src = sections.fiesta.extra_data.sub_photo_2;
@@ -668,9 +686,13 @@ async function loadAndApplySections() {
         const eImage = document.querySelector('.edu-img');
         const eContentWrapper = document.querySelector('.educativo-content');
 
-        if (eTitle && sections.educativo.title) eTitle.textContent = sections.educativo.title;
-        if (eTag && sections.educativo.subtitle) {
-            eTag.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> ${sections.educativo.subtitle}`;
+        if (eTitle) {
+            eTitle.textContent = sections.educativo.title || '';
+            eTitle.style.display = sections.educativo.title ? 'block' : 'none';
+        }
+        if (eTag) {
+            eTag.innerHTML = sections.educativo.subtitle ? `<i class="fa-solid fa-graduation-cap"></i> ${sections.educativo.subtitle}` : '';
+            eTag.style.display = sections.educativo.subtitle ? 'inline-block' : 'none';
         }
         if (eImage && sections.educativo.image_url) eImage.src = sections.educativo.image_url;
         
@@ -708,10 +730,14 @@ async function loadAndApplySections() {
         const sContentWrapper = document.querySelector('.sorteos-content > p');
         const sBanner = document.querySelector('.sorteos-banner');
 
-        if (sTitle && sections.sorteos.title) sTitle.textContent = sections.sorteos.title;
+        if (sTitle) {
+            sTitle.textContent = sections.sorteos.title || '';
+            sTitle.style.display = sections.sorteos.title ? 'block' : 'none';
+        }
         const sTag = document.getElementById('sorteos-tag');
-        if (sTag && sections.sorteos.subtitle) {
-            sTag.innerHTML = `<i class="fa-solid fa-ticket"></i> ${sections.sorteos.subtitle}`;
+        if (sTag) {
+            sTag.innerHTML = sections.sorteos.subtitle ? `<i class="fa-solid fa-ticket"></i> ${sections.sorteos.subtitle}` : '';
+            sTag.style.display = sections.sorteos.subtitle ? 'inline-block' : 'none';
         }
         if (sContentWrapper && sections.sorteos.content) sContentWrapper.textContent = sections.sorteos.content;
         if (sBanner && sections.sorteos.image_url) {
@@ -741,22 +767,6 @@ async function loadAndApplySections() {
         if (c3Num) c3Num.textContent = extra.card3_num || "03";
         if (c3Title) c3Title.textContent = extra.card3_title || "¡Participá!";
         if (c3Desc) c3Desc.innerHTML = extra.card3_desc || `Ya estás en la base de sorteos mensuales de viajes.`;
-
-        // Retarget contact links
-        const contactLinks = document.querySelectorAll('.raffle-link-contacto');
-        contactLinks.forEach(link => {
-            const newLink = link.cloneNode(true);
-            link.parentNode.replaceChild(newLink, link);
-            newLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                const viewContacto = document.getElementById('view-contacto');
-                if (viewContacto) {
-                    document.querySelectorAll('.spa-view').forEach(v => v.classList.remove('active-view'));
-                    viewContacto.classList.add('active-view');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            });
-        });
     }
 
     // Pagos (Medios de Pago)
@@ -767,14 +777,17 @@ async function loadAndApplySections() {
         const pInfoTitle = document.querySelector('.pagos-info h3');
         const pInfoContent = document.querySelector('.pagos-info > p');
 
-        if (pTag && sections.pagos.extra_data?.section_tag) {
-            pTag.textContent = sections.pagos.extra_data.section_tag;
+        if (pTag) {
+            pTag.textContent = sections.pagos.extra_data?.section_tag || '';
+            pTag.style.display = sections.pagos.extra_data?.section_tag ? 'inline-block' : 'none';
         }
-        if (pTitle && sections.pagos.title) {
-            pTitle.textContent = sections.pagos.title;
+        if (pTitle) {
+            pTitle.textContent = sections.pagos.title || '';
+            pTitle.style.display = sections.pagos.title ? 'block' : 'none';
         }
-        if (pSubtitle && sections.pagos.subtitle) {
-            pSubtitle.textContent = sections.pagos.subtitle;
+        if (pSubtitle) {
+            pSubtitle.textContent = sections.pagos.subtitle || '';
+            pSubtitle.style.display = sections.pagos.subtitle ? 'block' : 'none';
         }
         if (pInfoTitle && sections.pagos.extra_data?.info_title) {
             pInfoTitle.textContent = sections.pagos.extra_data.info_title;

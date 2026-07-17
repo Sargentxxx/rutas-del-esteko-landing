@@ -120,13 +120,15 @@
                                         bgSet = true;
                                     }
                                 }
-                                if (sections.hero.title) {
-                                    const hTitle = document.querySelector('.hero-title');
-                                    if (hTitle) hTitle.textContent = sections.hero.title;
+                                const hTitle = document.querySelector('.hero-title');
+                                if (hTitle) {
+                                    hTitle.textContent = sections.hero.title || '';
+                                    hTitle.style.display = sections.hero.title ? 'block' : 'none';
                                 }
-                                if (sections.hero.content) {
-                                    const hText = document.querySelector('.hero-text');
-                                    if (hText) hText.textContent = sections.hero.content;
+                                const hText = document.querySelector('.hero-text');
+                                if (hText) {
+                                    hText.textContent = sections.hero.content || '';
+                                    hText.style.display = sections.hero.content ? 'block' : 'none';
                                 }
                             }
                         }
