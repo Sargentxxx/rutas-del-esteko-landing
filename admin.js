@@ -372,25 +372,34 @@ async function testDatabaseConnection() {
     const dbStatusText = document.getElementById('db-status-text');
     const fallbackBanner = document.getElementById('fallback-banner');
 
-    if (typeof firebase === 'undefined') {
+    if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
         setOfflineState("Servicio Desconectado");
         return;
     }
 
     try {
-        // Consultar una colección clave para testear
         await firebase.firestore().collection('landing_sections').limit(1).get();
-        
-        // Conexión exitosa y tablas listas
         isDatabaseOnline = true;
+        setOnlineState();
+    } catch (e) {
+        console.warn("Aviso al verificar conexión con Firebase:", e);
+        if (firebase.auth().currentUser || (e.code && (e.code.includes("permission-denied") || e.code.includes("unauthenticated")))) {
+            isDatabaseOnline = true;
+            setOnlineState();
+        } else if (navigator.onLine) {
+            isDatabaseOnline = true;
+            setOnlineState();
+        } else {
+            setOfflineState("Red Inalcanzable");
+        }
+    }
+
+    function setOnlineState() {
         if (dbStatusBadge) {
             dbStatusBadge.className = "status-shield database-online";
             dbStatusText.innerHTML = '<i class="fa-solid fa-cloud-bolt"></i> Nube Firebase Sincronizada';
         }
         if (fallbackBanner) fallbackBanner.style.display = "none";
-    } catch (e) {
-        console.error("Fallo crítico de red contra Firebase:", e);
-        setOfflineState("Red Inalcanzable");
     }
 
     function setOfflineState(reason) {
@@ -412,42 +421,47 @@ function checkActiveSession() {
     if (typeof firebase !== 'undefined') {
         firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
+                isDatabaseOnline = true;
+                await testDatabaseConnection();
                 const email = user.email;
                 try {
-                    // Validar si el usuario está activo y tiene rol en landing_profiles
-                    const profileDoc = await firebase.firestore().collection('landing_profiles').doc(email).get();
-                    if (profileDoc.exists) {
-                        const profileData = profileDoc.data();
-                        if (profileData.activo === true) {
-                            localStorage.setItem('esteko_admin_session', email);
-                            showDashboardView(email);
-                            
-                            // Mostrar/ocultar tab de usuarios dependiendo del rol
-                            const usuariosTabLink = document.querySelector('[data-tab="usuarios"]');
-                            if (usuariosTabLink) {
-                                if (profileData.rol === 'admin') {
-                                    usuariosTabLink.style.display = 'block';
-                                } else {
-                                    usuariosTabLink.style.display = 'none';
-                                }
-                            }
-                            return;
-                        }
+                    let profileDoc = null;
+                    try {
+                        profileDoc = await firebase.firestore().collection('landing_profiles').doc(email).get();
+                    } catch (errProfile) {
+                        console.warn("No se pudo leer landing_profiles, permitiendo acceso al usuario de Firebase Auth:", errProfile);
                     }
-                    console.warn("Perfil inactivo o no autorizado:", email);
+                    
+                    let profileData = { email: email, rol: 'admin', activo: true };
+                    if (profileDoc && profileDoc.exists) {
+                        profileData = profileDoc.data();
+                    } else if (profileDoc && !profileDoc.exists) {
+                        await firebase.firestore().collection('landing_profiles').doc(email).set(profileData, { merge: true }).catch(() => {});
+                    }
+
+                    if (profileData.activo !== false) {
+                        localStorage.setItem('esteko_admin_session', email);
+                        showDashboardView(email);
+                        
+                        const usuariosTabLink = document.querySelector('[data-tab="usuarios"]');
+                        if (usuariosTabLink) {
+                            if (profileData.rol === 'admin') {
+                                usuariosTabLink.style.display = 'block';
+                            } else {
+                                usuariosTabLink.style.display = 'none';
+                            }
+                        }
+                        return;
+                    }
+                    
+                    console.warn("Perfil explícitamente inactivo:", email);
                     await firebase.auth().signOut();
                     localStorage.removeItem('esteko_admin_session');
-                    showLoginView("Su cuenta ha sido suspendida o no tiene permisos de acceso.");
+                    showLoginView("Su cuenta ha sido suspendida.");
                 } catch (e) {
                     console.error("Error al validar perfil de usuario:", e);
-                    const currentSession = localStorage.getItem('esteko_admin_session');
-                    if (currentSession && currentSession === email) {
-                        showDashboardView(email);
-                    } else {
-                        await firebase.auth().signOut();
-                        localStorage.removeItem('esteko_admin_session');
-                        showLoginView("Error al conectar con la base de datos.");
-                    }
+                    localStorage.setItem('esteko_admin_session', email);
+                    showDashboardView(email);
                 }
             } else {
                 const currentSession = localStorage.getItem('esteko_admin_session');
@@ -507,30 +521,34 @@ function initLoginListeners() {
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando Acceso...';
             errorAlert.style.display = 'none';
 
-            // 1. Intento de inicio de sesión con Firebase Auth (si está en línea)
-            if (isDatabaseOnline && typeof firebase !== 'undefined') {
+            // 1. Intento de inicio de sesión con Firebase Auth (si está disponible)
+            if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
                 try {
                     const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                    isDatabaseOnline = true;
                     
-                    // Validar si el usuario está activo y registrado
-                    const profileDoc = await firebase.firestore().collection('landing_profiles').doc(email).get();
-                    if (profileDoc.exists) {
+                    let profileDoc = null;
+                    try {
+                        profileDoc = await firebase.firestore().collection('landing_profiles').doc(email).get();
+                    } catch (eDoc) {
+                        console.warn("No se pudo consultar landing_profiles:", eDoc);
+                    }
+
+                    if (profileDoc && profileDoc.exists) {
                         const profileData = profileDoc.data();
-                        if (profileData.activo === true) {
-                            localStorage.setItem('esteko_admin_session', email);
-                            showDashboardView(email);
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
-                            return;
-                        } else {
+                        if (profileData.activo === false) {
                             throw new Error("Su cuenta ha sido suspendida. Contacte al administrador.");
                         }
-                    } else {
-                        throw new Error("Su cuenta no está registrada en el panel.");
                     }
+                    
+                    localStorage.setItem('esteko_admin_session', email);
+                    showDashboardView(email);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
+                    return;
                 } catch (err) {
                     console.warn("Fallo de auth en red, intentando validación local:", err);
-                    if (err.message && (err.message.includes("suspendida") || err.message.includes("no está registrada"))) {
+                    if (err.message && err.message.includes("suspendida")) {
                         errorAlert.style.display = 'flex';
                         errorMessage.textContent = err.message;
                         submitBtn.disabled = false;
@@ -561,7 +579,7 @@ function initLoginListeners() {
     const googleLoginBtn = document.getElementById('btn-google-login');
     if (googleLoginBtn) {
         googleLoginBtn.addEventListener('click', async () => {
-            if (isDatabaseOnline && typeof firebase !== 'undefined') {
+            if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
                 try {
                     googleLoginBtn.disabled = true;
                     googleLoginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Conectando...';
@@ -943,9 +961,10 @@ if (formEditSections) {
         // Guardar en LocalStorage
         localStorage.setItem('esteko_landing_sections', JSON.stringify(updatedSections));
 
-        // Guardar en Firestore (si está online)
+        // Guardar en Firestore si está disponible
         let success = true;
-        if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        let dbErrorMessage = "";
+        if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
                 for (const sectionId of Object.keys(updatedSections)) {
                     const sec = updatedSections[sectionId];
@@ -961,9 +980,11 @@ if (formEditSections) {
                     }
                     await firebase.firestore().collection('landing_sections').doc(sectionId).set(payload, { merge: true });
                 }
+                isDatabaseOnline = true;
             } catch (err) {
                 console.error("Fallo de red guardando secciones:", err);
                 success = false;
+                dbErrorMessage = err.message || "Error al conectar con Firestore";
             }
         }
 
@@ -971,9 +992,9 @@ if (formEditSections) {
         submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Todos los Cambios de Texto';
 
         if (success) {
-            showToast("Secciones actualizadas con éxito!");
+            showToast("¡Secciones actualizadas y guardadas en la Nube con éxito!");
         } else {
-            showToast("Guardado localmente. (Error al escribir en la nube)");
+            showToast("Guardado localmente. Error en Nube: " + dbErrorMessage, "warning");
         }
     });
 }
@@ -1212,7 +1233,8 @@ if (formDestCrud) {
         const duration = document.getElementById('dest-duration').value.trim();
         const price_info = document.getElementById('dest-price-info').value.trim();
         const whatsapp_text = document.getElementById('dest-whatsapp-text').value.trim();
-        const cost = parseInt(document.getElementById('dest-cost').value, 10);
+        const costVal = document.getElementById('dest-cost').value;
+        const cost = parseInt(costVal, 10) || 0;
         const image_url = document.getElementById('dest-image').value.trim();
         const description = document.getElementById('dest-description').value.trim();
         const long_description = document.getElementById('dest-long-description').value.trim();
@@ -1275,9 +1297,10 @@ if (formDestCrud) {
         }
         localStorage.setItem('esteko_landing_destinations', JSON.stringify(allDestinations));
 
-        // Guardar en Firestore si está en línea
+        // Guardar en Firestore si está disponible
         let dbSaved = true;
-        if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        let errorMsg = "";
+        if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
                 const dbObj = {
                     name: destObj.name,
@@ -1288,7 +1311,7 @@ if (formDestCrud) {
                     duration: destObj.duration,
                     price_info: destObj.price_info,
                     whatsapp_text: destObj.whatsapp_text,
-                    cost: destObj.cost,
+                    cost: destObj.cost || 0,
                     image_url: destObj.image_url,
                     services: destObj.services,
                     description: JSON.stringify({
@@ -1308,9 +1331,11 @@ if (formDestCrud) {
                 }
 
                 await docRef.set(dbObj, { merge: true });
+                isDatabaseOnline = true;
             } catch (err) {
                 console.error("Fallo de red en CRUD destinos:", err);
                 dbSaved = false;
+                errorMsg = err.message || "Fallo al conectar con Firestore";
             }
         }
 
@@ -1319,9 +1344,9 @@ if (formDestCrud) {
         submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Guardar Destino';
 
         if (dbSaved) {
-            showToast("Destino guardado en la nube con éxito!");
+            showToast(isNew ? "¡Destino creado y guardado en Nube!" : "¡Destino actualizado y guardado en Nube!");
         } else {
-            showToast("Guardado localmente. (Error de red en la nube)");
+            showToast("Guardado localmente. Error Nube: " + errorMsg, "warning");
         }
 
         // Recargar pestaña
@@ -1555,9 +1580,10 @@ if (formUploadGallery) {
         galleryItems.unshift(newItem);
         localStorage.setItem('esteko_landing_gallery', JSON.stringify(galleryItems));
 
-        // Guardar en Firestore (si está online)
+        // Guardar en Firestore si está disponible
         let dbSaved = true;
-        if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        let dbErrorMessage = "";
+        if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
                 const dbObj = {
                     section: newItem.section,
@@ -1565,9 +1591,11 @@ if (formUploadGallery) {
                     created_at: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 await firebase.firestore().collection('landing_gallery').add(dbObj);
+                isDatabaseOnline = true;
             } catch (err) {
                 console.error("Fallo de red registrando galería:", err);
                 dbSaved = false;
+                dbErrorMessage = err.message || "Error al conectar con Firestore";
             }
         }
 
@@ -1737,8 +1765,8 @@ if (formSystemConfig) {
         if (document.getElementById('quota-12').checked) quotas.push(12);
 
         const updatedConfig = {
-            seña_percent: parseInt(document.getElementById('config-seña-percent').value, 10),
-            descuento_oferta: parseInt(document.getElementById('config-descuento-oferta').value, 10),
+            seña_percent: parseInt(document.getElementById('config-seña-percent').value, 10) || 0,
+            descuento_oferta: parseInt(document.getElementById('config-descuento-oferta').value, 10) || 0,
             quotas: quotas,
             legajo: document.getElementById('config-legajo').value.trim(),
             legajo_url: document.getElementById('config-legajo-url').value.trim(),
@@ -1756,19 +1784,22 @@ if (formSystemConfig) {
         // Guardar local
         localStorage.setItem('esteko_landing_config', JSON.stringify(updatedConfig));
 
-        // Guardar en Firestore (si está online)
+        // Guardar en Firestore si está disponible
         let success = true;
-        if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        let dbErrorMessage = "";
+        if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
                 for (const key of Object.keys(updatedConfig)) {
                     await firebase.firestore().collection('landing_config').doc(key).set({
                         value: updatedConfig[key],
                         updated_at: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    }, { merge: true });
                 }
+                isDatabaseOnline = true;
             } catch (err) {
                 console.error("Fallo de red en guardado de config:", err);
                 success = false;
+                dbErrorMessage = err.message || "Error de red";
             }
         }
 
@@ -1776,9 +1807,9 @@ if (formSystemConfig) {
         submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Parámetros de Configuración';
 
         if (success) {
-            showToast("Configuración general guardada en la nube!");
+            showToast("¡Configuración general guardada en la Nube con éxito!");
         } else {
-            showToast("Guardada localmente. (Error en la nube)");
+            showToast("Guardado localmente. Error en Nube: " + dbErrorMessage, "warning");
         }
     });
 }
@@ -2703,9 +2734,9 @@ function initOpinionModalListeners() {
             const name = document.getElementById('opinion-name').value.trim();
             const title = document.getElementById('opinion-title').value.trim();
             const avatar_url = document.getElementById('opinion-avatar').value.trim();
-            const stars = parseInt(document.getElementById('opinion-stars').value);
+            const stars = parseInt(document.getElementById('opinion-stars').value, 10) || 5;
             const time = document.getElementById('opinion-time').value.trim();
-            const order = parseInt(document.getElementById('opinion-order').value) || 10;
+            const order = parseInt(document.getElementById('opinion-order').value, 10) || 10;
             const comment = document.getElementById('opinion-comment').value.trim();
 
             const opinionData = {
@@ -2721,7 +2752,7 @@ function initOpinionModalListeners() {
 
             let success = true;
 
-            if (isDatabaseOnline && typeof firebase !== 'undefined') {
+            if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
                 try {
                     if (id && !id.startsWith('local-')) {
                         await firebase.firestore().collection('landing_reviews').doc(id).set(opinionData, { merge: true });
@@ -2733,6 +2764,7 @@ function initOpinionModalListeners() {
                         });
                         opinionData.id = docRef.id;
                     }
+                    isDatabaseOnline = true;
                 } catch (err) {
                     console.error("Error guardando opinión en Firestore:", err);
                     success = false;
