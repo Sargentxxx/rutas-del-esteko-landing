@@ -918,6 +918,8 @@ a {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 30px;
+    align-items: stretch;
+    align-content: start;
     transition: var(--transition-smooth);
 }
 
@@ -929,6 +931,8 @@ a {
     transition: var(--transition-spring);
     display: flex;
     flex-direction: column;
+    height: 100%;
+    align-self: stretch;
     border: 1px solid rgba(24, 18, 12, 0.05);
     position: relative;
     background: radial-gradient(800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(220, 30, 30, 0.04), transparent 40%), var(--text-light);
@@ -1049,7 +1053,11 @@ a {
     color: var(--text-muted);
     margin-bottom: 20px;
     line-height: 1.5;
-    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.2em;
 }
 
 .card-services {
@@ -1060,6 +1068,7 @@ a {
     border-top: 1px dashed rgba(230, 92, 0, 0.15);
     padding-top: 16px;
     margin-bottom: 24px;
+    margin-top: auto;
 }
 
 .card-services li {
@@ -1083,6 +1092,7 @@ a {
     align-items: center;
     border-top: 1px solid rgba(230, 92, 0, 0.08);
     padding-top: 16px;
+    margin-top: auto;
 }
 
 .price-info {
