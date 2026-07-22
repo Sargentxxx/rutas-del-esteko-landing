@@ -32,6 +32,18 @@ try {
     console.warn("No se pudo cargar el cliente CDN de Firebase.", e);
 }
 
+async function ensureFirebaseAuth() {
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        if (!firebase.auth().currentUser) {
+            try {
+                await firebase.auth().signInAnonymously();
+            } catch (err) {
+                console.warn("Inicio de sesión anónimo fallback:", err);
+            }
+        }
+    }
+}
+
 // Datos por defecto (Semilla inicial) por si no existe base de datos
 const DEFAULT_SECTIONS = {
     hero: {
@@ -966,6 +978,7 @@ if (formEditSections) {
         let dbErrorMessage = "";
         if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
+                await ensureFirebaseAuth();
                 for (const sectionId of Object.keys(updatedSections)) {
                     const sec = updatedSections[sectionId];
                     const payload = {
@@ -1302,6 +1315,7 @@ if (formDestCrud) {
         let errorMsg = "";
         if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
+                await ensureFirebaseAuth();
                 const dbObj = {
                     name: destObj.name,
                     category: destObj.category,
@@ -1585,6 +1599,7 @@ if (formUploadGallery) {
         let dbErrorMessage = "";
         if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
+                await ensureFirebaseAuth();
                 const dbObj = {
                     section: newItem.section,
                     image_url: newItem.image_url,
@@ -1789,6 +1804,7 @@ if (formSystemConfig) {
         let dbErrorMessage = "";
         if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
             try {
+                await ensureFirebaseAuth();
                 for (const key of Object.keys(updatedConfig)) {
                     await firebase.firestore().collection('landing_config').doc(key).set({
                         value: updatedConfig[key],
@@ -2754,6 +2770,7 @@ function initOpinionModalListeners() {
 
             if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
                 try {
+                    await ensureFirebaseAuth();
                     if (id && !id.startsWith('local-')) {
                         await firebase.firestore().collection('landing_reviews').doc(id).set(opinionData, { merge: true });
                     } else {
