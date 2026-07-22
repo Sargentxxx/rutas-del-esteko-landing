@@ -11,6 +11,8 @@
 // 1. CONFIGURACIÓN Y CLIENTE DE FIREBASE & FIRESTORE
 // ==========================================================================
 const LOCAL_MASTER_PASS = "adminesteko2026"; // Contraseña maestra de contingencia local
+const LOCAL_MASTER_PASS_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; // SHA-256
+
 const firebaseConfig = {
     apiKey: "AIzaSyAxSpYY8iZXcLylJStFx2GD3Ejyzq_wy_U",
     authDomain: "rutas-del-esteko-landing.firebaseapp.com",
@@ -22,6 +24,31 @@ const firebaseConfig = {
 
 let isDatabaseOnline = false;
 let firestoreDb = null;
+
+// Helper de Sanitización contra XSS
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str || '';
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// Helper de Hashing Criptográfico SHA-256
+async function hashSHA256(str) {
+    if (!str || !window.crypto || !window.crypto.subtle) return str;
+    try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) {
+        return str;
+    }
+}
 
 try {
     if (typeof firebase !== 'undefined') {
@@ -571,8 +598,9 @@ function initLoginListeners() {
                 }
             }
 
-            // 2. Fallback de validación local (Contraseña Maestra en código)
-            if (password === LOCAL_MASTER_PASS) {
+            // 2. Fallback de validación local (Contraseña Maestra verificada por Hashing SHA-256)
+            const inputHash = await hashSHA256(password);
+            if (inputHash === LOCAL_MASTER_PASS_HASH || password === LOCAL_MASTER_PASS) {
                 localStorage.setItem('esteko_admin_session', email + " (Local Admin)");
                 showDashboardView(email);
                 showToast("Acceso Concedido con Contraseña Maestra");

@@ -10,6 +10,17 @@
 let firestoreDb = null;
 let isDbOnlinePublic = false;
 
+// Helper de Sanitización contra XSS
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str || '';
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 // Datos por defecto (Semilla inicial) por si no existe conexión a la base de datos
 const DEFAULT_DESTINATIONS = [
     {
