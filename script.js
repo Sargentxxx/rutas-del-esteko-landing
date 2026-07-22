@@ -1051,12 +1051,9 @@ function renderPublicCatalogGrid(destinations, config) {
     destinations.forEach((dest, index) => {
         const isInactive = dest.is_active === false;
         const card = document.createElement('div');
-        card.className = `destination-card animate-fade-in${isInactive ? ' card-disabled' : ''}`;
+        card.className = `destination-card${isInactive ? ' card-disabled' : ''}`;
         card.setAttribute('data-category', dest.category);
         card.id = `card-dynamic-${dest.id}`;
-        
-        // Estilo de delay escalonado para efecto cascada (Taste-Skill Feature)
-        card.style.animationDelay = `${index * 120}ms`;
 
         // Generar viñetas de servicios
         let servicesHtml = '';
@@ -1688,11 +1685,9 @@ function setupViewScrollTriggers(viewId) {
         const cards = view.querySelectorAll('.destination-card');
         if (cards.length > 0) {
             gsap.from(cards, {
-                y: 60,
                 opacity: 0,
-                scale: 0.95,
-                duration: 0.8,
-                stagger: 0.12,
+                duration: 0.6,
+                stagger: 0.08,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: view.querySelector('.destinations-grid'),
