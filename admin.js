@@ -2154,8 +2154,8 @@ async function loadUsersData() {
         localStorage.setItem('esteko_landing_profiles', JSON.stringify(SEED_PROFILES));
     }
 
-    // 1. Cargar desde la nube (si está en línea)
-    if (isDatabaseOnline && typeof firebase !== 'undefined') {
+    // 1. Cargar desde la nube si Firebase está disponible
+    if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
         try {
             const snapshot = await firebase.firestore().collection('landing_profiles').get();
             if (!snapshot.empty) {
@@ -2174,6 +2174,7 @@ async function loadUsersData() {
                 });
                 allUsers = list;
                 localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
+                isDatabaseOnline = true;
             }
         } catch (e) {
             console.warn("Fallo al leer usuarios de la nube, cargando caché local.", e);
@@ -2278,7 +2279,7 @@ function initUserModalListeners() {
             let saved = true;
             let errorMsg = "";
 
-            if (isDatabaseOnline && typeof firebase !== 'undefined') {
+            if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
                 try {
                     // Crear una instancia secundaria de Firebase para no desloguear al administrador actual
                     const secondaryApp = firebase.initializeApp(firebaseConfig, "SecondaryApp");
@@ -2292,7 +2293,8 @@ function initUserModalListeners() {
                             rol: u_rol,
                             activo: true,
                             created_at: firebase.firestore.FieldValue.serverTimestamp()
-                        });
+                        }, { merge: true });
+                        isDatabaseOnline = true;
                     } finally {
                         await secondaryApp.delete();
                     }
@@ -2353,14 +2355,15 @@ function initUserModalListeners() {
             let saved = true;
             let errorMsg = "";
 
-            if (isDatabaseOnline && typeof firebase !== 'undefined') {
+            if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
                 try {
-                    await firebase.firestore().collection('landing_profiles').doc(edit_id).update({
+                    await firebase.firestore().collection('landing_profiles').doc(edit_id).set({
                         full_name: edit_name,
                         rol: edit_rol,
                         activo: edit_activo,
                         updated_at: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    }, { merge: true });
+                    isDatabaseOnline = true;
                 } catch (err) {
                     saved = false;
                     errorMsg = err.message || "Fallo de conexión.";
@@ -2408,33 +2411,36 @@ window.openEditUserModal = function(userId) {
 
 // Eliminar un usuario
 window.deleteUserTrigger = async function(userId) {
-    // 1. Confirmar con doble paso
-    if (!confirm("¿Está seguro de eliminar militarmente a este usuario del sistema? Se revocará su acceso inmediato a la Landing y al ERP.")) {
+    if (!confirm("¿Está seguro de eliminar a este usuario del sistema? Se revocará su acceso inmediato a la Landing y al Panel.")) {
         return;
     }
 
     let deleted = true;
     let errorMsg = "";
 
-    if (isDatabaseOnline && typeof firebase !== 'undefined') {
+    const userObj = allUsers.find(u => u.id === userId || u.email === userId);
+    const targetDocId = (userObj && userObj.email) ? userObj.email : userId;
+
+    if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
         try {
-            // Eliminar el documento de perfil del usuario de Firestore
-            await firebase.firestore().collection('landing_profiles').doc(userId).delete();
+            await firebase.firestore().collection('landing_profiles').doc(targetDocId).delete();
+            isDatabaseOnline = true;
         } catch (err) {
+            console.error("Fallo al eliminar usuario en Firestore:", err);
             deleted = false;
-            errorMsg = err.message || "Error de conexión.";
+            errorMsg = err.message || "Error de conexión con la nube";
         }
-    } else {
-        // Offline simulation
-        allUsers = allUsers.filter(u => u.id !== userId);
-        localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
     }
 
+    allUsers = allUsers.filter(u => u.id !== userId && u.email !== targetDocId);
+    localStorage.setItem('esteko_landing_profiles', JSON.stringify(allUsers));
+
     if (deleted) {
-        showToast("Usuario eliminado con éxito del sistema.");
-        loadUsersData();
+        showToast("¡Usuario eliminado con éxito del sistema!");
+        renderUsersTable();
     } else {
-        alert("Error al eliminar usuario: " + errorMsg);
+        showToast("Eliminado localmente. Error en la nube: " + errorMsg, "warning");
+        renderUsersTable();
     }
 };
 
