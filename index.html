@@ -174,7 +174,15 @@
                     <li><a href="#sorteos">Sorteos</a></li>
                     <li><a href="#pagos">Pagos</a></li>
                     <li><a href="#unete">Únete</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
+                    <li class="nav-dropdown">
+                        <a href="#contacto" class="nav-dropdown-btn" id="btn-contacto-dropdown">
+                            CONTACTO <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#contacto"><i class="fa-solid fa-headset"></i> Formulario de Contacto</a></li>
+                            <li><a href="#faq"><i class="fa-solid fa-circle-question"></i> Preguntas Frecuentes</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
 
@@ -189,7 +197,13 @@
                     <li><a href="#sorteos">Sorteos</a></li>
                     <li><a href="#pagos">Pagos</a></li>
                     <li><a href="#unete">Únete</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
+                    <li class="mobile-dropdown-item">
+                        <a href="#contacto" class="mobile-dropdown-btn">CONTACTO <i class="fa-solid fa-chevron-down mobile-arrow"></i></a>
+                        <ul class="mobile-dropdown-sub">
+                            <li><a href="#contacto"><i class="fa-solid fa-headset"></i> Formulario de Contacto</a></li>
+                            <li><a href="#faq"><i class="fa-solid fa-circle-question"></i> Preguntas Frecuentes</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
             
@@ -1207,185 +1221,184 @@
 
         <!-- SPA VIEW: CONTACTO -->
         <div id="view-contacto" class="spa-view">
+            <!-- SECCIÓN CONTACTO -->
+            <section class="contacto" id="contacto">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Comenzá tu Aventura Hoy</h2>
+                        <div class="header-line"></div>
+                    </div>
+                    
+                    <div class="contacto-grid">
+                        <div class="contacto-info-box">
+                            <h3>¿Tenés dudas? Escribinos</h3>
+                            <p>Estamos para asesorarte en cada paso. Escribinos, llamanos o visítanos en nuestra ubicación oficial.</p>
+                            
+                            <div class="contact-details">
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                    <div>
+                                        <h5>Dirección Comercial</h5>
+                                        <p>Barrio Solar Mariano Moreno Manzana F Lote 1 - Santiago del Estero, Argentina.</p>
+                                        <span class="detail-extra">(Aparece en Google Maps como Rutas del Esteko)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <div>
+                                        <h5>WhatsApp Oficial</h5>
+                                        <p><a href="https://wa.me/543855962089" target="_blank" style="text-decoration: underline;">3855962089</a> (Atención de Lunes a Sábado)</p>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <div>
+                                        <h5>Correo Electrónico</h5>
+                                        <p><a href="mailto:rutasdelesteko@gmail.com" style="text-decoration: underline;">rutasdelesteko@gmail.com</a></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Social Icons Block -->
+                            <div class="contact-social-icons">
+                                <a href="https://www.facebook.com/profile.php?id=100087455823485" target="_blank" class="icon-fb" aria-label="Siganos en Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="https://www.instagram.com/rutasdelesteko.sde/" target="_blank" class="icon-ig" aria-label="Siganos en Instagram"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://www.tiktok.com/@rutasdelesteko" target="_blank" class="icon-tiktok" aria-label="Siganos en TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                                <a href="https://wa.me/543855962089" target="_blank" class="icon-wa" aria-label="Escribanos por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Registration / Promo Capturer Form -->
+                        <div class="contacto-form-box">
+                            <h3>¡Recibí Sorteos & Ofertas!</h3>
+                            <p>Registrá tu correo electrónico para sumarte a la base de sorteos mensuales de viajes y recibir alertas de promos de último minuto.</p>
+                            
+                            <form id="lead-form" class="lead-form">
+                                <div class="form-group-row">
+                                    <div class="form-group">
+                                        <label for="lead-name">Nombre completo:</label>
+                                        <input type="text" id="lead-name" placeholder="Ej. Juan Pérez" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lead-phone">WhatsApp / Teléfono:</label>
+                                        <input type="tel" id="lead-phone" placeholder="Ej. 3855962089" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lead-email">Correo Electrónico:</label>
+                                    <input type="email" id="lead-email" placeholder="Ej. rutasdelesteko@gmail.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lead-destiny-select">Destino que más te interesa:</label>
+                                    <select id="lead-destiny-select">
+                                        <option value="Mar del Plata">Mar del Plata (Verano)</option>
+                                        <option value="Camboriu">Camboriú (Verano)</option>
+                                        <option value="San Rafael">San Rafael (Invierno)</option>
+                                        <option value="Cataratas">Cataratas (Invierno)</option>
+                                        <option value="Educativo">Viaje Educativo (Colegio)</option>
+                                        <option value="Otro">Otro Destino</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-checkbox">
+                                    <input type="checkbox" id="lead-terms" required checked>
+                                    <label for="lead-terms">Acepto sumarme a la lista de sorteos y notificaciones.</label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-block" id="btn-submit-lead">
+                                    <span id="btn-submit-text"><i class="fa-solid fa-paper-plane"></i> Registrarme y Participar</span>
+                                </button>
+                            </form>
+                            
+                            <!-- Beautiful dynamic success message (hidden initially by CSS) -->
+                            <div id="lead-success-msg" class="lead-success-msg">
+                                <i class="fa-solid fa-circle-check success-icon"></i>
+                                <h4>¡Registro Completado con Éxito!</h4>
+                                <p>Felicitaciones <strong id="success-user-name"></strong>, ya sos parte del sorteo y de nuestro club de viajeros VIP. Nos pondremos en contacto contigo.</p>
+                                <button id="btn-reset-form" class="btn btn-secondary btn-sm">Registrar otro correo</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Dynamic interactive Google Maps Integration (Santiago del Estero local maps context) -->
+                    <div class="map-container-box">
+                        <h4><i class="fa-solid fa-location-dot"></i> Dónde encontrarnos - Rutas del Esteko</h4>
+                        <div class="map-iframe-wrapper">
+                            <!-- Precise location for Barrio Solar Mariano Moreno context -->
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.0664972740924!2d-64.2676658!3d-27.8192068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x943b4d0000d981d3%3A0x7b8cfd201eae5f9f!2sRutas%20del%20Esteko%20-%20Agencia%20de%20Viajes%20y%20Turismo!5e0!3m2!1ses-419!2sar!4v1700000000000!5m2!1ses-419!2sar" 
+                                width="100%" 
+                                height="450" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="Ubicación oficial de Rutas del Esteko">
+                            </iframe>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
             <!-- SECCIÓN PREGUNTAS FRECUENTES (FAQ) -->
             <section class="faq-section" id="faq">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Preguntas Frecuentes</h2>
-                    <p class="section-subtitle">Resolvemos tus dudas principales para que planifiques tu viaje con total tranquilidad y confianza.</p>
-                    <div class="header-line"></div>
-                </div>
-
-                <div class="faq-accordion" id="faq-accordion">
-                    <!-- Pregunta 1 -->
-                    <div class="faq-item active">
-                        <button type="button" class="faq-question" aria-expanded="true">
-                            <span><i class="fa-solid fa-bus-simple"></i> ¿Desde dónde salen los viajes de Rutas del Esteko?</span>
-                            <i class="fa-solid fa-chevron-down faq-icon"></i>
-                        </button>
-                        <div class="faq-answer" style="display: block;">
-                            <p>Nuestras salidas principales y coordinaciones se organizan desde Santiago del Estero y puntos clave del NOA hacia destinos nacionales e internacionales.</p>
-                        </div>
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Preguntas Frecuentes</h2>
+                        <p class="section-subtitle">Resolvemos tus dudas principales para que planifiques tu viaje con total tranquilidad y confianza.</p>
+                        <div class="header-line"></div>
                     </div>
 
-                    <!-- Pregunta 2 -->
-                    <div class="faq-item">
-                        <button type="button" class="faq-question" aria-expanded="false">
-                            <span><i class="fa-solid fa-credit-card"></i> ¿Qué formas de pago y financiación ofrecen?</span>
-                            <i class="fa-solid fa-chevron-down faq-icon"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Contamos con planes de pago en cuotas, transferencias y financiación adaptada para que puedas congelar la tarifa de tu viaje.</p>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 3 -->
-                    <div class="faq-item">
-                        <button type="button" class="faq-question" aria-expanded="false">
-                            <span><i class="fa-solid fa-suitcase-rolling"></i> ¿Qué incluyen los paquetes de viaje?</span>
-                            <i class="fa-solid fa-chevron-down faq-icon"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Nuestros paquetes suelen incluir transporte ida y vuelta, alojamiento, coordinadores permanentes 24/7, excursiones seleccionadas y asistencia al viajero.</p>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 4 -->
-                    <div class="faq-item">
-                        <button type="button" class="faq-question" aria-expanded="false">
-                            <span><i class="fa-brands fa-whatsapp"></i> ¿Cómo reservo un viaje o consulto las próximas fechas?</span>
-                            <i class="fa-solid fa-chevron-down faq-icon"></i>
-                        </button>
-                        <div class="faq-answer">
-                            <p>Puedes explorar nuestros destinos en la web o comunicarte directamente por WhatsApp con nuestro equipo comercial para recibir atención personalizada.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SPA VIEW: CONTACTO -->
-        <section class="contacto" id="contacto">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Comenzá tu Aventura Hoy</h2>
-                    <div class="header-line"></div>
-                </div>
-                
-                <div class="contacto-grid">
-                    
-                    <div class="contacto-info-box">
-                        <h3>¿Tenés dudas? Escribinos</h3>
-                        <p>Estamos para asesorarte en cada paso. Escribinos, llamanos o visítanos en nuestra ubicación oficial.</p>
-                        
-                        <div class="contact-details">
-                            <div class="detail-item">
-                                <i class="fa-solid fa-map-location-dot"></i>
-                                <div>
-                                    <h5>Dirección Comercial</h5>
-                                    <p>Barrio Solar Mariano Moreno Manzana F Lote 1 - Santiago del Estero, Argentina.</p>
-                                    <span class="detail-extra">(Aparece en Google Maps como Rutas del Esteko)</span>
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <div>
-                                    <h5>WhatsApp Oficial</h5>
-                                    <p><a href="https://wa.me/543855962089" target="_blank" style="text-decoration: underline;">3855962089</a> (Atención de Lunes a Sábado)</p>
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fa-solid fa-envelope"></i>
-                                <div>
-                                    <h5>Correo Electrónico</h5>
-                                    <p><a href="mailto:rutasdelesteko@gmail.com" style="text-decoration: underline;">rutasdelesteko@gmail.com</a></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Social Icons Block -->
-                        <div class="contact-social-icons">
-                            <a href="https://www.facebook.com/profile.php?id=100087455823485" target="_blank" class="icon-fb" aria-label="Siganos en Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                            <a href="https://www.instagram.com/rutasdelesteko.sde/" target="_blank" class="icon-ig" aria-label="Siganos en Instagram"><i class="fa-brands fa-instagram"></i></a>
-                            <a href="https://www.tiktok.com/@rutasdelesteko" target="_blank" class="icon-tiktok" aria-label="Siganos en TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                            <a href="https://wa.me/543855962089" target="_blank" class="icon-wa" aria-label="Escribanos por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-                        </div>
-                    </div>
-
-                    <!-- Registration / Promo Capturer Form -->
-                    <div class="contacto-form-box">
-                        <h3>¡Recibí Sorteos & Ofertas!</h3>
-                        <p>Registrá tu correo electrónico para sumarte a la base de sorteos mensuales de viajes y recibir alertas de promos de último minuto.</p>
-                        
-                        <form id="lead-form" class="lead-form">
-                            <div class="form-group-row">
-                                <div class="form-group">
-                                    <label for="lead-name">Nombre completo:</label>
-                                    <input type="text" id="lead-name" placeholder="Ej. Juan Pérez" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lead-phone">WhatsApp / Teléfono:</label>
-                                    <input type="tel" id="lead-phone" placeholder="Ej. 3855962089" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="lead-email">Correo Electrónico:</label>
-                                <input type="email" id="lead-email" placeholder="Ej. rutasdelesteko@gmail.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lead-destiny-select">Destino que más te interesa:</label>
-                                <select id="lead-destiny-select">
-                                    <option value="Mar del Plata">Mar del Plata (Verano)</option>
-                                    <option value="Camboriu">Camboriú (Verano)</option>
-                                    <option value="San Rafael">San Rafael (Invierno)</option>
-                                    <option value="Cataratas">Cataratas (Invierno)</option>
-                                    <option value="Educativo">Viaje Educativo (Colegio)</option>
-                                    <option value="Otro">Otro Destino</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-checkbox">
-                                <input type="checkbox" id="lead-terms" required checked>
-                                <label for="lead-terms">Acepto sumarme a la lista de sorteos y notificaciones.</label>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-block" id="btn-submit-lead">
-                                <span id="btn-submit-text"><i class="fa-solid fa-paper-plane"></i> Registrarme y Participar</span>
+                    <div class="faq-accordion" id="faq-accordion">
+                        <!-- Pregunta 1 -->
+                        <div class="faq-item active">
+                            <button type="button" class="faq-question" aria-expanded="true">
+                                <span><i class="fa-solid fa-bus-simple"></i> ¿Desde dónde salen los viajes de Rutas del Esteko?</span>
+                                <i class="fa-solid fa-chevron-down faq-icon"></i>
                             </button>
-                        </form>
-                        
-                        <!-- Beautiful dynamic success message (hidden initially by CSS) -->
-                        <div id="lead-success-msg" class="lead-success-msg">
-                            <i class="fa-solid fa-circle-check success-icon"></i>
-                            <h4>¡Registro Completado con Éxito!</h4>
-                            <p>Felicitaciones <strong id="success-user-name"></strong>, ya sos parte del sorteo y de nuestro club de viajeros VIP. Nos pondremos en contacto contigo.</p>
-                            <button id="btn-reset-form" class="btn btn-secondary btn-sm">Registrar otro correo</button>
+                            <div class="faq-answer" style="display: block;">
+                                <p>Nuestras salidas principales y coordinaciones se organizan desde Santiago del Estero y puntos clave del NOA hacia destinos nacionales e internacionales.</p>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 2 -->
+                        <div class="faq-item">
+                            <button type="button" class="faq-question" aria-expanded="false">
+                                <span><i class="fa-solid fa-credit-card"></i> ¿Qué formas de pago y financiación ofrecen?</span>
+                                <i class="fa-solid fa-chevron-down faq-icon"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Contamos con planes de pago en cuotas, transferencias y financiación adaptada para que puedas congelar la tarifa de tu viaje.</p>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 3 -->
+                        <div class="faq-item">
+                            <button type="button" class="faq-question" aria-expanded="false">
+                                <span><i class="fa-solid fa-suitcase-rolling"></i> ¿Qué incluyen los paquetes de viaje?</span>
+                                <i class="fa-solid fa-chevron-down faq-icon"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Nuestros paquetes suelen incluir transporte ida y vuelta, alojamiento, coordinadores permanentes 24/7, excursiones seleccionadas y asistencia al viajero.</p>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 4 -->
+                        <div class="faq-item">
+                            <button type="button" class="faq-question" aria-expanded="false">
+                                <span><i class="fa-brands fa-whatsapp"></i> ¿Cómo reservo un viaje o consulto las próximas fechas?</span>
+                                <i class="fa-solid fa-chevron-down faq-icon"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Puedes explorar nuestros destinos en la web o comunicarte directamente por WhatsApp con nuestro equipo comercial para recibir atención personalizada.</p>
+                            </div>
                         </div>
                     </div>
-
                 </div>
-
-                <!-- Dynamic interactive Google Maps Integration (Santiago del Estero local maps context) -->
-                <div class="map-container-box">
-                    <h4><i class="fa-solid fa-location-dot"></i> Dónde encontrarnos - Rutas del Esteko</h4>
-                    <div class="map-iframe-wrapper">
-                        <!-- Precise location for Barrio Solar Mariano Moreno context -->
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.0664972740924!2d-64.2676658!3d-27.8192068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x943b4d0000d981d3%3A0x7b8cfd201eae5f9f!2sRutas%20del%20Esteko%20-%20Agencia%20de%20Viajes%20y%20Turismo!5e0!3m2!1ses-419!2sar!4v1700000000000!5m2!1ses-419!2sar" 
-                            width="100%" 
-                            height="450" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade"
-                            title="Ubicación oficial de Rutas del Esteko">
-                        </iframe>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
 
     <!-- Footer -->
     <footer class="footer-bottom">
