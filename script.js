@@ -272,13 +272,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function switchView(hash) {
-        const viewId = hash.replace('#', '') || 'inicio';
+        let viewId = hash.replace('#', '') || 'inicio';
+        let scrollToElementId = null;
+
+        if (viewId === 'faq') {
+            scrollToElementId = 'faq';
+            viewId = 'contacto';
+        } else if (viewId === 'contacto') {
+            scrollToElementId = 'contacto';
+        }
+
         const targetViewElement = document.getElementById('view-' + viewId);
 
         if (targetViewElement) {
-            // Evitar doble transición
+            // Evitar doble transición si ya estamos en esa vista y no hay sub-desplazamiento específico
             const currentActiveView = document.querySelector('.spa-view.active-view');
-            if (currentActiveView === targetViewElement) return;
+            if (currentActiveView === targetViewElement && !scrollToElementId) return;
+            if (currentActiveView === targetViewElement && scrollToElementId) {
+                const subTarget = document.getElementById(scrollToElementId);
+                if (subTarget) {
+                    subTarget.scrollIntoView({ behavior: 'smooth' });
+                }
+                return;
+            }
 
             // Determinar dirección del deslizamiento
             const oldIndex = currentActiveView ? sectionOrder.indexOf(currentActiveView.id.replace('view-', '')) : -1;
@@ -382,6 +398,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         });
                         // Iniciar animaciones de elementos DESPUÉS de que la vista sea visible
                         setupViewScrollTriggers(viewId);
+                        if (scrollToElementId) {
+                            const subTarget = document.getElementById(scrollToElementId);
+                            if (subTarget) {
+                                setTimeout(() => {
+                                    subTarget.scrollIntoView({ behavior: 'smooth' });
+                                }, 150);
+                            }
+                        }
                     }
                 }, 0.1); // Pequeño delay de 0.1s para un cruce ultra suave
             } else {
@@ -397,6 +421,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     },
                     onComplete: () => {
                         setupViewScrollTriggers(viewId);
+                        if (scrollToElementId) {
+                            const subTarget = document.getElementById(scrollToElementId);
+                            if (subTarget) {
+                                setTimeout(() => {
+                                    subTarget.scrollIntoView({ behavior: 'smooth' });
+                                }, 150);
+                            }
+                        }
                     }
                 });
             }
