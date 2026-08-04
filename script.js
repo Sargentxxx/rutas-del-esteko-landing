@@ -1055,6 +1055,10 @@ function renderPublicCatalogGrid(destinations, config) {
         card.setAttribute('data-category', dest.category);
         card.id = `card-dynamic-${dest.id}`;
 
+        card.style.display = 'flex';
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+
         // Generar viñetas de servicios
         let servicesHtml = '';
         if (dest.services) {
@@ -1098,7 +1102,22 @@ function renderPublicCatalogGrid(destinations, config) {
 
 function initTripFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const destinationCards = document.querySelectorAll('.destination-card');
+
+    // Inicializar estado activo en "Todos los Destinos"
+    filterButtons.forEach(b => {
+        if (b.getAttribute('data-filter') === 'all') {
+            b.classList.add('active');
+        } else {
+            b.classList.remove('active');
+        }
+    });
+
+    // Forzar visibilidad inicial completa para todas las tarjetas
+    document.querySelectorAll('.destination-card').forEach(card => {
+        card.style.display = 'flex';
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+    });
 
     filterButtons.forEach(btn => {
         // Clonar para remover listeners anteriores si existieran
@@ -1684,18 +1703,7 @@ function setupViewScrollTriggers(viewId) {
     if (viewId === 'temporadas') {
         const cards = view.querySelectorAll('.destination-card');
         if (cards.length > 0) {
-            gsap.from(cards, {
-                opacity: 0,
-                duration: 0.6,
-                stagger: 0.08,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: view.querySelector('.destinations-grid'),
-                    start: "top 90%",
-                    toggleActions: "play none none none",
-                    once: true
-                }
-            });
+            gsap.set(cards, { opacity: 1, y: 0, scale: 1 });
         }
     }
 
