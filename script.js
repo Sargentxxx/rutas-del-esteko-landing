@@ -509,7 +509,10 @@ async function testConnectionAndLoadContent() {
     // 5. Inicializar el formulario de CV
     initCVFormSubmission();
 
-    // 6. Cargar opiniones de Google Maps
+    // 6. Inicializar acordeón de Preguntas Frecuentes (FAQ)
+    initFaqAccordion();
+
+    // 7. Cargar opiniones de Google Maps
     await loadGoogleReviews();
 }
 
@@ -2522,6 +2525,47 @@ function renderPublicDestinosMasElegidos(destinations, config) {
             clearInterval(window.destinosCarouselInterval);
         }, { passive: true });
     }
+}
+
+// ==========================================================================
+// 12. COMPONENTE DE PREGUNTAS FRECUENTES (FAQ ACCORDION)
+// ==========================================================================
+function initFaqAccordion() {
+    const faqContainer = document.getElementById('faq-accordion');
+    if (!faqContainer) return;
+
+    const faqItems = faqContainer.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const btn = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        if (!btn || !answer) return;
+
+        btn.addEventListener('click', () => {
+            const isCurrentlyActive = item.classList.contains('active');
+
+            // Acordeón exclusivo: cerrar otros si están abiertos
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                    const otherBtn = otherItem.querySelector('.faq-question');
+                    const otherAns = otherItem.querySelector('.faq-answer');
+                    if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+                    if (otherAns) otherAns.style.display = 'none';
+                }
+            });
+
+            if (isCurrentlyActive) {
+                item.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
+                answer.style.display = 'none';
+            } else {
+                item.classList.add('active');
+                btn.setAttribute('aria-expanded', 'true');
+                answer.style.display = 'block';
+            }
+        });
+    });
 }
 
 
