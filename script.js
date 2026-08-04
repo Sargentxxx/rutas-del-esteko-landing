@@ -2270,6 +2270,8 @@ function updateOverlayLightboxImage() {
         }
         if (img) {
             img.src = mediaUrl;
+            const destTitle = document.getElementById('overlay-title')?.textContent || 'Destino';
+            img.alt = `Galería de ${destTitle} - Rutas del Esteko Santiago del Estero (${overlayLightboxIndex + 1}/${overlayGalleryImages.length})`;
             img.style.display = 'block';
         }
     }
