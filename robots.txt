@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rutasdelesteko.com.ar/sitemap.xml
