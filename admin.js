@@ -740,6 +740,8 @@ function loadTabContent(tabId) {
         loadPostulacionesData();
     } else if (tabId === 'opiniones') {
         loadOpinionsData();
+    } else if (tabId === 'faq') {
+        loadFaqData();
     } else if (tabId === 'usuarios') {
         loadUsersData();
     }
@@ -2895,5 +2897,241 @@ async function deleteOpinion(id) {
         alert("Ocurrió un error al eliminar de la base de datos.");
     }
 }
+
+// ==========================================================================
+// 11. PESTAÑA: PREGUNTAS FRECUENTES FAQ (CRUD)
+// ==========================================================================
+let allFaqs = [];
+
+const DEFAULT_FAQS = [
+    {
+        id: 'faq-1',
+        icon: 'fa-bus-simple',
+        question: '¿Desde dónde salen los viajes de Rutas del Esteko?',
+        answer: 'Nuestras salidas principales y coordinaciones se organizan desde Santiago del Estero y puntos clave del NOA hacia destinos nacionales e internacionales.',
+        order: 1
+    },
+    {
+        id: 'faq-2',
+        icon: 'fa-credit-card',
+        question: '¿Qué formas de pago y financiación ofrecen?',
+        answer: 'Contamos con planes de pago en cuotas, transferencias y financiación adaptada para que puedas congelar la tarifa de tu viaje.',
+        order: 2
+    },
+    {
+        id: 'faq-3',
+        icon: 'fa-suitcase-rolling',
+        question: '¿Qué incluyen los paquetes de viaje?',
+        answer: 'Nuestros paquetes suelen incluir transporte ida y vuelta, alojamiento, coordinadores permanentes 24/7, excursiones seleccionadas y asistencia al viajero.',
+        order: 3
+    },
+    {
+        id: 'faq-4',
+        icon: 'fa-whatsapp',
+        question: '¿Cómo reservo un viaje o consulto las próximas fechas?',
+        answer: 'Puedes explorar nuestros destinos en la web o comunicarte directamente por WhatsApp con nuestro equipo comercial para recibir atención personalizada.',
+        order: 4
+    }
+];
+
+async function loadFaqData() {
+    const tableBody = document.getElementById('faq-table-body');
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="table-empty-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Cargando preguntas frecuentes...</td></tr>';
+    }
+
+    allFaqs = [];
+
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        try {
+            const snapshot = await firebase.firestore().collection('landing_faq').get();
+            if (!snapshot.empty) {
+                snapshot.forEach(doc => {
+                    allFaqs.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+            }
+        } catch (e) {
+            console.warn("Fallo de red al obtener FAQ de Firestore, usando local.", e);
+        }
+    }
+
+    if (allFaqs.length === 0) {
+        const cached = localStorage.getItem('esteko_landing_faq');
+        if (cached) {
+            try {
+                allFaqs = JSON.parse(cached);
+            } catch (e) {
+                allFaqs = DEFAULT_FAQS;
+            }
+        } else {
+            allFaqs = DEFAULT_FAQS;
+            localStorage.setItem('esteko_landing_faq', JSON.stringify(DEFAULT_FAQS));
+        }
+    } else {
+        localStorage.setItem('esteko_landing_faq', JSON.stringify(allFaqs));
+    }
+
+    // Ordenar por 'order' ascendente
+    allFaqs.sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+
+    renderFaqAdminList();
+}
+
+function renderFaqAdminList() {
+    const tableBody = document.getElementById('faq-table-body');
+    if (!tableBody) return;
+
+    if (allFaqs.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="table-empty-placeholder">No hay preguntas frecuentes registradas.</td></tr>';
+        return;
+    }
+
+    let html = '';
+    allFaqs.forEach(faq => {
+        const iconClass = faq.icon || 'fa-circle-question';
+        html += `
+            <tr>
+                <td><i class="fa-solid ${iconClass}" style="font-size: 1.2rem; color: var(--admin-primary);"></i></td>
+                <td><strong>${escapeHtml(faq.question)}</strong></td>
+                <td><span style="font-size: 0.85rem; color: var(--admin-text-muted);">${escapeHtml(faq.answer || '')}</span></td>
+                <td><span class="badge-order">${faq.order || 1}</span></td>
+                <td>
+                    <div class="actions-cell">
+                        <button class="btn-admin btn-admin-xs btn-admin-primary" onclick="editFaq('${faq.id}')" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-admin btn-admin-xs btn-admin-danger" onclick="deleteFaq('${faq.id}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    tableBody.innerHTML = html;
+}
+
+function openCreateFaqModal() {
+    document.getElementById('faq-modal-title').innerHTML = '<i class="fa-solid fa-circle-question"></i> Nueva Pregunta Frecuente';
+    document.getElementById('faq-id').value = '';
+    document.getElementById('faq-question').value = '';
+    document.getElementById('faq-answer').value = '';
+    document.getElementById('faq-icon').value = 'fa-circle-question';
+    document.getElementById('faq-order').value = (allFaqs.length + 1);
+
+    document.getElementById('faq-modal').style.display = 'flex';
+}
+
+function closeFaqModal() {
+    document.getElementById('faq-modal').style.display = 'none';
+}
+
+function editFaq(id) {
+    const item = allFaqs.find(f => f.id === id);
+    if (!item) return;
+
+    document.getElementById('faq-modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editar Pregunta Frecuente';
+    document.getElementById('faq-id').value = item.id;
+    document.getElementById('faq-question').value = item.question;
+    document.getElementById('faq-answer').value = item.answer;
+    document.getElementById('faq-icon').value = item.icon || 'fa-circle-question';
+    document.getElementById('faq-order').value = item.order || 1;
+
+    document.getElementById('faq-modal').style.display = 'flex';
+}
+
+async function saveFaqSubmit(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('faq-id').value;
+    const question = document.getElementById('faq-question').value.trim();
+    const answer = document.getElementById('faq-answer').value.trim();
+    const icon = document.getElementById('faq-icon').value.trim() || 'fa-circle-question';
+    const order = parseInt(document.getElementById('faq-order').value) || 1;
+
+    if (!question || !answer) {
+        alert("Por favor completa la pregunta y la respuesta.");
+        return;
+    }
+
+    const btnSubmit = document.getElementById('btn-save-faq-submit');
+    const originalText = btnSubmit.innerHTML;
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+    const faqData = {
+        question,
+        answer,
+        icon,
+        order,
+        updatedAt: new Date().toISOString()
+    };
+
+    let docId = id;
+
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        try {
+            if (docId) {
+                await firebase.firestore().collection('landing_faq').doc(docId).set(faqData, { merge: true });
+            } else {
+                const newDoc = await firebase.firestore().collection('landing_faq').add({
+                    ...faqData,
+                    createdAt: new Date().toISOString()
+                });
+                docId = newDoc.id;
+            }
+        } catch (err) {
+            console.error("Error al guardar FAQ en Firestore:", err);
+        }
+    }
+
+    if (!docId) {
+        docId = 'local-' + Date.now();
+    }
+
+    // Actualizar local
+    const index = allFaqs.findIndex(f => f.id === docId);
+    if (index !== -1) {
+        allFaqs[index] = { id: docId, ...faqData };
+    } else {
+        allFaqs.push({ id: docId, ...faqData });
+    }
+
+    localStorage.setItem('esteko_landing_faq', JSON.stringify(allFaqs));
+
+    btnSubmit.disabled = false;
+    btnSubmit.innerHTML = originalText;
+    closeFaqModal();
+    showToast("Pregunta Frecuente guardada correctamente.");
+    loadFaqData();
+}
+
+async function deleteFaq(id) {
+    if (!confirm("¿Estás seguro de que deseas eliminar esta pregunta frecuente?")) return;
+
+    if (isDatabaseOnline && typeof firebase !== 'undefined') {
+        try {
+            if (id && !id.startsWith('local-')) {
+                await firebase.firestore().collection('landing_faq').doc(id).delete();
+            }
+        } catch (err) {
+            console.error("Error al eliminar FAQ de Firestore:", err);
+        }
+    }
+
+    allFaqs = allFaqs.filter(f => f.id !== id);
+    localStorage.setItem('esteko_landing_faq', JSON.stringify(allFaqs));
+
+    showToast("Pregunta Frecuente eliminada.");
+    loadFaqData();
+}
+
+// Event Listeners para FAQ Modal
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-open-create-faq-modal')?.addEventListener('click', openCreateFaqModal);
+    document.getElementById('btn-close-faq-modal')?.addEventListener('click', closeFaqModal);
+    document.getElementById('btn-cancel-faq-modal')?.addEventListener('click', closeFaqModal);
+    document.getElementById('form-faq-crud')?.addEventListener('submit', saveFaqSubmit);
+});
 
 
