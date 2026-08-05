@@ -541,7 +541,8 @@ async function testConnectionAndLoadContent() {
     // 5. Inicializar el formulario de CV
     initCVFormSubmission();
 
-    // 6. Inicializar acordeón de Preguntas Frecuentes (FAQ)
+    // 6. Cargar y renderizar Preguntas Frecuentes (FAQ)
+    await loadAndRenderFaqs();
     initFaqAccordion();
 
     // 7. Cargar opiniones de Google Maps
@@ -2562,6 +2563,71 @@ function renderPublicDestinosMasElegidos(destinations, config) {
 // ==========================================================================
 // 12. COMPONENTE DE PREGUNTAS FRECUENTES (FAQ ACCORDION)
 // ==========================================================================
+async function loadAndRenderFaqs() {
+    const faqAccordion = document.getElementById('faq-accordion');
+    if (!faqAccordion) return;
+
+    let faqs = [];
+
+    if (isDbOnlinePublic && firestoreDb) {
+        try {
+            const snapshot = await firestoreDb.collection('landing_faq').get();
+            if (!snapshot.empty) {
+                faqs = [];
+                snapshot.forEach(doc => {
+                    faqs.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+            }
+        } catch (e) {
+            console.warn("Error al cargar FAQ desde Firestore, usando respaldo local.", e);
+        }
+    }
+
+    if (faqs.length === 0) {
+        const cached = localStorage.getItem('esteko_landing_faq');
+        if (cached) {
+            try {
+                faqs = JSON.parse(cached);
+            } catch (e) {}
+        }
+    }
+
+    if (faqs.length === 0) {
+        return; // Mantener preguntas estáticas si no hay datos en BD o caché
+    }
+
+    // Guardar copia local en caché
+    localStorage.setItem('esteko_landing_faq', JSON.stringify(faqs));
+
+    // Ordenar por 'order'
+    faqs.sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+
+    let html = '';
+    faqs.forEach((item, index) => {
+        const isActive = index === 0 ? 'active' : '';
+        const isExpanded = index === 0 ? 'true' : 'false';
+        const displayStyle = index === 0 ? 'style="display: block;"' : '';
+        const iconClass = item.icon || 'fa-circle-question';
+
+        html += `
+            <div class="faq-item ${isActive}">
+                <button type="button" class="faq-question" aria-expanded="${isExpanded}">
+                    <span><i class="fa-solid ${escapeHTML(iconClass)}"></i> ${escapeHTML(item.question)}</span>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </button>
+                <div class="faq-answer" ${displayStyle}>
+                    <p>${escapeHTML(item.answer)}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    faqAccordion.innerHTML = html;
+}
+
 function initFaqAccordion() {
     const faqContainer = document.getElementById('faq-accordion');
     if (!faqContainer) return;

@@ -91,6 +91,7 @@
                     <li><a href="#" class="sidebar-link" data-tab="leads"><i class="fa-solid fa-users-viewfinder"></i> Leads Capturados <span class="badge-leads-count" id="nav-leads-badge">0</span></a></li>
                     <li><a href="#" class="sidebar-link" data-tab="postulaciones"><i class="fa-solid fa-file-pdf"></i> Postulaciones CV <span class="badge-leads-count" id="nav-postulaciones-badge" style="background: var(--accent);">0</span></a></li>
                     <li><a href="#" class="sidebar-link" data-tab="opiniones"><i class="fa-solid fa-star"></i> Opiniones de Google</a></li>
+                    <li><a href="#" class="sidebar-link" data-tab="faq"><i class="fa-solid fa-circle-question"></i> Preguntas Frecuentes</a></li>
                     <li><a href="#" class="sidebar-link" data-tab="usuarios"><i class="fa-solid fa-users-gear"></i> Administrar Usuarios</a></li>
                 </ul>
             </nav>
@@ -907,6 +908,37 @@
                                 </tbody>
                             </table>
                         </div>
+                </section>
+
+                <!-- 8. TAB: PREGUNTAS FRECUENTES (FAQ) -->
+                <section class="tab-pane" id="tab-faq">
+                    <div class="pane-header header-flex">
+                        <div>
+                            <h2><i class="fa-solid fa-circle-question text-primary"></i> Gestión de Preguntas Frecuentes (FAQ)</h2>
+                            <p>Creá, editá y organizá las preguntas frecuentes que aparecen en la sección de Contacto & FAQ de la landing page.</p>
+                        </div>
+                        <button class="btn-admin btn-admin-primary" id="btn-open-create-faq-modal"><i class="fa-solid fa-circle-plus"></i> Nueva Pregunta</button>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="card-body-admin table-responsive-admin">
+                            <table class="leads-table-admin">
+                                <thead>
+                                    <tr>
+                                        <th>Ícono</th>
+                                        <th>Pregunta / Título</th>
+                                        <th>Respuesta</th>
+                                        <th>Orden</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="faq-table-body">
+                                    <tr>
+                                        <td colspan="5" class="table-empty-placeholder">Cargando preguntas frecuentes...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
@@ -1346,6 +1378,46 @@ CREATE POLICY "Allow auth read/write leads" ON public.landing_leads FOR ALL TO a
         </form>
     </div>
 
+
+    <!-- MODAL: FAQ FORM (CREATE / EDIT) -->
+    <div id="faq-modal" class="modal-overlay-admin" style="display: none;">
+        <form id="form-faq-crud" class="modal-admin-card">
+            <div class="modal-admin-header">
+                <h3 id="faq-modal-title"><i class="fa-solid fa-circle-question"></i> Nueva Pregunta Frecuente</h3>
+                <button type="button" class="modal-close-trigger" id="btn-close-faq-modal" aria-label="Cerrar modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-admin-body">
+                <input type="hidden" id="faq-id">
+                
+                <div class="form-group-admin">
+                    <label for="faq-question">Pregunta / Título</label>
+                    <input type="text" id="faq-question" class="form-control-admin" placeholder="Ej. ¿Desde dónde salen los viajes de Rutas del Esteko?" required>
+                </div>
+
+                <div class="form-group-admin">
+                    <label for="faq-answer">Respuesta Detallada</label>
+                    <textarea id="faq-answer" class="form-control-admin" rows="4" placeholder="Ej. Nuestras salidas principales se organizan desde Santiago del Estero..." required></textarea>
+                </div>
+
+                <div class="grid-2-col">
+                    <div class="form-group-admin">
+                        <label for="faq-icon">Clase de Ícono (FontAwesome)</label>
+                        <input type="text" id="faq-icon" class="form-control-admin" placeholder="Ej. fa-bus-simple, fa-credit-card, fa-whatsapp" required>
+                    </div>
+                    <div class="form-group-admin">
+                        <label for="faq-order">Orden de Aparición</label>
+                        <input type="number" id="faq-order" class="form-control-admin" min="1" value="1" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-admin-footer">
+                <button type="button" class="btn-admin btn-admin-secondary" id="btn-cancel-faq-modal">Cancelar</button>
+                <button type="submit" class="btn-admin btn-admin-primary" id="btn-save-faq-submit"><i class="fa-solid fa-floppy-disk"></i> Guardar Pregunta</button>
+            </div>
+        </form>
+    </div>
 
     <!-- Toast Notification Injected by JS -->
     <div id="admin-toast-notification" class="admin-toast" style="display: none;">
