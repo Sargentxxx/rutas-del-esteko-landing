@@ -17,21 +17,24 @@
     <meta name="geo.position" content="-27.7833;-64.2667">
     <meta name="ICBM" content="-27.7833, -64.2667">
 
-    <!-- Open Graph for Social Networks -->
+    <!-- Open Graph for Social Networks & Google Search Thumbnails -->
     <meta property="og:title" content="Rutas del Esteko - Agencia de Viajes y Turismo | Santiago del Estero">
     <meta property="og:description" content="Agencia de viajes y turismo en Santiago del Estero. Paquetes turísticos nacionales e internacionales, viajes educativos y la mejor financiación.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://rutasdelesteko.com.ar/">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:image" content="https://rutasdelesteko.com.ar/img/og-banner.jpg">
+    <meta property="og:image:secure_url" content="https://rutasdelesteko.com.ar/img/og-banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rutas del Esteko - Agencia de Viajes y Turismo">
     <meta property="og:locale" content="es_AR">
     
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Rutas del Esteko - Agencia de Viajes y Turismo | Santiago del Estero">
     <meta name="twitter:description" content="Salidas grupales desde Santiago del Estero. Mar del Plata, Camboriú, San Rafael y Cataratas al mejor precio.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:image" content="https://rutasdelesteko.com.ar/img/og-banner.jpg">
 
     <!-- Schema.org JSON-LD (TravelAgency & LocalBusiness) -->
     <script type="application/ld+json">
@@ -40,7 +43,11 @@
       "@type": ["TravelAgency", "LocalBusiness"],
       "name": "Rutas del Esteko",
       "description": "Agencia de viajes y turismo en Santiago del Estero. Paquetes turísticos nacionales e internacionales, viajes educativos y la mejor financiación.",
-      "image": "https://rutasdelesteko.com.ar/img/logo.png",
+      "image": [
+        "https://rutasdelesteko.com.ar/img/search-thumbnail.jpg",
+        "https://rutasdelesteko.com.ar/img/og-banner.jpg"
+      ],
+      "logo": "https://rutasdelesteko.com.ar/img/search-thumbnail.jpg",
       "@id": "https://rutasdelesteko.com.ar/",
       "url": "https://rutasdelesteko.com.ar/",
       "telephone": "+543855962089",
@@ -137,8 +144,13 @@
     <link rel="stylesheet" href="style.css?v=2.0">
     <link rel="stylesheet" href="destino.css">
     
-    <!-- Favicon -->
+    <!-- Favicon Oficial para Navegadores y Google Search (Múltiplos de 48px según directivas de Google) -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/jpeg" sizes="48x48" href="img/search-thumbnail.jpg">
+    <link rel="icon" type="image/jpeg" sizes="96x96" href="img/search-thumbnail.jpg">
+    <link rel="icon" type="image/jpeg" sizes="192x192" href="img/search-thumbnail.jpg">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/search-thumbnail.jpg">
 </head>
 <body>
     <!-- Encabezado H1 Semántico accesible para motores de búsqueda -->
