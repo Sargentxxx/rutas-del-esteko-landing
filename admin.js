@@ -2995,8 +2995,8 @@ function renderFaqAdminList() {
         html += `
             <tr>
                 <td><i class="fa-solid ${iconClass}" style="font-size: 1.2rem; color: var(--admin-primary);"></i></td>
-                <td><strong>${escapeHtml(faq.question)}</strong></td>
-                <td><span style="font-size: 0.85rem; color: var(--admin-text-muted);">${escapeHtml(faq.answer || '')}</span></td>
+                <td><strong>${escapeHTML(faq.question)}</strong></td>
+                <td><span style="font-size: 0.85rem; color: var(--admin-text-muted);">${escapeHTML(faq.answer || '')}</span></td>
                 <td><span class="badge-order">${faq.order || 1}</span></td>
                 <td>
                     <div class="actions-cell">
@@ -3039,6 +3039,12 @@ function editFaq(id) {
 
     document.getElementById('faq-modal').style.display = 'flex';
 }
+
+// Exponer funciones en window para invocaciones inline de HTML
+window.editFaq = editFaq;
+window.deleteFaq = deleteFaq;
+window.openCreateFaqModal = openCreateFaqModal;
+window.closeFaqModal = closeFaqModal;
 
 async function saveFaqSubmit(e) {
     e.preventDefault();
