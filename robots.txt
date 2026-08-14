@@ -1,3 +1,12 @@
 User-agent: *
 Allow: /
+
+User-agent: Googlebot-Image
+Allow: /favicon.ico
+Allow: /favicon-48x48.png
+Allow: /favicon.png
+Allow: /apple-touch-icon.png
+Allow: /img/
+
 Sitemap: https://rutasdelesteko.com.ar/sitemap.xml
+
