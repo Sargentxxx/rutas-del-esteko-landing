@@ -223,7 +223,7 @@ const DEFAULT_DESTINATIONS = [
 const DEFAULT_CONFIG = {
     seña_percent: 20,
     descuento_oferta: 15,
-    quotas: [3, 6, 9, 12],
+    quotas: [3, 4, 5, 6, 9, 12],
     legajo: "19.515",
     legajo_url: "https://www.agenciasdeviajes.ar/#buscador",
     email: "rutasdelesteko@gmail.com",
@@ -1786,8 +1786,10 @@ async function loadConfigData() {
     initFileUploaderListeners('config-qr-mintur-file', 'config-qr-mintur');
 
     // Checkboxes de cuotas
-    const quotas = config.quotas || [3, 6, 9, 12];
+    const quotas = config.quotas || [3, 4, 5, 6, 9, 12];
     document.getElementById('quota-3').checked = quotas.includes(3);
+    document.getElementById('quota-4').checked = quotas.includes(4);
+    document.getElementById('quota-5').checked = quotas.includes(5);
     document.getElementById('quota-6').checked = quotas.includes(6);
     document.getElementById('quota-9').checked = quotas.includes(9);
     document.getElementById('quota-12').checked = quotas.includes(12);
@@ -1805,6 +1807,8 @@ if (formSystemConfig) {
         // Obtener cuotas seleccionadas
         const quotas = [];
         if (document.getElementById('quota-3').checked) quotas.push(3);
+        if (document.getElementById('quota-4').checked) quotas.push(4);
+        if (document.getElementById('quota-5').checked) quotas.push(5);
         if (document.getElementById('quota-6').checked) quotas.push(6);
         if (document.getElementById('quota-9').checked) quotas.push(9);
         if (document.getElementById('quota-12').checked) quotas.push(12);
