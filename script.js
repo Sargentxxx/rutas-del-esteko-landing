@@ -1216,7 +1216,8 @@ function initSavingsSimulator(destinations, config) {
     // Poblar cuotas si la config las tiene
     if (config?.quotas && config.quotas.length > 0) {
         selectInstallments.innerHTML = '';
-        config.quotas.forEach(q => {
+        const sortedQuotas = [...config.quotas].sort((a, b) => Number(a) - Number(b));
+        sortedQuotas.forEach(q => {
             const opt = document.createElement('option');
             opt.value = q;
             opt.textContent = `${q} Cuotas Mensuales`;
