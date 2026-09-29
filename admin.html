@@ -104,6 +104,9 @@
                         <span class="user-role"><i class="fa-solid fa-shield-halved"></i> Administrador</span>
                     </div>
                 </div>
+                <button type="button" id="btn-trigger-support" class="btn-sidebar-support" title="Abrir Soporte Técnico Alpha Systems" onclick="localStorage.removeItem('ag_widget_hidden'); if(window.AntigravityTicket){ window.AntigravityTicket.restore?.(); window.AntigravityTicket.setVisibility?.(true); window.AntigravityTicket.open?.(); }">
+                    <i class="fa-solid fa-headset"></i> Soporte Técnico
+                </button>
                 <button id="btn-logout" class="btn-sidebar-logout" title="Cerrar Sesión"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</button>
             </div>
         </aside>
@@ -1434,5 +1437,16 @@ CREATE POLICY "Allow auth read/write leads" ON public.landing_leads FOR ALL TO a
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <!-- Admin JS Lógica -->
     <script src="admin.js"></script>
+
+    <!-- Widget Universal de Tickets - Alpha Systems -->
+    <script
+        id="antigravity-ticket-widget-script"
+        src="https://antigravity-ticket-system.vercel.app/widget.js"
+        data-app-id="4acbcf69-5448-404b-93c9-6f3e4817e318"
+        data-api-key="ag_live_cfxwvniluzq3p7ic6prdzs"
+        data-api-url="https://antigravity-ticket-system.vercel.app"
+        data-position="bottom-right"
+        defer
+    ></script>
 </body>
 </html>

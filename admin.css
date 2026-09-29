@@ -394,6 +394,33 @@
     color: var(--admin-text-muted);
 }
 
+.btn-sidebar-support {
+    width: 100%;
+    background-color: rgba(0, 199, 253, 0.08);
+    border: 1px solid rgba(0, 199, 253, 0.25);
+    color: #00C7FD;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: var(--transition-fast);
+    margin-bottom: 8px;
+}
+
+.btn-sidebar-support:hover {
+    background-color: rgba(0, 199, 253, 0.18);
+    border-color: rgba(0, 199, 253, 0.5);
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(0, 199, 253, 0.25);
+    transform: translateY(-1px);
+}
+
 .btn-sidebar-logout {
     width: 100%;
     background-color: rgba(239, 68, 68, 0.08);
