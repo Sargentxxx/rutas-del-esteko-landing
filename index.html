@@ -1158,27 +1158,28 @@
                     
                     <div class="unete-grid">
                         <div class="unete-info-box">
+                            <span class="unete-tag"><i class="fa-solid fa-users"></i> Oportunidades Laborales</span>
                             <h3>¿Querés formar parte de nuestro equipo?</h3>
                             <p class="unete-intro">Dejanos tu CV y completá el formulario. Buscamos personas apasionadas por el turismo, comprometidas con brindar la mejor experiencia y con vocación de servicio para acompañar a nuestros viajeros en sus mejores momentos.</p>
                             
                             <div class="unete-perks">
                                 <div class="unete-perk-item">
                                     <div class="unete-perk-icon-wrapper"><i class="fa-solid fa-people-group"></i></div>
-                                    <div>
+                                    <div class="unete-perk-content">
                                         <h5>Excelente Clima Laboral</h5>
                                         <p>Integrate a un equipo familiar y profesional enfocado en el crecimiento mutuo.</p>
                                     </div>
                                 </div>
                                 <div class="unete-perk-item">
                                     <div class="unete-perk-icon-wrapper"><i class="fa-solid fa-plane-departure"></i></div>
-                                    <div>
+                                    <div class="unete-perk-content">
                                         <h5>Pasión por Viajar</h5>
                                         <p>Trabajá en lo que más te gusta y acompañá al grupo en salidas por Argentina y Brasil.</p>
                                     </div>
                                 </div>
                                 <div class="unete-perk-item">
                                     <div class="unete-perk-icon-wrapper"><i class="fa-solid fa-circle-nodes"></i></div>
-                                    <div>
+                                    <div class="unete-perk-content">
                                         <h5>Desarrollo Profesional</h5>
                                         <p>Capacitaciones continuas en guiado, recreación y gestión de grupos.</p>
                                     </div>
@@ -1187,25 +1188,29 @@
                         </div>
                         
                         <div class="unete-form-box">
-                            <h3>Completá tus datos</h3>
+                            <div class="unete-form-header">
+                                <span class="unete-form-badge"><i class="fa-solid fa-file-lines"></i> Postulación Online</span>
+                                <h3>Completá tus datos</h3>
+                                <p class="unete-form-subtitle">Completá todos los campos para que nuestro equipo de Recursos Humanos evalúe tu perfil.</p>
+                            </div>
                             <form id="cv-upload-form" class="lead-form">
                                 <div class="form-group-row">
                                     <div class="form-group">
-                                        <label for="cv-name">Nombre completo:</label>
+                                        <label for="cv-name"><i class="fa-regular fa-user"></i> Nombre completo:</label>
                                         <input type="text" id="cv-name" placeholder="Ej. Ana Gómez" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="cv-phone">WhatsApp / Teléfono:</label>
+                                        <label for="cv-phone"><i class="fa-brands fa-whatsapp"></i> WhatsApp / Teléfono:</label>
                                         <input type="tel" id="cv-phone" placeholder="Ej. 3855962089" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cv-email">Correo Electrónico:</label>
+                                    <label for="cv-email"><i class="fa-regular fa-envelope"></i> Correo Electrónico:</label>
                                     <input type="email" id="cv-email" placeholder="Ej. anagomez@gmail.com" required>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="cv-position">Puesto que querés ocupar:</label>
+                                    <label for="cv-position"><i class="fa-solid fa-briefcase"></i> Puesto que querés ocupar:</label>
                                     <select id="cv-position" required>
                                         <option value="" disabled selected>Seleccioná el puesto al que querés postularte...</option>
                                         <option value="Vendedor de turismo educativo">Vendedor de turismo educativo</option>
@@ -1218,10 +1223,13 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label>Adjuntá tu CV (PDF, Word, máx. 5MB):</label>
+                                    <label><i class="fa-solid fa-paperclip"></i> Adjuntá tu CV (PDF, Word, máx. 5MB):</label>
                                     <div class="drag-drop-zone" id="cv-drag-drop">
-                                        <i class="fa-solid fa-cloud-arrow-up drag-icon"></i>
-                                        <p class="drag-text">Arrastrá tu archivo aquí o hace clic para buscar</p>
+                                        <div class="drag-icon-wrapper">
+                                            <i class="fa-solid fa-cloud-arrow-up drag-icon"></i>
+                                        </div>
+                                        <p class="drag-text">Arrastrá tu archivo aquí o <span class="drag-highlight">hacé clic para buscar</span></p>
+                                        <span class="drag-hint">Formatos aceptados: PDF, DOC o DOCX (Máx. 5MB)</span>
                                         <p class="file-name-display" id="cv-file-display"></p>
                                         <input type="file" id="cv-file-input" accept=".pdf,.doc,.docx" style="display: none;">
                                     </div>
@@ -1230,7 +1238,7 @@
                                     </div>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-primary btn-block" id="btn-submit-cv">
+                                <button type="submit" class="btn btn-primary btn-block btn-cv-submit" id="btn-submit-cv">
                                     <span id="btn-submit-cv-text"><i class="fa-solid fa-paper-plane"></i> Enviar Postulación</span>
                                 </button>
                             </form>
