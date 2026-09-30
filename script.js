@@ -1529,6 +1529,7 @@ function initCVFormSubmission() {
         const name = document.getElementById('cv-name').value.trim();
         const phone = document.getElementById('cv-phone').value.trim();
         const email = document.getElementById('cv-email').value.trim();
+        const position = document.getElementById('cv-position') ? document.getElementById('cv-position').value : '';
 
         // 1. Upload CV to Firebase Storage
         let cvUrl = "";
@@ -1587,6 +1588,7 @@ function initCVFormSubmission() {
                 full_name: name,
                 phone: phone,
                 email: email,
+                position: position,
                 cv_url: cvUrl,
                 created_at: new Date().toISOString()
             };
@@ -1625,6 +1627,8 @@ function initCVFormSubmission() {
     if (btnReset) {
         btnReset.addEventListener('click', () => {
             cvForm.reset();
+            const positionEl = document.getElementById('cv-position');
+            if (positionEl) positionEl.selectedIndex = 0;
             selectedFile = null;
             fileDisplay.style.display = 'none';
             fileInput.value = '';
