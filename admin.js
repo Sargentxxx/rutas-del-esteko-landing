@@ -2487,7 +2487,7 @@ async function loadPostulacionesData() {
     const navPostBadge = document.getElementById('nav-postulaciones-badge');
     
     if (tableBody) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="table-empty-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Cargando postulaciones...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" class="table-empty-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> Cargando postulaciones...</td></tr>';
     }
 
     allPostulaciones = [];
@@ -2534,7 +2534,7 @@ function renderPostulacionesTable() {
     if (!tableBody) return;
 
     if (allPostulaciones.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="table-empty-placeholder">No hay postulaciones registradas todavía.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" class="table-empty-placeholder">No hay postulaciones registradas todavía.</td></tr>';
         return;
     }
 
@@ -2559,9 +2559,14 @@ function renderPostulacionesTable() {
             ? `<a href="${app.cv_url}" target="_blank" class="lead-whatsapp-btn" style="background-color: var(--accent); margin: 0;"><i class="fa-solid fa-file-arrow-down"></i> Descargar CV</a>` 
             : `<span class="text-muted">Sin archivo</span>`;
 
+        const positionBadge = app.position 
+            ? `<span style="display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background-color: rgba(230, 92, 0, 0.12); color: var(--primary); white-space: nowrap;">${app.position}</span>` 
+            : `<span class="text-muted" style="font-size: 0.82rem; font-style: italic;">No especificado</span>`;
+
         tr.innerHTML = `
             <td class="lead-date-cell">${formattedDate}</td>
             <td class="lead-name-cell">${app.full_name || app.name || 'Sin nombre'}</td>
+            <td>${positionBadge}</td>
             <td>+54 ${app.phone}</td>
             <td>${app.email}</td>
             <td>${cvDownloadBtn}</td>
