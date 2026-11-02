@@ -10,8 +10,8 @@
 // ==========================================================================
 // 1. CONFIGURACIÓN Y CLIENTE DE FIREBASE & FIRESTORE
 // ==========================================================================
-const LOCAL_MASTER_PASS = "***REMOVED***"; // Contraseña maestra de contingencia local
-const LOCAL_MASTER_PASS_HASH = "***REMOVED***"; // SHA-256
+// Seguridad: se eliminó la contraseña maestra local (estaba en texto plano en un repo público).
+// El acceso al panel requiere exclusivamente Firebase Auth con un usuario real.
 
 const firebaseConfig = {
     apiKey: "AIzaSyAxSpYY8iZXcLylJStFx2GD3Ejyzq_wy_U",
@@ -586,7 +586,7 @@ function initLoginListeners() {
                     submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';
                     return;
                 } catch (err) {
-                    console.warn("Fallo de auth en red, intentando validación local:", err);
+                    console.warn("Fallo de autenticación con Firebase; se deniega el acceso:", err);
                     if (err.message && err.message.includes("suspendida")) {
                         errorAlert.style.display = 'flex';
                         errorMessage.textContent = err.message;
@@ -598,17 +598,10 @@ function initLoginListeners() {
                 }
             }
 
-            // 2. Fallback de validación local (Contraseña Maestra verificada por Hashing SHA-256)
-            const inputHash = await hashSHA256(password);
-            if (inputHash === LOCAL_MASTER_PASS_HASH || password === LOCAL_MASTER_PASS) {
-                localStorage.setItem('esteko_admin_session', email + " (Local Admin)");
-                showDashboardView(email);
-                showToast("Acceso Concedido con Contraseña Maestra");
-            } else {
-                // Denegado
-                errorAlert.style.display = 'flex';
-                errorMessage.textContent = "Contraseña o correo de administrador inválido.";
-            }
+            // 2. Sin validación local: si Firebase Auth no autorizó, el acceso se deniega.
+            //    (El antiguo fallback con contraseña maestra se eliminó por seguridad.)
+            errorAlert.style.display = 'flex';
+            errorMessage.textContent = "Contraseña o correo de administrador inválido.";
 
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<span><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</span>';

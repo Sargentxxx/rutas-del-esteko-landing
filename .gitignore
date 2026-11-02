@@ -1,3 +1,15 @@
 .vercel
-.env
 .agents
+
+# Variables de entorno: nunca versionar valores reales
+.env
+.env.*
+!.env.example
+
+# Credenciales y certificados
+*.key
+*.pem
+*.crt
+*.csr
+*.p12
+.secrets/
