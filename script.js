@@ -886,35 +886,73 @@ function initializeHeroCarousel(images) {
     const sliderContainer = document.getElementById('hero-slider');
     if (!sliderContainer) return;
 
-    // Solo una imagen neutra de excelente resolución como respaldo (ruta escénica en cañón)
-    const defaultImages = [
-        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80"
-    ];
+    // Sin imágenes configuradas se mantiene el fondo de marca del CSS:
+    // nunca se inyecta una foto que no venga del panel de administración.
+    if (!images || images.length === 0) return;
 
-    const finalImages = (images && images.length > 0) ? images : defaultImages;
+    const existingSlides = Array.from(sliderContainer.querySelectorAll('.hero-slide'));
 
-    sliderContainer.innerHTML = '';
-    finalImages.forEach((imgUrl, index) => {
-        const slide = document.createElement('div');
-        slide.className = `hero-slide${index === 0 ? ' active' : ''}`;
-        slide.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 10, 0.12), rgba(15, 10, 10, 0.02)), url('${imgUrl}')`;
-        sliderContainer.appendChild(slide);
-    });
-
-    let currentSlide = 0;
-    const slides = sliderContainer.querySelectorAll('.hero-slide');
-    
-    if (slides.length <= 1) return;
+    // Imagen que el usuario ya está viendo (la pintada desde caché o el fondo de marca)
+    const activeOld = existingSlides.find(s => s.classList.contains('active'));
+    const urlFromStyle = (el) => {
+        if (!el) return '';
+        const match = (el.style.backgroundImage || '').match(/url\(["']?([^"')]+)["']?\)/);
+        return match ? match[1] : '';
+    };
+    const shownUrl = activeOld ? (activeOld.dataset.bgUrl || urlFromStyle(activeOld)) : '';
 
     if (window.heroCarouselInterval) {
         clearInterval(window.heroCarouselInterval);
+        window.heroCarouselInterval = null;
     }
 
-    window.heroCarouselInterval = setInterval(() => {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }, 5000);
+    // Los slides nuevos se crean ocultos y recién se muestran cuando la primera
+    // imagen terminó de descargar: sin hueco en blanco y sin fotos intermedias.
+    const newSlides = images.map((imgUrl) => {
+        const slide = document.createElement('div');
+        slide.className = 'hero-slide';
+        slide.dataset.bgUrl = imgUrl;
+        slide.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 10, 0.12), rgba(15, 10, 10, 0.02)), url('${imgUrl}')`;
+        sliderContainer.appendChild(slide);
+        return slide;
+    });
+
+    const reveal = () => {
+        // Si la primera imagen configurada es la misma que ya se está viendo
+        // (carga en caliente desde caché), se cambia al instante: sin doble capa.
+        if (shownUrl && shownUrl === images[0]) {
+            newSlides[0].style.transition = 'none';
+            newSlides[0].classList.add('active');
+            existingSlides.forEach(old => old.remove());
+        } else {
+            // Crossfade: el nuevo slide se enciende mientras el anterior se apaga,
+            // así nunca se ve el fondo vacío ni una foto intermedia.
+            newSlides[0].classList.add('active');
+            existingSlides.forEach(old => old.classList.remove('active'));
+            window.setTimeout(() => existingSlides.forEach(old => old.remove()), 1700);
+        }
+
+        if (newSlides.length <= 1) return;
+
+        let currentSlide = 0;
+        window.heroCarouselInterval = setInterval(() => {
+            newSlides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % newSlides.length;
+            newSlides[currentSlide].classList.add('active');
+        }, 5000);
+    };
+
+    const preload = new Image();
+    let revealed = false;
+    const finish = () => {
+        if (revealed) return;
+        revealed = true;
+        reveal();
+    };
+    preload.onload = finish;
+    preload.onerror = finish;
+    preload.src = images[0];
+    window.setTimeout(finish, 2500);
 }
 
 // Aplicar catálogo y simulador

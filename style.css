@@ -3284,6 +3284,12 @@ a {
 .hero.hero-stitch {
     min-height: 85vh;
     padding-bottom: 0;
+    /* Fondo de marca visible mientras llegan las imágenes del panel:
+       evita el "flash" en blanco y no muestra ninguna foto de relleno. */
+    background:
+        radial-gradient(ellipse at 18% 12%, rgba(122, 24, 32, 0.65), transparent 58%),
+        radial-gradient(ellipse at 88% 92%, rgba(16, 96, 110, 0.35), transparent 55%),
+        linear-gradient(150deg, #241a16 0%, #171009 55%, #0d0908 100%);
 }
 
 .hero.hero-stitch .hero-slide {
