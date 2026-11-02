@@ -1054,6 +1054,13 @@ function applyGlobalConfigVars(config) {
     });
     if (config.tiktok) tkLinks.forEach(link => link.setAttribute('href', config.tiktok));
 
+    // Posteo de Instagram destacado (sección "Viví la Experiencia")
+    if (config.instagram_reel) {
+        const reelIframe = document.querySelector('.instagram-reel-iframe');
+        const embedUrl = toInstagramEmbedUrl(config.instagram_reel);
+        if (reelIframe && embedUrl) reelIframe.src = embedUrl;
+    }
+
     // Aplicar logos e imágenes globales de la landing
     if (config.logo_header_url) {
         const headerLogoImg = document.querySelector('.navbar-logo-img');
@@ -1076,6 +1083,26 @@ function applyGlobalConfigVars(config) {
         const footerQrImg = document.querySelector('.footer-qr-img');
         if (footerQrImg) footerQrImg.src = config.qr_mintur_url;
     }
+}
+
+// Normaliza un link de publicación de Instagram a su URL embebible.
+// Acepta https://www.instagram.com/reel/CODE/, /reels/CODE/, /p/CODE/, /tv/CODE/
+// con o sin parámetros (utm, igsh, ?__a=1) y también URLs que ya vienen en /embed.
+function toInstagramEmbedUrl(raw) {
+    if (!raw) return "";
+    const value = String(raw).trim();
+
+    const embedMatch = value.match(/instagram\.com\/(reel|reels|p|tv)\/([A-Za-z0-9_-]+)\/embed/i);
+    if (embedMatch) {
+        const embedKind = embedMatch[1].toLowerCase() === 'reels' ? 'reel' : embedMatch[1].toLowerCase();
+        return `https://www.instagram.com/${embedKind}/${embedMatch[2]}/embed`;
+    }
+
+    const match = value.match(/instagram\.com\/(reel|reels|p|tv)\/([A-Za-z0-9_-]+)/i);
+    if (!match) return "";
+
+    const kind = match[1].toLowerCase() === 'reels' ? 'reel' : match[1].toLowerCase();
+    return `https://www.instagram.com/${kind}/${match[2]}/embed`;
 }
 
 function renderPublicCatalogGrid(destinations, config) {

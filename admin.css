@@ -109,6 +109,14 @@
     letter-spacing: 0.2px;
 }
 
+.form-group-admin .form-hint-admin {
+    display: block;
+    margin-top: 7px;
+    font-size: 0.76rem;
+    line-height: 1.45;
+    color: var(--admin-text-muted, rgba(255, 255, 255, 0.55));
+}
+
 .form-group-admin input[type="text"],
 .form-group-admin input[type="email"],
 .form-group-admin input[type="password"],

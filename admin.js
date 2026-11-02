@@ -230,6 +230,7 @@ const DEFAULT_CONFIG = {
     whatsapp: "3855962089",
     facebook: "https://www.facebook.com/profile.php?id=100087455823485",
     instagram: "https://www.instagram.com/rutasdelesteko.sde/",
+    instagram_reel: "https://www.instagram.com/reel/DdaNaNExCXf/",
     tiktok: "https://www.tiktok.com/@rutasdelesteko",
     logo_header_url: "img/logo.png",
     logo_footer_url: "img/logo.png",
@@ -1766,6 +1767,10 @@ async function loadConfigData() {
     document.getElementById('config-instagram').value = config.instagram || "";
     document.getElementById('config-tiktok').value = config.tiktok || "";
 
+    // Posteo de Instagram destacado en la landing
+    const reelInput = document.getElementById('config-instagram-reel');
+    if (reelInput) reelInput.value = config.instagram_reel || "";
+
     // Imágenes globales
     document.getElementById('config-logo-header').value = config.logo_header_url || "";
     document.getElementById('config-logo-footer').value = config.logo_footer_url || "";
@@ -1816,6 +1821,7 @@ if (formSystemConfig) {
             whatsapp: document.getElementById('config-whatsapp').value.trim(),
             facebook: document.getElementById('config-facebook').value.trim(),
             instagram: document.getElementById('config-instagram').value.trim(),
+            instagram_reel: (document.getElementById('config-instagram-reel') || {}).value?.trim() || "",
             tiktok: document.getElementById('config-tiktok').value.trim(),
             logo_header_url: document.getElementById('config-logo-header').value.trim(),
             logo_footer_url: document.getElementById('config-logo-footer').value.trim(),
