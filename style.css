@@ -1616,13 +1616,44 @@ a {
 }
 
 .sorteos-banner {
-    background-image: url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1200&q=80');
+    position: relative;
+    overflow: hidden;
+    /* Fondo de marca mientras descarga la imagen configurada en el panel:
+       evita el recuadro en blanco (con el texto claro encima, ilegible). */
+    background-color: #170f0c;
+    background-image:
+        radial-gradient(ellipse at 15% 10%, rgba(122, 24, 32, 0.55), transparent 60%),
+        radial-gradient(ellipse at 85% 90%, rgba(16, 96, 110, 0.32), transparent 55%),
+        linear-gradient(150deg, #241a16 0%, #171009 55%, #0d0908 100%);
     background-size: cover;
     background-position: center;
     border-radius: var(--border-radius-lg);
     padding: 60px;
     color: var(--text-light);
     box-shadow: var(--shadow-lg);
+}
+
+/* Imagen del panel: se funde sobre el degradado recién cuando ya está descargada */
+.sorteos-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--sorteos-bg, none);
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.sorteos-banner.has-bg-image::before {
+    opacity: 1;
+}
+
+.sorteos-banner > * {
+    position: relative;
+    z-index: 1;
 }
 
 .raffle-badge {

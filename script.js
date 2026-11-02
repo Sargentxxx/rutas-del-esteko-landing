@@ -788,7 +788,7 @@ async function loadAndApplySections() {
         }
         if (sContentWrapper && sections.sorteos.content) sContentWrapper.textContent = sections.sorteos.content;
         if (sBanner && sections.sorteos.image_url) {
-            sBanner.style.backgroundImage = `url('${sections.sorteos.image_url}')`;
+            applySorteosBannerImage(sBanner, sections.sorteos.image_url);
         }
 
         // Render step cards dynamically
@@ -953,6 +953,24 @@ function initializeHeroCarousel(images) {
     preload.onerror = finish;
     preload.src = images[0];
     window.setTimeout(finish, 2500);
+}
+
+// Imagen de fondo del banner de Sorteos: se aplica recién cuando terminó de
+// descargar, así el recuadro nunca queda en blanco ni muestra una foto de relleno.
+function applySorteosBannerImage(banner, url) {
+    if (!banner || !url) return;
+    if (banner.dataset.bgUrl === url && banner.classList.contains('has-bg-image')) return;
+
+    const apply = () => {
+        banner.style.setProperty('--sorteos-bg', `url('${url}')`);
+        banner.classList.add('has-bg-image');
+        banner.dataset.bgUrl = url;
+    };
+
+    const img = new Image();
+    img.onload = apply;
+    img.onerror = () => console.warn('No se pudo cargar la imagen de Sorteos:', url);
+    img.src = url;
 }
 
 // Aplicar catálogo y simulador
